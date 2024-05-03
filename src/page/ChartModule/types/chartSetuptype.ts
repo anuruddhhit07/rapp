@@ -3,6 +3,7 @@ export interface ChartOptionsIn {
     stockid: string;
     liveupdatefunction: () => void;
     chartsettings?: {
+     tooltipshow?: { status: boolean };
       mdbutton?: { status: boolean };
       fiibutton?: { status: boolean };
       opbutton?: { status: boolean };
@@ -19,8 +20,20 @@ export interface ChartOptionsIn {
       cdbutton?: { status: boolean };
       volbutton?: { status: boolean };
       sigbutton?: { status: boolean };
+      livebutton?: { status: boolean };
+      toggleTrendLine?: { status: boolean };
+      backgroundProp?: { color: string, opacity: number }
+     buttonProps?: { color: string, opacity: number }
     };
   }
+
+//   this.tooltipshow = true;
+//     this.backtestreport = true;
+//     this.backgroundProp = { color: "lightblue", opacity: 0.1 };
+//     this.buttonProps = { color: "#90a7d5", opacity: 0.7 };
+//     this.topyscalepadding = 1;
+//     this.livebutton = false;
+//     this.toggleTrendLine = false;
 
   export interface Margin {
     top: number;
