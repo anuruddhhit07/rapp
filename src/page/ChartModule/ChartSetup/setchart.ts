@@ -24,33 +24,41 @@ const ChartOptionsDefault: ChartOptionsIn = {
   },
 };
 
-const marginDefault:Margin = {
-    top: 20,
-    right: 50,
-    bottom: 20,
-    left: 10,
-    innerLeft: 20,
-    innerRight: 100,
-    innerBottom: 20,
-    innertop: 20,
-  };
+const marginDefault: Margin = {
+  top: 20,
+  right: 50,
+  bottom: 20,
+  left: 10,
+  innerLeft: 20,
+  innerRight: 100,
+  innerBottom: 20,
+  innertop: 20,
+};
 
- 
 class SetupChart {
   svgWidth: number;
   svgHeight: number;
   targetID: string;
   stockid: string;
   liveupdatefunction: () => void;
-  margin:Margin
+  margin: Margin;
+  private static instance: SetupChart | null = null; // Static property to hold the instance
 
-  constructor(svgWidth: number, svgHeight: number, chartOptions: ChartOptionsIn = ChartOptionsDefault) {
+  private constructor(svgWidth: number, svgHeight: number, chartOptions: ChartOptionsIn = ChartOptionsDefault) {
     this.svgWidth = svgWidth;
     this.svgHeight = svgHeight;
     this.targetID = chartOptions.targetID;
     this.stockid = chartOptions.stockid;
     this.liveupdatefunction = chartOptions.liveupdatefunction;
-    this.margin=marginDefault
+    this.margin = marginDefault;
+  }
+
+  // Static method to create or retrieve the singleton instance
+  static getInstance(svgWidth: number, svgHeight: number, chartOptions?: ChartOptionsIn): SetupChart {
+    if (!SetupChart.instance) {
+      SetupChart.instance = new SetupChart(svgWidth, svgHeight, chartOptions);
+    }
+    return SetupChart.instance;
   }
 }
 
