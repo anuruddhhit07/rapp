@@ -34,7 +34,7 @@ export interface YScaleConfigType {
 
 export interface yAxisItemType<T extends keyof ChartDataObj = keyof ChartDataObj> {
     status: boolean;
-    yaxisName: string;
+    yscaleName: string;
     x_point: number;
     xaxisdataTag:keyof ChartDataObj;  // for auto yvalue change on zooming based on min and max data in xdata range
     scaleSide:'Right'|'Left';

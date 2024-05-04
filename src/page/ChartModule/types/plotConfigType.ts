@@ -1,3 +1,4 @@
+import { YScaleConfigType } from "./AxisScaleType";
 import { ChartDataObj } from "./chartdataTypes";
 
 
@@ -19,8 +20,18 @@ export interface PlotConfigType {
     tagclass: string;
 }
 
-export interface PlotConfigItemType<T extends keyof ChartDataObj = keyof ChartDataObj> {
+export interface PlotConfigItemType<YScaleKeyType extends keyof YScaleConfigType> {
     plotstatus: boolean;
     plotName: string;
     datatoPlot:keyof ChartDataObj|'ohlc'
+    yscaleName:YScaleKeyType;
+    linetype?: "solid" | "dashed" | "dotted"; // Adjust according to possible values
+    color?: string;
+    fill?: "none" | "solid" | string; // Adjust according to possible values
+    strokewidth?: number;
+    strokedasharray?: string;
+    yscaletag?: string;
+    xscaletag?: string;
+    plottype?: "ohlc" | string; // Adjust according to possible values
+    tagclass?: string;
 }

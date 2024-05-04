@@ -12,7 +12,7 @@ export class AxisChart {
   private static instance: AxisChart | null = null;
   public xScaleConfig: XScaleConfigType = {};
   public yScaleConfig: YScaleConfigType = {};
-
+  // type YScaleKeys = keyof typeof this.yScaleConfig;
   private constructor(ChartOptions: SetupChart, ChartData: ChartDataObj) {
     this.setXScaleConfig(ChartOptions, ChartData);
     this.setYScaleConfig(ChartOptions, ChartData);
@@ -56,7 +56,7 @@ export class AxisChart {
     const YscaleConfigDefault: yAxisItemType[] = [
       {
         status: true,
-        yaxisName: "OHLC",
+        yscaleName: "OHLC",
         xaxisdataTag: "xindex",
         scaleSide: "Right",
         x_point: svgWidth - margin.right,
@@ -66,7 +66,7 @@ export class AxisChart {
       },
       {
         status: true,
-        yaxisName: "BR",
+        yscaleName: "BR",
         xaxisdataTag: "xindex",
         scaleSide: "Right",
         x_point: 50,
@@ -84,7 +84,7 @@ export class AxisChart {
 
     yscaleconfigdata.forEach((item) => {
       const {
-        yaxisName,
+        yscaleName,
         x_point,
         scaleSide,
         xaxisdataTag,
@@ -92,8 +92,8 @@ export class AxisChart {
         highestYDataTag,
         lowestYDataTag,
       } = item;
-      this.yScaleConfig[yaxisName] = {
-        yaxistag: yaxisName,
+      this.yScaleConfig[yscaleName] = {
+        yaxistag: yscaleName,
         xpoint: x_point, // Example value, replace with actual values
         scaleSide: scaleSide,
         ypadding: () => 0.1,
@@ -150,6 +150,10 @@ export class AxisChart {
           },
       };
     });
+  }
+
+  getYScaleConfigType(){
+    type YScaleKeys = keyof typeof this.yScaleConfig;
   }
 
   getXScaleConfig() {

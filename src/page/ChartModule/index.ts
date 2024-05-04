@@ -16,7 +16,7 @@ class CandlestickChartTS {
         this.setupdata=SetupChart.getInstance(500, 200)
         this.chartdata=arrangeData(stockdata)
         this.axisChart=AxisChart.getInstance(this.setupdata,this.chartdata)
-        this.PlotConfig=PlotConfig.getInstance(this.chartdata)
+        this.PlotConfig=PlotConfig.getInstance(this.chartdata,this.axisChart)
         console.log(this.axisChart)
         // this.chartAxis= 
         // this.margin=this.setupdata.margin
