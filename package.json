@@ -12,6 +12,7 @@
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.0",
     "chartpakage": "github:anuruddhhit07/chartpakage",
+    "d3": "^7.9.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-scripts": "5.0.1",
@@ -23,7 +24,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "dev": "nodemon"
   },
   "eslintConfig": {
     "extends": [
@@ -45,5 +47,9 @@
   },
   "keywords": [
     "npm install git+https://github.com/anuruddhhit07/chartpakage.git"
-  ]
+  ],
+  "devDependencies": {
+    "@types/d3": "^7.4.3",
+    "nodemon": "^3.1.0"
+  }
 }

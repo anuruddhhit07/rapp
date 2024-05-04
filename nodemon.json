@@ -1,0 +1,6 @@
+{
+  "watch": ["src"],
+  "ext": "ts,tsx",
+  "ignore": ["src/**/*.test.tsx", "node_modules"],
+  "exec": "npm start"
+}
