@@ -6,34 +6,22 @@ import { AxisChart } from "./AxisScale";
 import { multiFormat } from "../dataUtility/dateFormat";
 import { ChartDataObj } from "../types/chartdataTypes";
 import { error } from "console";
+import { Shared_ChartPlotData, Shared_Xscaleconfig } from "../SharedObject";
 
 export class PlotAxis {
   private static instance: PlotAxis | null = null;
-  private chartdata: ChartDataObj;
   // type YScaleKeys = keyof typeof this.yScaleConfig;
   private constructor(
-    svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,
-    axisChart: AxisChart,
-    PlotDataConfig: PlotConfig,
-    chartdata: ChartDataObj
-  ) {
-    this.chartdata = chartdata;
-    this.rendorXaxis(svg, axisChart, PlotDataConfig);
+    svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,PlotDataConfig:PlotConfig) {
+    
+    this.rendorXaxis(svg,PlotDataConfig);
   }
 
   static getInstance(
-    svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,
-    axisChart: AxisChart,
-    PlotDataConfig: PlotConfig,
-    chartdata: ChartDataObj
-  ): PlotAxis {
+    svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,PlotDataConfig:PlotConfig): PlotAxis {
     if (!PlotAxis.instance) {
       PlotAxis.instance = new PlotAxis(
-        svg,
-        axisChart,
-        PlotDataConfig,
-        chartdata
-      );
+        svg,PlotDataConfig);
     }
     return PlotAxis.instance;
   }
@@ -63,7 +51,7 @@ export class PlotAxis {
     stockid: string,
     datatotag: keyof ChartDataObj
   ): string | null {
-    return multiFormat(i, "temp:1D", this.chartdata[datatotag]);
+    return multiFormat(i, "temp:1D", Shared_ChartPlotData[datatotag]);
   }
 
   updateXscaleConfig<T, K extends keyof T>(
@@ -142,10 +130,7 @@ export class PlotAxis {
   }
 
   rendorXaxis(
-    svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,
-    axisChart: AxisChart,
-    PlotDataConfig: PlotConfig
-  ) {
+    svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,PlotDataConfig:PlotConfig) {
     svg.selectAll(`.x-axis`).remove();
 
     const plotaxies = false;
@@ -158,11 +143,11 @@ export class PlotAxis {
       yscaletagsarray = yscaletags;
       xscaletagsarray = xscaletags;
     } else {
-      xscaletagsarray = Object.keys(axisChart.xScaleConfig);
+      xscaletagsarray = Object.keys(Shared_Xscaleconfig);
     }
 
     xscaletagsarray.map((scaletag) => {
-      let scaleconfig = axisChart.xScaleConfig[scaletag];
+      let scaleconfig = Shared_Xscaleconfig[scaletag];
       if (scaleconfig.Xscale == null) {
         throw new Error(`Scale cannot be null for scaletag: ${scaletag}`);
       }

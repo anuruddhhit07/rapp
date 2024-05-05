@@ -33,24 +33,26 @@ export interface xAxisItemType<T extends keyof ChartDataObj = keyof ChartDataObj
     
 }
 
+export interface YscaleItemProp {
+    // Define properties for each configuration
+    plotstatus:boolean;
+    yaxisnumer:number;
+    yaxistag: string;
+    xpoint: number;
+    scaleSide: string;
+    ypadding: () => number;
+    transform: { k: number };
+    scaledata_max: () => number[];
+    scaledata_min: () => number[];
+    changeRangeTag: boolean;
+    visrange: (minrange?:number,maxrange?:number) => [number, number];
+    maxscaledata: () => number;
+    minscaledata: () => number;
+    datadomain: () => [number, number];
+};
+
 export interface YScaleConfigType {
-    [key: string]: {
-        // Define properties for each configuration
-        plotstatus:boolean;
-        yaxisnumer:number;
-        yaxistag: string;
-        xpoint: number;
-        scaleSide: string;
-        ypadding: () => number;
-        transform: { k: number };
-        scaledata_max: () => number[];
-        scaledata_min: () => number[];
-        changeRangeTag: boolean;
-        visrange: (minrange?:number,maxrange?:number) => [number, number];
-        maxscaledata: () => number;
-        minscaledata: () => number;
-        datadomain: () => [number, number];
-    };
+    [key: string]: YscaleItemProp
 }
 
 export interface yAxisItemType<T extends keyof ChartDataObj = keyof ChartDataObj> {

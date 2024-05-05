@@ -2,7 +2,7 @@ import { AxisChart } from "../AxisUtility/AxisScale";
 import { XScaleConfigType, YScaleConfigType } from "../types/AxisScaleType";
 import { ChartDataObj } from "../types/chartdataTypes";
 import { PlotConfigItemType, PlotConfigdataType } from "../types/plotConfigType";
-
+import { Shared_Xscaleconfig,Shared_Yscaleconfig,Shared_ChartPlotData } from "../SharedObject";
 
 export class PlotConfig {
   private static instance: PlotConfig | null = null;
@@ -10,25 +10,25 @@ export class PlotConfig {
 //   public yScaleConfig: YScaleConfigType = {};
 //   public xScaleConfig: XScaleConfigType = {};
 
-  private constructor(ChartData: ChartDataObj,axisChart:AxisChart) {
+  private constructor() {
     // this.yScaleConfig=axisChart.yScaleConfig
     // this.xScaleConfig=axisChart.xScaleConfig
-    console.log("axisChart",axisChart)
-    this.setPlot(ChartData,axisChart);
+    // console.log("axisChart",axisChart)
+    // this.setPlot(ChartData,axisChart);
     
     
   }
-  static getInstance(ChartData: ChartDataObj,axisChart:AxisChart): PlotConfig {
+  static getInstance(): PlotConfig {
     if (!PlotConfig.instance) {
-      PlotConfig.instance = new PlotConfig(ChartData,axisChart);
+      PlotConfig.instance = new PlotConfig();
     }
     return PlotConfig.instance;
   }
 
 
-  setDefaultPlotConfig(axisChart:AxisChart): PlotConfigItemType[] {
-    const yscalekeys = Object.keys(axisChart.yScaleConfig) as (keyof YScaleConfigType)[];
-    const xscalekeys = Object.keys(axisChart.xScaleConfig) as (keyof XScaleConfigType)[];
+  setDefaultPlotConfig(): PlotConfigItemType[] {
+    const yscalekeys = Object.keys(Shared_Yscaleconfig) as (keyof YScaleConfigType)[];
+    const xscalekeys = Object.keys(Shared_Xscaleconfig) as (keyof XScaleConfigType)[];
     // Define a type for the keys of YScaleConfigType
     type YScaleKeys = keyof YScaleConfigType;
     console.log("xscalekeys",xscalekeys)
@@ -83,8 +83,8 @@ export class PlotConfig {
 }
 
 
-  setPlot(ChartData: ChartDataObj,axisChart:AxisChart) {
-    const plotconfigdata = this.setDefaultPlotConfig(axisChart)
+  setPlot() {
+    const plotconfigdata = this.setDefaultPlotConfig()
     // let temparray={}
     plotconfigdata.forEach((item) => {
         const {plotstatus,plotName,Ydata,Xdata,yscaletag,xscaletag,plottype, tagclass,linetype='solid',
@@ -92,8 +92,8 @@ export class PlotConfig {
         }=item
         this.PlotData[plotName]={
           plotstatus: plotstatus,
-            ydata: () =>  Ydata=='ohlc'?ChartData:ChartData[Ydata],
-            xdata: () =>  ChartData[Xdata],
+            ydata: () =>  Ydata=='ohlc'?Shared_ChartPlotData:Shared_ChartPlotData[Ydata],
+            xdata: () =>  Shared_ChartPlotData[Xdata],
             yscaletag: yscaletag,
             xscaletag: xscaletag,
             // xdata: "xdata",

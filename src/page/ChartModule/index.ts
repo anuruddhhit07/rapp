@@ -6,13 +6,13 @@ import { arrangeData } from "./dataUtility/arrangeData";
 import { ChartOptions, Margin } from "./types/chartSetuptype";
 import { ChartDataIN, ChartDataObj } from "./types/chartdataTypes";
 import * as d3 from "d3";
-import { Shared_ChartPlotData, updateChartPlotData,Shared_ChartBaseProp } from "./SharedObject";
+import { Shared_ChartPlotData, updateChartPlotData,Shared_ChartBaseProp,Shared_Xscaleconfig, Shared_Yscaleconfig } from "./SharedObject";
 
 class CandlestickChartTS {
 //   private chartdata: ChartDataObj;
   private setupdata: SetupChart;
   private axisChart: AxisChart;
-//   private PlotDataConfig: PlotConfig;
+  private PlotDataConfig: PlotConfig;
   private svg! : d3.Selection<SVGSVGElement, any, HTMLElement, any>
   private axisarea!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   // private margin: Margin
@@ -20,19 +20,18 @@ class CandlestickChartTS {
     this.setupdata = SetupChart.getInstance(500, 200, { targetID: targetID });
     updateChartPlotData(arrangeData(stockdata));
     this.axisChart = AxisChart.getInstance();
-    // this.PlotDataConfig = PlotConfig.getInstance(
-    //   this.chartdata,
-    //   this.axisChart
-    // );
+    this.PlotDataConfig = PlotConfig.getInstance();
 
 
-    // this.setupSVG(targetID);
-    // PlotAxis.getInstance(this.svg,this.axisChart,this.PlotDataConfig,this.chartdata)
+    this.setupSVG();
+    PlotAxis.getInstance(this.svg,this.PlotDataConfig)
     // // this.svg=this.setupdata.setupSVG(this.svg)
 
     console.log(this);
     console.log(Shared_ChartPlotData)
     console.log(Shared_ChartBaseProp)
+    console.log(Shared_Xscaleconfig)
+    console.log(Shared_Yscaleconfig["OHLC"].datadomain())
   }
 
   setupSVG() {
