@@ -5,6 +5,9 @@ export const defaultChartBaseProp: ChartBaseSetupType = {
     svgHeight: 200,
     targetID: "chartContainer",
     stockid: "StockName:1D",
+    liveupdatefunction: function (): void {
+        throw new Error("Function not implemented.");
+    },
     margin: {
         top: 20,
         right: 50,
@@ -17,16 +20,16 @@ export const defaultChartBaseProp: ChartBaseSetupType = {
     },
     get width() {
         return this.svgWidth -
-        this.margin.left -
-        this.margin.right -
-        this.margin.innerRight -
-        this.margin.innerLeft;
+            this.margin.left -
+            this.margin.right -
+            this.margin.innerRight -
+            this.margin.innerLeft;
     },
     get height() {
         return this.svgHeight -
-        this.margin.top -
-        this.margin.bottom -
-        this.margin.innerTop -
-        this.margin.innerBottom;
+            this.margin.top -
+            this.margin.bottom -
+            this.margin.innerTop -
+            this.margin.innerBottom;
     }
 };

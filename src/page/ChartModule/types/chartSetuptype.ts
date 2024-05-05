@@ -55,6 +55,7 @@ export interface ChartBaseSetupType {
   svgHeight: number;
   targetID: string;
   stockid: string;
+  liveupdatefunction: () => void;
   margin: {
       top: number;
       right: number;

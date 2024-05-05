@@ -11,7 +11,7 @@ import { Shared_ChartPlotData, updateChartPlotData,Shared_ChartBaseProp } from "
 class CandlestickChartTS {
 //   private chartdata: ChartDataObj;
   private setupdata: SetupChart;
-//   private axisChart: AxisChart;
+  private axisChart: AxisChart;
 //   private PlotDataConfig: PlotConfig;
   private svg! : d3.Selection<SVGSVGElement, any, HTMLElement, any>
   private axisarea!: d3.Selection<SVGGElement, any, HTMLElement, any>;
@@ -19,9 +19,7 @@ class CandlestickChartTS {
   constructor(stockdata: ChartDataIN, targetID: string) {
     this.setupdata = SetupChart.getInstance(500, 200, { targetID: targetID });
     updateChartPlotData(arrangeData(stockdata));
-    // arrangeData(stockdata)
-    // this.chartdata = arrangeData(stockdata);
-    // this.axisChart = AxisChart.getInstance(this.setupdata, this.chartdata);
+    this.axisChart = AxisChart.getInstance();
     // this.PlotDataConfig = PlotConfig.getInstance(
     //   this.chartdata,
     //   this.axisChart
@@ -37,7 +35,8 @@ class CandlestickChartTS {
     console.log(Shared_ChartBaseProp)
   }
 
-  setupSVG(targetID: string) {
+  setupSVG() {
+    const {targetID,svgWidth,svgHeight,margin,width,height}=Shared_ChartBaseProp
     const svgElementExists: boolean = d3.select(`#svg-${targetID}`).empty();
     this.svg =
       svgElementExists
@@ -45,8 +44,8 @@ class CandlestickChartTS {
             .select(`#${targetID}`)
             .append("svg")
             .attr("id", `svg-${targetID}`)
-            .attr("width", this.setupdata.svgWidth)
-            .attr("height", this.setupdata.svgHeight)
+            .attr("width", svgWidth)
+            .attr("height", svgHeight)
         : d3.select(`#svg-${targetID}`);
 
     this.svg
@@ -54,10 +53,10 @@ class CandlestickChartTS {
       .append("clipPath")
       .attr("id", `clip1-${targetID}`)
       .append("rect")
-      .attr("x", this.setupdata.margin.left + this.setupdata.margin.innerLeft)
-      .attr("y", this.setupdata.margin.top + this.setupdata.margin.innertop)
-      .attr("width", this.setupdata.width + 0 * this.setupdata.margin.innerLeft)
-      .attr("height", this.setupdata.height);
+      .attr("x", margin.left + margin.innerLeft)
+      .attr("y", margin.top + margin.innerTop)
+      .attr("width", width + 0 * margin.innerLeft)
+      .attr("height", height);
 
     // Return the SVG as a string
 

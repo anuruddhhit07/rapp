@@ -8,31 +8,30 @@ import {
 import { ChartOptions, Margin } from "../types/chartSetuptype";
 import { ChartDataObj } from "../types/chartdataTypes";
 import * as d3 from "d3";
+import { Shared_ChartBaseProp,Shared_ChartPlotData } from "../SharedObject";
 
 export class AxisChart {
   private static instance: AxisChart | null = null;
   public xScaleConfig: XScaleConfigType = {};
   public yScaleConfig: YScaleConfigType = {};
   // type YScaleKeys = keyof typeof this.yScaleConfig;
-  private constructor(ChartOptions: SetupChart, ChartData: ChartDataObj) {
-    this.setXScaleConfig(ChartOptions, ChartData);
-    this.setYScaleConfig(ChartOptions, ChartData);
-    this.setXscalefn(ChartData)
-    this.setYscalefn(ChartData)
+  private constructor() {
+    this.setXScaleConfig();
+    this.setYScaleConfig();
+    this.setXscalefn()
+    this.setYscalefn()
   }
 
   static getInstance(
-    ChartOptions: SetupChart,
-    ChartData: ChartDataObj
   ): AxisChart {
     if (!AxisChart.instance) {
-      AxisChart.instance = new AxisChart(ChartOptions, ChartData);
+      AxisChart.instance = new AxisChart();
     }
     return AxisChart.instance;
   }
 
-  getdefaultxaxis(ChartOptions: SetupChart, ChartData: ChartDataObj) {
-    const { svgHeight, svgWidth, margin } = ChartOptions;
+  getdefaultxaxis() {
+    const { svgHeight, svgWidth, margin } = Shared_ChartBaseProp;
     const XscaleConfigDefault: xAxisItemType[] = [
       {
         y_point: svgHeight - margin.bottom,
@@ -68,10 +67,10 @@ export class AxisChart {
     return XscaleConfigDefault.filter((item) => item.plotstatus == true);
   }
 
-  setXScaleConfig(ChartOptions: SetupChart, ChartData: ChartDataObj) {
-    const { svgHeight, svgWidth, margin } = ChartOptions;
-    const { timestamp } = ChartData;
-    const xscaleconfigdata = this.getdefaultxaxis(ChartOptions, ChartData);
+  setXScaleConfig() {
+    const { svgHeight, svgWidth, margin } = Shared_ChartBaseProp;
+    const { timestamp } = Shared_ChartPlotData;
+    const xscaleconfigdata = this.getdefaultxaxis();
 
     xscaleconfigdata.forEach((item) => {
       const {
@@ -81,7 +80,7 @@ export class AxisChart {
         scaledatatag,
         scaleType,scalerange,ticlavelmappedwith,plotstatus,zooming
       } = item;
-      const datadomainFunction = () => [d3.min(ChartData[scaledatatag] as number[]) as number, d3.max(ChartData[scaledatatag] as number[]) as number] as [number, number];
+      const datadomainFunction = () => [d3.min(Shared_ChartPlotData[scaledatatag] as number[]) as number, d3.max(Shared_ChartPlotData[scaledatatag] as number[]) as number] as [number, number];
       this.xScaleConfig[xscaleName] = {
         xscaleName:xscaleName,
         y_point: y_point,
@@ -110,8 +109,8 @@ export class AxisChart {
     
   }
 
-  getdefaultyaxis(ChartOptions: SetupChart, ChartData: ChartDataObj) {
-    const { svgHeight, svgWidth, margin } = ChartOptions;
+  getdefaultyaxis() {
+    const { svgHeight, svgWidth, margin } = Shared_ChartBaseProp;
     const YscaleConfigDefault: yAxisItemType[] = [
       {
         plotstatus: true,
@@ -140,8 +139,8 @@ export class AxisChart {
     return YscaleConfigDefault.filter((item) => item.plotstatus == true);
   }
 
-  setYScaleConfig(ChartOptions: SetupChart, ChartData: ChartDataObj) {
-    const yscaleconfigdata = this.getdefaultyaxis(ChartOptions, ChartData);
+  setYScaleConfig() {
+    const yscaleconfigdata = this.getdefaultyaxis();
 
     yscaleconfigdata.forEach((item) => {
       const {
@@ -163,10 +162,10 @@ export class AxisChart {
         scaleSide: scaleSide,
         ypadding: () => 0.1,
         transform: { k: 1 },
-        scaledata_max: () => ChartData[highestYDataTag], // Example value, replace with actual values
-        scaledata_min: () => ChartData[lowestYDataTag], // Example value, replace with actual values
+        scaledata_max: () => Shared_ChartPlotData[highestYDataTag], // Example value, replace with actual values
+        scaledata_min: () => Shared_ChartPlotData[lowestYDataTag], // Example value, replace with actual values
         changeRangeTag: changeRangeTag,
-        visrange:(minrange:number=d3.min(ChartData[xaxisdataTag] as number[]) as number,maxrange:number= d3.max(ChartData[xaxisdataTag] as number[]) as number ) => [
+        visrange:(minrange:number=d3.min(Shared_ChartPlotData[xaxisdataTag] as number[]) as number,maxrange:number= d3.max(Shared_ChartPlotData[xaxisdataTag] as number[]) as number ) => [
             minrange,maxrange
         ], // Example value, replace with actual values
         maxscaledata() {
@@ -238,7 +237,7 @@ export class AxisChart {
     return activeXScales;
 }
 
-  setXscalefn(ChartData: ChartDataObj){
+  setXscalefn(){
     const xscaletagsarray = Object.keys(this.xScaleConfig);
     xscaletagsarray.map((scaletag) => {
       let scaleconfig = this.xScaleConfig[scaletag];
@@ -259,7 +258,7 @@ export class AxisChart {
                 .scaleBand<string>()
                 .range(scaleconfig.scalerange)
                 .domain(
-                  ChartData[scaleconfig.scaledatatag].map((d: any) =>
+                  Shared_ChartPlotData[scaleconfig.scaledatatag].map((d: any) =>
                     d.toString()
                   ) // Convert numbers to strings
                 );
@@ -276,7 +275,7 @@ export class AxisChart {
     })
   }
 
-  setYscalefn(ChartData: ChartDataObj){
+  setYscalefn(){
     const yscaletagsarray = Object.keys(this.yScaleConfig);
     console.log("yscaletagsarray",yscaletagsarray)
   }
