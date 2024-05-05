@@ -17,7 +17,8 @@ export class AxisChart {
   private constructor(ChartOptions: SetupChart, ChartData: ChartDataObj) {
     this.setXScaleConfig(ChartOptions, ChartData);
     this.setYScaleConfig(ChartOptions, ChartData);
-    this.setXscale()
+    this.setXscalefn(ChartData)
+    this.setYscalefn(ChartData)
   }
 
   static getInstance(
@@ -86,20 +87,21 @@ export class AxisChart {
         y_point: y_point,
         scaleSide:scaleSide,
         scaleType: scaleType,
-        // scaledatatag: scaledatatag,
+        scaledatatag: scaledatatag,
         scalerange: scalerange,
         // datadomain: [0, this.dataset.xdata[this.dataset.xdata.length - 1]],
         datadomain: datadomainFunction(),
         ticlavelmappedwith: ticlavelmappedwith, // just to display axis tick and reverse map if any dataplot have axis defeind in timestamp
         plotstatus: plotstatus,
         zooming: zooming,
-        Xscale: scaleType === 'linear' ? 
-        d3.scaleLinear().range(scalerange).domain(datadomainFunction()) : 
-        scaleType === 'TimeScale' ?
-        d3.scaleTime().range(scalerange).domain(datadomainFunction()) :
-        d3.scaleBand<string>().range(scalerange).domain(
-            ChartData[scaledatatag].map((d: any) => d.toString()) // Convert numbers to strings
-        )
+        Xscale:null
+        // Xscale: scaleType === 'linear' ? 
+        // d3.scaleLinear().range(scalerange).domain(datadomainFunction()) : 
+        // scaleType === 'TimeScale' ?
+        // d3.scaleTime().range(scalerange).domain(datadomainFunction()) :
+        // d3.scaleBand<string>().range(scalerange).domain(
+        //     ChartData[scaledatatag].map((d: any) => d.toString()) // Convert numbers to strings
+        // )
       }
     
 
@@ -236,18 +238,46 @@ export class AxisChart {
     return activeXScales;
 }
 
-  setXscale(){
-    // const activeScale=this.getActiveXScales()
-    // console.log("activeScale",activeScale)
+  setXscalefn(ChartData: ChartDataObj){
+    const xscaletagsarray = Object.keys(this.xScaleConfig);
+    xscaletagsarray.map((scaletag) => {
+      let scaleconfig = this.xScaleConfig[scaletag];
+      
+      if (scaleconfig.Xscale == null) {
+        const Xscale =
+          scaleconfig.scaleType === "linear"
+            ? d3
+                .scaleLinear()
+                .range(scaleconfig.scalerange)
+                .domain(scaleconfig.datadomain)
+            : scaleconfig.scaleType === "TimeScale"
+            ? d3
+                .scaleTime()
+                .range(scaleconfig.scalerange)
+                .domain(scaleconfig.datadomain)
+            : d3
+                .scaleBand<string>()
+                .range(scaleconfig.scalerange)
+                .domain(
+                  ChartData[scaleconfig.scaledatatag].map((d: any) =>
+                    d.toString()
+                  ) // Convert numbers to strings
+                );
 
+        // scaleconfig = this.updateXscaleConfig(scaleconfig, "Xscale", Xscale);
 
-    // let xScale;
-    // if (scaleType === "linear") {
-    //   xScale = d3.scaleLinear().range(scalerange).domain(datadomain);
-    // }
-    // if (scaleType === "scaleband") {
-    //   xScale = d3.scaleBand().range(scalerange).domain(datadomain);
-    // }
+        // scaleconfig = {
+        //   ...scaleconfig,
+        //   Xscale: Xscale,
+        // };
+        // this.xScaleConfig[scaletag]=scaleconfig
+        this.xScaleConfig[scaletag].Xscale=Xscale
+      }
+    })
+  }
+
+  setYscalefn(ChartData: ChartDataObj){
+
   }
 
 }

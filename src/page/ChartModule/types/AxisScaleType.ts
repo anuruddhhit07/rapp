@@ -1,21 +1,24 @@
 import { ScaleBand, ScaleLinear, ScaleTime } from "d3";
 import { ChartDataObj } from "./chartdataTypes";
 
-export interface XScaleConfigType  {
-    [key: string]: {
-        xscaleName:string;
+export interface XscaleItemProp {
+    xscaleName:string;
         y_point: number;
         scaleSide: 'Top'|'Bottom';
         scaleType: 'linear' | 'scaleband' | 'TimeScale';
-        // scaledatatag: string;
+        scaledatatag: keyof ChartDataObj;
         scalerange: [number, number];
-        datadomain: number[] | (() => number[]);
+        datadomain: [number, number] ;
         ticlavelmappedwith: keyof ChartDataObj;
         plotstatus: boolean;
         zooming: boolean;
-        Xscale: ScaleLinear<number, number> | ScaleTime<number, number> | ScaleBand<string>
-    };
+        Xscale: ScaleLinear<number, number> | ScaleTime<number, number> | ScaleBand<string> |null
+
+}
+export interface XScaleConfigType  {
+    [key: string]: XscaleItemProp
 };
+export type UpdateXscaleConfig<T, K extends keyof T> = (xscaleConfigItem: T, keyToUpdate: K, keyValue: T[K]) => T;
 
 export interface xAxisItemType<T extends keyof ChartDataObj = keyof ChartDataObj> {
     y_point: number;
