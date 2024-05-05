@@ -12,7 +12,7 @@ const testobj= new testdatamodule(20)
 // console.log("AA",sma1);
 const ohlcdata=testobj.getDataForPeriod(15)
 
-const chartobj= new CandlestickChartTS({histdata:ohlcdata})
+// const chartobj= new CandlestickChartTS({histdata:ohlcdata},divId)
 
 const data = testobj.getSeriesPeriod('close');
 const divId = 'chartContainer'; // ID of the div where you want to render the chart
@@ -20,7 +20,8 @@ const divId = 'chartContainer'; // ID of the div where you want to render the ch
 const ChartPage = () => {
   useEffect(() => {
     // Call drawLineChart function when component mounts
-    drawLineChart(data, divId);
+    // drawLineChart(data, divId);
+    const chartobj= new CandlestickChartTS({histdata:ohlcdata},divId)
   }, []); // Empty dependency array ensures the effect runs only once, similar to componentDidMount in class components
 
   return (

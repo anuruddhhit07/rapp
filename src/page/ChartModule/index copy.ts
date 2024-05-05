@@ -1,5 +1,4 @@
 import { AxisChart } from "./AxisUtility/AxisScale";
-import { PlotAxis } from "./AxisUtility/PlotAxis";
 import SetupChart from "./ChartSetup/setchart";
 import { PlotConfig } from "./ChartSetup/setplotConfig";
 import { arrangeData } from "./dataUtility/arrangeData";
@@ -13,7 +12,6 @@ class CandlestickChartTS {
   private axisChart: AxisChart;
   private PlotDataConfig: PlotConfig;
   private svg! : d3.Selection<SVGSVGElement, any, HTMLElement, any>
-  private axisarea!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   // private margin: Margin
   constructor(stockdata: ChartDataIN, targetID: string) {
     this.setupdata = SetupChart.getInstance(500, 200, { targetID: targetID });
@@ -23,9 +21,9 @@ class CandlestickChartTS {
       this.chartdata,
       this.axisChart
     );
-    this.setupSVG(targetID);
-    PlotAxis.getInstance(this.svg,this.axisChart,this.PlotDataConfig,this.chartdata)
-    // this.svg=this.setupdata.setupSVG(this.svg)
+    
+    // this.setupSVG(targetID);
+    this.svg=this.setupdata.setupSVG(this.svg)
 
     console.log(this);
   }
@@ -61,7 +59,7 @@ class CandlestickChartTS {
       .style("fill", "lightblue")
       .style("opacity", 0.5);
 
-      this.axisarea = this.svg.append("g");
+    //   console.log(svg)
   }
 }
 

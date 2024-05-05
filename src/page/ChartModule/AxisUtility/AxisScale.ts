@@ -2,6 +2,7 @@ import SetupChart from "../ChartSetup/setchart";
 import {
   XScaleConfigType,
   YScaleConfigType,
+  xAxisItemType,
   yAxisItemType,
 } from "../types/AxisScaleType";
 import { ChartOptions, Margin } from "../types/chartSetuptype";
@@ -16,6 +17,7 @@ export class AxisChart {
   private constructor(ChartOptions: SetupChart, ChartData: ChartDataObj) {
     this.setXScaleConfig(ChartOptions, ChartData);
     this.setYScaleConfig(ChartOptions, ChartData);
+    this.setXscale()
   }
 
   static getInstance(
@@ -28,34 +30,75 @@ export class AxisChart {
     return AxisChart.instance;
   }
 
-  setXScaleConfig(ChartOptions: SetupChart, ChartData: ChartDataObj) {
+  getdefaultxaxis(ChartOptions: SetupChart, ChartData: ChartDataObj) {
     const { svgHeight, svgWidth, margin } = ChartOptions;
-    const { timestamp } = ChartData;
-    this.xScaleConfig = {
-      bot: {
-        ypoint: svgHeight - margin.bottom,
+    const XscaleConfigDefault: xAxisItemType[] = [
+      {
+        y_point: svgHeight - margin.bottom,
+        xscaleName:"mainx",
         scaleSide: "Bottom",
         scaleType: "linear",
-        scaledatatag: "timestamp",
+        scaledatatag: "xindex",
         scalerange: [
           margin.left + margin.innerLeft,
           svgWidth - margin.right - margin.innerRight,
         ],
-        // datadomain: [0, this.dataset.xdata[this.dataset.xdata.length - 1]],
-        datadomain: () => [0, timestamp.length],
-        mappedwith: "timestamp", // just to display axis tick and reverse map if any dataplot have axis defeind in timestamp
-        //scaleRole: "main",
-        plotaxis: true,
+        ticlavelmappedwith: "timestamp", // just to display axis tick and reverse map if any dataplot have axis defeind in timestamp
+        plotstatus: true,
         zooming: true,
-      },
-    };
+      }
+      
+    ];
+
+    return XscaleConfigDefault.filter((item) => item.plotstatus == true);
+  }
+
+  setXScaleConfig(ChartOptions: SetupChart, ChartData: ChartDataObj) {
+    const { svgHeight, svgWidth, margin } = ChartOptions;
+    const { timestamp } = ChartData;
+    const xscaleconfigdata = this.getdefaultxaxis(ChartOptions, ChartData);
+
+    xscaleconfigdata.forEach((item) => {
+      const {
+        xscaleName,
+        y_point,
+        scaleSide,
+        scaledatatag,
+        scaleType,scalerange,ticlavelmappedwith,plotstatus,zooming
+      } = item;
+      const datadomainFunction = () => [d3.min(ChartData[scaledatatag] as number[]) as number, d3.max(ChartData[scaledatatag] as number[]) as number] as [number, number];
+      this.xScaleConfig[xscaleName] = {
+        xscaleName:xscaleName,
+        y_point: y_point,
+        scaleSide:scaleSide,
+        scaleType: scaleType,
+        // scaledatatag: scaledatatag,
+        scalerange: scalerange,
+        // datadomain: [0, this.dataset.xdata[this.dataset.xdata.length - 1]],
+        datadomain: datadomainFunction(),
+        ticlavelmappedwith: ticlavelmappedwith, // just to display axis tick and reverse map if any dataplot have axis defeind in timestamp
+        plotstatus: plotstatus,
+        zooming: zooming,
+        Xscale: scaleType === 'linear' ? 
+        d3.scaleLinear().range(scalerange).domain(datadomainFunction()) : 
+        scaleType === 'TimeScale' ?
+        d3.scaleTime().range(scalerange).domain(datadomainFunction()) :
+        d3.scaleBand<string>().range(scalerange).domain(
+            ChartData[scaledatatag].map((d: any) => d.toString()) // Convert numbers to strings
+        )
+      }
+    
+
+    })
+
+    
   }
 
   getdefaultyaxis(ChartOptions: SetupChart, ChartData: ChartDataObj) {
     const { svgHeight, svgWidth, margin } = ChartOptions;
     const YscaleConfigDefault: yAxisItemType[] = [
       {
-        status: true,
+        plotstatus: true,
         yscaleName: "OHLC",
         xaxisdataTag: "xindex",
         scaleSide: "Right",
@@ -63,9 +106,10 @@ export class AxisChart {
         changeRangeTag: true,
         highestYDataTag: "high",
         lowestYDataTag: "low",
+        yaxisnumer:1
       },
       {
-        status: true,
+        plotstatus: true,
         yscaleName: "BR",
         xaxisdataTag: "xindex",
         scaleSide: "Right",
@@ -73,10 +117,11 @@ export class AxisChart {
         changeRangeTag: true,
         highestYDataTag: "high",
         lowestYDataTag: "low",
+        yaxisnumer:2
       },
     ];
 
-    return YscaleConfigDefault.filter((item) => item.status == true);
+    return YscaleConfigDefault.filter((item) => item.plotstatus == true);
   }
 
   setYScaleConfig(ChartOptions: SetupChart, ChartData: ChartDataObj) {
@@ -85,6 +130,8 @@ export class AxisChart {
     yscaleconfigdata.forEach((item) => {
       const {
         yscaleName,
+        yaxisnumer,
+        plotstatus,
         x_point,
         scaleSide,
         xaxisdataTag,
@@ -93,7 +140,9 @@ export class AxisChart {
         lowestYDataTag,
       } = item;
       this.yScaleConfig[yscaleName] = {
+        plotstatus: plotstatus,
         yaxistag: yscaleName,
+        yaxisnumer:yaxisnumer,
         xpoint: x_point, // Example value, replace with actual values
         scaleSide: scaleSide,
         ypadding: () => 0.1,
@@ -159,4 +208,32 @@ export class AxisChart {
   getXScaleConfig() {
     return this.xScaleConfig;
   }
+
+  getActiveXScales(): XScaleConfigType {
+    const activeXScales: XScaleConfigType = {};
+
+    for (const key in this.xScaleConfig) {
+        if (this.xScaleConfig.hasOwnProperty(key)) {
+            if (this.xScaleConfig[key].plotstatus) {
+              activeXScales[key] = this.xScaleConfig[key];
+            }
+        }
+    }
+    return activeXScales;
+}
+
+  setXscale(){
+    // const activeScale=this.getActiveXScales()
+    // console.log("activeScale",activeScale)
+
+
+    // let xScale;
+    // if (scaleType === "linear") {
+    //   xScale = d3.scaleLinear().range(scalerange).domain(datadomain);
+    // }
+    // if (scaleType === "scaleband") {
+    //   xScale = d3.scaleBand().range(scalerange).domain(datadomain);
+    // }
+  }
+
 }

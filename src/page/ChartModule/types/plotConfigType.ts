@@ -4,13 +4,14 @@ import { ChartDataObj } from "./chartdataTypes";
 
 
 export interface PlotConfigType {
-    plot: boolean; // Adjust the type according to the type of this.cdbutton
-    data: () => number[] | number[][]; // Adjust the type according to the type of this.dataset
-    xdata: string;
-    xdatamap: boolean;
+    plotstatus: boolean; // Adjust the type according to the type of this.cdbutton
+    xdata: () => number[] | number[][];
+    ydata: () => number[] ; // Adjust the type according to the type of this.dataset
+    // xdata: string;
+    // xdatamap: boolean;
     linetype: "solid" | "dashed" | "dotted"; // Adjust according to possible values
-    color: string;
-    yscalenumber: number;
+    color: string|'red'|'blue';
+    // yscalenumber: number;
     fill: "none" | "solid" | string; // Adjust according to possible values
     strokewidth: number;
     strokedasharray: string;
@@ -20,18 +21,23 @@ export interface PlotConfigType {
     tagclass: string;
 }
 
-export interface PlotConfigItemType<YScaleKeyType extends keyof YScaleConfigType> {
+export interface PlotConfigdataType {
+    [key: string]: PlotConfigType
+}
+
+export interface PlotConfigItemType<> {
     plotstatus: boolean;
     plotName: string;
-    datatoPlot:keyof ChartDataObj|'ohlc'
-    yscaleName:YScaleKeyType;
+    Ydata:keyof ChartDataObj|'ohlc';
+    Xdata:keyof ChartDataObj
+    yscaletag:string;
+    xscaletag: string
+    plottype: "ohlc" | string; // Adjust according to possible values
+    tagclass: string;
     linetype?: "solid" | "dashed" | "dotted"; // Adjust according to possible values
-    color?: string;
+    color?: string|'red'|'blue';
     fill?: "none" | "solid" | string; // Adjust according to possible values
     strokewidth?: number;
     strokedasharray?: string;
-    yscaletag?: string;
-    xscaletag?: string;
-    plottype?: "ohlc" | string; // Adjust according to possible values
-    tagclass?: string;
+   
 }

@@ -49,3 +49,5 @@ export interface ChartOptionsIn {
   export interface ChartOptions extends ChartOptionsIn {
     margin: Margin;
 }
+
+export type CustomChartOptions = ChartOptionsIn & { [key: string]: never };
