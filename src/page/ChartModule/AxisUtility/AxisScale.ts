@@ -46,6 +46,20 @@ export class AxisChart {
         ticlavelmappedwith: "timestamp", // just to display axis tick and reverse map if any dataplot have axis defeind in timestamp
         plotstatus: true,
         zooming: true,
+      },
+      {
+        y_point: margin.top,
+        xscaleName:"topx",
+        scaleSide: "Top",
+        scaleType: "linear",
+        scaledatatag: "xindex",
+        scalerange: [
+          margin.left + margin.innerLeft,
+          svgWidth - margin.right - margin.innerRight,
+        ],
+        ticlavelmappedwith: "xindex", // just to display axis tick and reverse map if any dataplot have axis defeind in timestamp
+        plotstatus: true,
+        zooming: true,
       }
       
     ];

@@ -83,20 +83,24 @@ export class PlotAxis {
     // return axisGenerator.ticks(tickCount).tickFormat((i) => i);
 
     if (ticlavelmappedwith == "timestamp") {
-      return axisGenerator.ticks(tickCount).tickFormat((i: Date | d3.NumberValue) => {
-        // Convert the Date or number value to a string
-        console.log("i111", i);
-        if (i instanceof Date) {
-          return i.toLocaleDateString(); // Format date using toLocaleDateString
-        } else {
-        //   return i.toString(); // Convert other values to string
-          return this.custumticformat(i, "stockid", ticlavelmappedwith) as string
-        }
-        
-      });
-      
+      return axisGenerator
+        .ticks(tickCount)
+        .tickFormat((i: Date | d3.NumberValue) => {
+          // Convert the Date or number value to a string
+          console.log("i111", i);
+          if (i instanceof Date) {
+            return i.toLocaleDateString(); // Format date using toLocaleDateString
+          } else {
+            //   return i.toString(); // Convert other values to string
+            return this.custumticformat(
+              i,
+              "stockid",
+              ticlavelmappedwith
+            ) as string;
+          }
+        });
     }
- 
+
     return axisGenerator.ticks(tickCount).tickFormat((i) => {
       // Convert the Date or number value to a string
       return i.toString();
@@ -125,14 +129,20 @@ export class PlotAxis {
 
     console.log(axisChart.xScaleConfig);
     console.log(PlotDataConfig.PlotData);
-    const activePlots = PlotDataConfig.getActivePlots();
-    console.log("AA", activePlots);
+    const plotaxies = false;
+    let yscaletagsarray: string[];
+    let xscaletagsarray: string[] = [];
 
-    const { yscaletags, xscaletags } = this.getUniqueScaleTags(activePlots);
-    console.log("Unique yscaletags:", yscaletags);
-    console.log("Unique xscaletags:", xscaletags);
+    if (plotaxies) {
+      const activePlots = PlotDataConfig.getActivePlots();
+      const { yscaletags, xscaletags } = this.getUniqueScaleTags(activePlots);
+      yscaletagsarray = yscaletags;
+      xscaletagsarray = xscaletags;
+    } else {
+      xscaletagsarray = Object.keys(axisChart.xScaleConfig);
+    }
 
-    xscaletags.map((scaletag) => {
+    xscaletagsarray.map((scaletag) => {
       const scaleconfig = axisChart.xScaleConfig[scaletag];
       console.log(scaleconfig);
       console.log("datadomain", scaleconfig.datadomain);
