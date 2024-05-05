@@ -108,6 +108,8 @@ export class PlotConfig {
             tagclass: tagclass,
         }
     })
+
+    
   }
 
   getActivePlots(): PlotConfigdataType {

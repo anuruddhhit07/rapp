@@ -4,6 +4,7 @@ import {
   CustomChartOptions,
 } from "../types/chartSetuptype";
 import * as d3 from "d3";
+import { updateChartBaseProp } from "../SharedObject";
 
 const ChartOptionsDefault: ChartOptionsIn = {
   targetID: "DivID",
@@ -63,6 +64,12 @@ class SetupChart {
     this.liveupdatefunction = chartOptions.liveupdatefunction;
     this.margin = marginDefault;
     this.setDimensions();
+    updateChartBaseProp({
+      svgWidth:svgWidth,
+      svgHeight:svgHeight,
+      targetID:chartOptions.targetID,
+      stockid:chartOptions.stockid,
+  })
   }
 
   // Static method to create or retrieve the singleton instance

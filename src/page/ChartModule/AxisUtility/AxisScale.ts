@@ -277,7 +277,8 @@ export class AxisChart {
   }
 
   setYscalefn(ChartData: ChartDataObj){
-
+    const yscaletagsarray = Object.keys(this.yScaleConfig);
+    console.log("yscaletagsarray",yscaletagsarray)
   }
 
 }

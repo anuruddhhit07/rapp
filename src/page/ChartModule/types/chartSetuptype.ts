@@ -50,4 +50,25 @@ export interface ChartOptionsIn {
     margin: Margin;
 }
 
+export interface ChartBaseSetupType {
+  svgWidth: number;
+  svgHeight: number;
+  targetID: string;
+  stockid: string;
+  margin: {
+      top: number;
+      right: number;
+      bottom: number;
+      left: number;
+      innerLeft: number;
+      innerRight: number;
+      innerBottom: number;
+      innerTop: number; // Fixed typo in the property name "innertop" -> "innerTop"
+  };
+  readonly width: number;
+  readonly height: number;
+}
+
+export type PartialChartBaseSetupType = Partial<ChartBaseSetupType>;
+
 export type CustomChartOptions = ChartOptionsIn & { [key: string]: never };
