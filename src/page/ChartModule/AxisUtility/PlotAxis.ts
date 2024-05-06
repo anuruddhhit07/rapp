@@ -10,19 +10,19 @@ import { DataToplotType } from "../types/plotConfigType";
 
 export class PlotAxis {
   private static instance: PlotAxis | null = null;
-  // type YScaleKeys = keyof typeof this.yScaleConfig;
+  private axisChart: AxisChart
   private constructor(
-    svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>) {
-    
+    svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,axisChart: AxisChart) {
+    this.axisChart=axisChart
     this.rendorXaxis(svg);
     this.rendorYaxis(svg)
   }
 
   static getInstance(
-    svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>): PlotAxis {
+    svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,axisChart: AxisChart): PlotAxis {
     if (!PlotAxis.instance) {
       PlotAxis.instance = new PlotAxis(
-        svg);
+        svg,axisChart);
     }
     return PlotAxis.instance;
   }
@@ -144,8 +144,10 @@ export class PlotAxis {
     svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>) {
     svg.selectAll(`.y-axis`).remove();
     setYaxisRatio()
-    const plotaxies = false;
-   
+    this.axisChart.setYscalefn()
+
+
+    const plotaxies = true;
     let yscaletagsarray: string[] = [];
     if (plotaxies) {
       const { yscaletags } = getUniqueScaleTags();
@@ -155,6 +157,13 @@ export class PlotAxis {
     }
 
     console.log(yscaletagsarray)
+    yscaletagsarray.map((scaletag) => {
+      let scaleconfig = Shared_Yscaleconfig[scaletag]
+      if (scaleconfig.Yscale == null) {
+            throw new Error(`Scale cannot be null for scaletag: ${scaletag}`);
+        }
+
+    })
 
 
     // yscaletagsarray.map((scaletag) => {

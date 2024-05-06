@@ -27,7 +27,7 @@ export class AxisChart {
     this.setXScaleConfig();
     this.setYScaleConfig();
     this.setXscalefn();
-    this.setYscalefn();
+    // this.setYscalefn();
   }
 
   static getInstance(): AxisChart {
@@ -305,6 +305,7 @@ export class AxisChart {
   setYscalefn() {
     const {yscaletags}=getUniqueScaleTags()
     const yscaletagsarray = yscaletags;
+    console.log("yscaletagsarray",yscaletagsarray)
 
     yscaletagsarray.map((scaletag) => {
       let scaleconfig = Shared_Yscaleconfig[scaletag];

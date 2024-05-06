@@ -32,7 +32,7 @@ class CandlestickChartTS {
     
     // setYaxisRatio()
     this.setupSVG();
-    PlotAxis.getInstance(this.svg);
+    PlotAxis.getInstance(this.svg,this.axisChart);
     // // this.svg=this.setupdata.setupSVG(this.svg)
     
     console.log(this);

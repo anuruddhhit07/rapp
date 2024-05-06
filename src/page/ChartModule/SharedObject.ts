@@ -230,3 +230,22 @@ export function setYaxisRatio(): void {
     tempcumulativeRatio += ratio;
   });
 }
+
+// export function setYcalefn(): void {
+//     const {yscaletags}=getUniqueScaleTags()
+//     const yscaletagsarray = yscaletags;
+//     console.log("yscaletagsarray",yscaletagsarray)
+
+//     yscaletagsarray.map((scaletag) => {
+//       let scaleconfig = Shared_Yscaleconfig[scaletag];
+//       if (scaleconfig.Yscale == null) {
+//         if (scaleconfig.yaxisrange!=null){
+//           console.log(scaletag,scaleconfig.yaxisrange,scaleconfig.datadomain())
+//           const Yscale =d3.scaleLinear().range(scaleconfig.yaxisrange).domain(scaleconfig.datadomain())
+//           updateYscaleconfig(scaletag,{
+//             Yscale: Yscale
+//           })
+//         }   
+//       }
+//     });
+// }
