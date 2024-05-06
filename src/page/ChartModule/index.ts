@@ -15,33 +15,75 @@ import {
   Shared_DataToplot,
   setYaxisRatio,
 } from "./SharedObject";
+import { createGroup, createGroupAdv, createRect } from "./SVG/SVGUtility";
 
 class CandlestickChartTS {
   private axisChart: AxisChart;
   private svg!: d3.Selection<SVGSVGElement, any, HTMLElement, any>;
   private axisarea!: d3.Selection<SVGGElement, any, HTMLElement, any>;
+  axisGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
+  AllGroup: d3.Selection<SVGGElement, any, HTMLElement, any>;
+  AxisXGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
+  AxisYGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   constructor(stockdata: ChartDataIN, targetID: string) {
     SetupChart.getInstance(500, 500, { targetID: targetID });
     updateChartPlotData(arrangeData(stockdata));
     this.axisChart = AxisChart.getInstance();
     PlotConfig.getInstance();
     this.setupSVG();
+    const {svgWidth,svgHeight,margin}=Shared_ChartBaseProp
+
+
+
+    this.AllGroup = createGroupAdv(this.svg, "main-border")
+    .drawBorder(0, 0, svgWidth, svgHeight, "red", 2,"blue",.2)
+
+    this.AxisXGroup = createGroupAdv(this.svg, "X-Area")
+    .translate(0,svgHeight-margin.bottom)
+    .drawBorder(0, 0,svgWidth-margin.right, margin.bottom, "red", 2,"green",.2)
+
+    this.AxisYGroup = createGroupAdv(this.svg, "Y-Area")
+    .translate(svgWidth-margin.right,0)
+    .drawBorder(0, 0,margin.right, svgHeight-margin.bottom, "red", 2,"green",.2)
+
+
+    // this.axisGroup = createGroup(this.svg);
+    PlotAxis.getInstance(this.AllGroup, this.axisChart);
+
     
-    PlotAxis.getInstance(this.axisarea,this.axisChart);
-    
-    
-    
-    console.log(this);
-    
-   
+    // this.drawBackGround();
+  }
+
+  drawBackGround() {
+    const { margin, width, height } = Shared_ChartBaseProp;
+    this.drawPlots(
+      this.AllGroup,
+      margin.left + margin.innerLeft,
+      margin.top + margin.innerTop,
+      width,
+      height
+    )
+      .attr("fill", "blue")
+      .attr("opacity", 0.1);
+  }
+
+  drawPlots(
+    svggrop: d3.Selection<SVGGElement, any, HTMLElement, any>,
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ): d3.Selection<SVGRectElement, any, HTMLElement, any> {
+    // Example: Draw a plot
+    return createRect(svggrop, x, y, width, height);
   }
 
   setupSVG() {
     const { targetID, svgWidth, svgHeight, margin, width, height } =
       Shared_ChartBaseProp;
-      // console.log(Shared_ChartBaseProp)
+    // console.log(Shared_ChartBaseProp)
     const svgElementExists: boolean = d3.select(`#svg-${targetID}`).empty();
-    console.log("svgElementExists",svgElementExists)
+    console.log("svgElementExists", svgElementExists);
     this.svg = svgElementExists
       ? d3
           .select(`#${targetID}`)
@@ -50,6 +92,14 @@ class CandlestickChartTS {
           .attr("width", svgWidth)
           .attr("height", svgHeight)
       : d3.select(`#svg-${targetID}`);
+
+    this.svg
+      .append("rect")
+      .attr("width", svgWidth)
+      .attr("height", svgHeight)
+      .style("fill", "none")
+      .style("stroke", "black")
+      .style("stroke-width", 1);
 
     this.svg
       .append("defs")
@@ -62,15 +112,17 @@ class CandlestickChartTS {
       .attr("height", height);
 
     // Return the SVG as a string
+    // let plotGroup = createGroup(this.svg);
+    // this.drawPlots(plotGroup,margin.left + margin.innerLeft,margin.top + margin.innerTop,20,50)
 
-    this.svg
-      .append("rect")
-      .attr("width", "100%")
-      .attr("height", "100%")
-      .style("fill", "lightblue")
-      .style("opacity", 0.5);
+    // this.svg
+    //   .append("rect")
+    //   .attr("width", "100%")
+    //   .attr("height", "100%")
+    //   .style("fill", "lightblue")
+    //   .style("opacity", 0.5);
 
-    this.axisarea = this.svg.append("g");
+    // this.axisarea = this.svg.append("g");
   }
 }
 
