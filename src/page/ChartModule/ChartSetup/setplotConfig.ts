@@ -53,7 +53,7 @@ export class PlotConfig {
             
           },
           {
-            plotstatus: false,
+            plotstatus: true,
             plotName: "VolumePlot",
             Ydata: "ohlc",
             Xdata:"xdata",

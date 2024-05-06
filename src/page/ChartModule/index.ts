@@ -13,6 +13,8 @@ import {
   Shared_Xscaleconfig,
   Shared_Yscaleconfig,
   Shared_DataToplot,
+  getUniqueYaxisTags,
+  getActivePlotData,
 } from "./SharedObject";
 
 class CandlestickChartTS {
@@ -32,13 +34,15 @@ class CandlestickChartTS {
     this.setupSVG();
     PlotAxis.getInstance(this.svg);
     // // this.svg=this.setupdata.setupSVG(this.svg)
-
+    
     console.log(this);
     console.log(Shared_ChartPlotData);
     console.log(Shared_ChartBaseProp);
     console.log(Shared_Xscaleconfig);
-    console.log(Shared_Yscaleconfig["OHLC"].datadomain());
+    console.log(Shared_Yscaleconfig);
     console.log(Shared_DataToplot)
+    console.log(getActivePlotData())
+    console.log(getUniqueYaxisTags())
   }
 
   setupSVG() {
