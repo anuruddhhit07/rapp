@@ -1,12 +1,12 @@
 import { AxisChart } from "../AxisUtility/AxisScale";
 import { XScaleConfigType, YScaleConfigType } from "../types/AxisScaleType";
 import { ChartDataObj } from "../types/chartdataTypes";
-import { PlotConfigItemType, PlotConfigdataType } from "../types/plotConfigType";
-import { Shared_Xscaleconfig,Shared_Yscaleconfig,Shared_ChartPlotData } from "../SharedObject";
+import { PlotConfigItemType, DataToplotType } from "../types/plotConfigType";
+import { Shared_Xscaleconfig,Shared_Yscaleconfig,Shared_ChartPlotData,updateSharedDataToplot } from "../SharedObject";
 
 export class PlotConfig {
   private static instance: PlotConfig | null = null;
-  public PlotData:PlotConfigdataType={}
+  // public PlotData:PlotConfigdataType={}
 //   public yScaleConfig: YScaleConfigType = {};
 //   public xScaleConfig: XScaleConfigType = {};
 
@@ -14,7 +14,7 @@ export class PlotConfig {
     // this.yScaleConfig=axisChart.yScaleConfig
     // this.xScaleConfig=axisChart.xScaleConfig
     // console.log("axisChart",axisChart)
-    // this.setPlot(ChartData,axisChart);
+    this.setPlot();
     
     
   }
@@ -90,7 +90,7 @@ export class PlotConfig {
         const {plotstatus,plotName,Ydata,Xdata,yscaletag,xscaletag,plottype, tagclass,linetype='solid',
         color='red',fill='none',strokewidth=2,strokedasharray='15,5'  
         }=item
-        this.PlotData[plotName]={
+        updateSharedDataToplot(plotName,{
           plotstatus: plotstatus,
             ydata: () =>  Ydata=='ohlc'?Shared_ChartPlotData:Shared_ChartPlotData[Ydata],
             xdata: () =>  Shared_ChartPlotData[Xdata],
@@ -106,25 +106,7 @@ export class PlotConfig {
             strokedasharray: strokedasharray,
             plottype: plottype,
             tagclass: tagclass,
-        }
+        })
     })
-
-    
   }
-
-  getActivePlots(): PlotConfigdataType {
-    
-    const activePlots: PlotConfigdataType = {};
-
-    for (const key in this.PlotData) {
-        if (this.PlotData.hasOwnProperty(key)) {
-            if (this.PlotData[key].plotstatus) {
-                activePlots[key] = this.PlotData[key];
-            }
-        }
-    }
-
-    return activePlots;
-}
-
 }

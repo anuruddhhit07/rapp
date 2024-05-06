@@ -6,14 +6,21 @@ import { arrangeData } from "./dataUtility/arrangeData";
 import { ChartOptions, Margin } from "./types/chartSetuptype";
 import { ChartDataIN, ChartDataObj } from "./types/chartdataTypes";
 import * as d3 from "d3";
-import { Shared_ChartPlotData, updateChartPlotData,Shared_ChartBaseProp,Shared_Xscaleconfig, Shared_Yscaleconfig } from "./SharedObject";
+import {
+  Shared_ChartPlotData,
+  updateChartPlotData,
+  Shared_ChartBaseProp,
+  Shared_Xscaleconfig,
+  Shared_Yscaleconfig,
+  Shared_DataToplot,
+} from "./SharedObject";
 
 class CandlestickChartTS {
-//   private chartdata: ChartDataObj;
+  //   private chartdata: ChartDataObj;
   private setupdata: SetupChart;
   private axisChart: AxisChart;
   private PlotDataConfig: PlotConfig;
-  private svg! : d3.Selection<SVGSVGElement, any, HTMLElement, any>
+  private svg!: d3.Selection<SVGSVGElement, any, HTMLElement, any>;
   private axisarea!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   // private margin: Margin
   constructor(stockdata: ChartDataIN, targetID: string) {
@@ -22,30 +29,30 @@ class CandlestickChartTS {
     this.axisChart = AxisChart.getInstance();
     this.PlotDataConfig = PlotConfig.getInstance();
 
-
     this.setupSVG();
-    PlotAxis.getInstance(this.svg,this.PlotDataConfig)
+    PlotAxis.getInstance(this.svg);
     // // this.svg=this.setupdata.setupSVG(this.svg)
 
     console.log(this);
-    console.log(Shared_ChartPlotData)
-    console.log(Shared_ChartBaseProp)
-    console.log(Shared_Xscaleconfig)
-    console.log(Shared_Yscaleconfig["OHLC"].datadomain())
+    console.log(Shared_ChartPlotData);
+    console.log(Shared_ChartBaseProp);
+    console.log(Shared_Xscaleconfig);
+    console.log(Shared_Yscaleconfig["OHLC"].datadomain());
+    console.log(Shared_DataToplot)
   }
 
   setupSVG() {
-    const {targetID,svgWidth,svgHeight,margin,width,height}=Shared_ChartBaseProp
+    const { targetID, svgWidth, svgHeight, margin, width, height } =
+      Shared_ChartBaseProp;
     const svgElementExists: boolean = d3.select(`#svg-${targetID}`).empty();
-    this.svg =
-      svgElementExists
-        ? d3
-            .select(`#${targetID}`)
-            .append("svg")
-            .attr("id", `svg-${targetID}`)
-            .attr("width", svgWidth)
-            .attr("height", svgHeight)
-        : d3.select(`#svg-${targetID}`);
+    this.svg = svgElementExists
+      ? d3
+          .select(`#${targetID}`)
+          .append("svg")
+          .attr("id", `svg-${targetID}`)
+          .attr("width", svgWidth)
+          .attr("height", svgHeight)
+      : d3.select(`#svg-${targetID}`);
 
     this.svg
       .append("defs")
@@ -66,7 +73,7 @@ class CandlestickChartTS {
       .style("fill", "lightblue")
       .style("opacity", 0.5);
 
-      this.axisarea = this.svg.append("g");
+    this.axisarea = this.svg.append("g");
   }
 }
 

@@ -2,6 +2,7 @@ import { defaultChartBaseProp } from "./SharedDefaultValue";
 import { XScaleConfigType, XscaleItemProp, YScaleConfigType, YscaleItemProp } from "./types/AxisScaleType";
 import { ChartBaseSetupType } from "./types/chartSetuptype";
 import { ChartDataObj } from "./types/chartdataTypes";
+import { DataToplotObjType, DataToplotType } from "./types/plotConfigType";
 
 export let Shared_ChartPlotData: ChartDataObj = {
     timestamp: [],
@@ -18,6 +19,8 @@ export let Shared_ChartBaseProp:ChartBaseSetupType=defaultChartBaseProp
 
 export let Shared_Xscaleconfig:XScaleConfigType={}
 export let Shared_Yscaleconfig:YScaleConfigType={}
+
+export let Shared_DataToplot:DataToplotType={}
 
 export function updateChartPlotData(data: ChartDataObj) {
     Shared_ChartPlotData = data;
@@ -74,3 +77,47 @@ export function updateYscaleconfig(key: string, partialData: Partial<YscaleItemP
         };
     }
 }
+
+export function updateSharedDataToplot(key: string, partialData: Partial<DataToplotObjType>): void {
+    // Check if the key already exists in Shared_DataToplot
+    if (Shared_DataToplot.hasOwnProperty(key)) {
+        // Merge the partial data with the existing DataToplotObjType object
+        Shared_DataToplot[key] = { ...Shared_DataToplot[key], ...partialData };
+    } else {
+        // If the key does not exist, create a new DataToplotObjType object with the provided data
+        Shared_DataToplot[key] = {
+            plotstatus: false,
+            xdata: () => [],
+            ydata: () => [],
+            linetype: "solid",
+            color: 'black',
+            fill: "none",
+            strokewidth: 1,
+            strokedasharray: "",
+            yscaletag: "",
+            xscaletag: "",
+            plottype: "ohlc",
+            tagclass: "",
+            ...partialData // Merge with provided partial data
+        };
+    }
+}
+
+export function getActivePlotData(): DataToplotType {
+    const activePlotData: DataToplotType = {};
+
+    // Iterate through each entry in Shared_DataToplot
+    for (const key in Shared_DataToplot) {
+        if (Shared_DataToplot.hasOwnProperty(key)) {
+            const plotConfig = Shared_DataToplot[key];
+
+            // Check if plotstatus is true
+            if (plotConfig.plotstatus) {
+                activePlotData[key] = plotConfig; // Add to activePlotData
+            }
+        }
+    }
+
+    return activePlotData;
+}
+

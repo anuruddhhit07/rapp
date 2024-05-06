@@ -1,32 +1,32 @@
 import * as d3 from "d3";
 import { PlotConfig } from "../ChartSetup/setplotConfig";
 import { XScaleConfigType, XscaleItemProp } from "../types/AxisScaleType";
-import { PlotConfigdataType } from "../types/plotConfigType";
 import { AxisChart } from "./AxisScale";
 import { multiFormat } from "../dataUtility/dateFormat";
 import { ChartDataObj } from "../types/chartdataTypes";
 import { error } from "console";
-import { Shared_ChartPlotData, Shared_Xscaleconfig } from "../SharedObject";
+import { Shared_ChartPlotData, Shared_Xscaleconfig, getActivePlotData } from "../SharedObject";
+import { DataToplotType } from "../types/plotConfigType";
 
 export class PlotAxis {
   private static instance: PlotAxis | null = null;
   // type YScaleKeys = keyof typeof this.yScaleConfig;
   private constructor(
-    svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,PlotDataConfig:PlotConfig) {
+    svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>) {
     
-    this.rendorXaxis(svg,PlotDataConfig);
+    this.rendorXaxis(svg);
   }
 
   static getInstance(
-    svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,PlotDataConfig:PlotConfig): PlotAxis {
+    svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>): PlotAxis {
     if (!PlotAxis.instance) {
       PlotAxis.instance = new PlotAxis(
-        svg,PlotDataConfig);
+        svg);
     }
     return PlotAxis.instance;
   }
 
-  getUniqueScaleTags(activePlots: PlotConfigdataType): {
+  getUniqueScaleTags(activePlots: DataToplotType): {
     yscaletags: string[];
     xscaletags: string[];
   } {
@@ -130,7 +130,7 @@ export class PlotAxis {
   }
 
   rendorXaxis(
-    svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,PlotDataConfig:PlotConfig) {
+    svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>) {
     svg.selectAll(`.x-axis`).remove();
 
     const plotaxies = false;
@@ -138,7 +138,7 @@ export class PlotAxis {
     let xscaletagsarray: string[] = [];
 
     if (plotaxies) {
-      const activePlots = PlotDataConfig.getActivePlots();
+      const activePlots = getActivePlotData();
       const { yscaletags, xscaletags } = this.getUniqueScaleTags(activePlots);
       yscaletagsarray = yscaletags;
       xscaletagsarray = xscaletags;

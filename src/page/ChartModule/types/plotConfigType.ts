@@ -3,7 +3,7 @@ import { ChartDataObj } from "./chartdataTypes";
 
 
 
-export interface PlotConfigType {
+export interface DataToplotObjType {
     plotstatus: boolean; // Adjust the type according to the type of this.cdbutton
     xdata: () => number[] | number[][];
     ydata: () => number[] ; // Adjust the type according to the type of this.dataset
@@ -21,8 +21,8 @@ export interface PlotConfigType {
     tagclass: string;
 }
 
-export interface PlotConfigdataType {
-    [key: string]: PlotConfigType
+export interface DataToplotType {
+    [key: string]: DataToplotObjType
 }
 
 export interface PlotConfigItemType<> {
