@@ -36,8 +36,8 @@ export interface xAxisItemType<T extends keyof ChartDataObj = keyof ChartDataObj
 export interface YscaleItemProp {
     // Define properties for each configuration
     plotstatus:boolean;
-    yaxisnumer:number;
-    yaxistag: string;
+    yaxistag:string;
+    yscaletag: string;
     xpoint: number;
     scaleSide: string;
     ypadding: () => number;
@@ -57,8 +57,8 @@ export interface YScaleConfigType {
 
 export interface yAxisItemType<T extends keyof ChartDataObj = keyof ChartDataObj> {
     plotstatus: boolean;
-    yscaleName: string;
-    yaxisnumer:number;
+    yscaletag: string;
+    yaxistag:string;
     x_point: number;
     xaxisdataTag:keyof ChartDataObj;  // for auto yvalue change on zooming based on min and max data in xdata range
     scaleSide:'Right'|'Left';

@@ -5,7 +5,7 @@ import { AxisChart } from "./AxisScale";
 import { multiFormat } from "../dataUtility/dateFormat";
 import { ChartDataObj } from "../types/chartdataTypes";
 import { error } from "console";
-import { Shared_ChartPlotData, Shared_Xscaleconfig, getActivePlotData } from "../SharedObject";
+import { Shared_ChartPlotData, Shared_Xscaleconfig, getActivePlotData, getUniqueScaleTags } from "../SharedObject";
 import { DataToplotType } from "../types/plotConfigType";
 
 export class PlotAxis {
@@ -26,25 +26,7 @@ export class PlotAxis {
     return PlotAxis.instance;
   }
 
-  getUniqueScaleTags(activePlots: DataToplotType): {
-    yscaletags: string[];
-    xscaletags: string[];
-  } {
-    const yscaletagsSet = new Set<string>();
-    const xscaletagsSet = new Set<string>();
-
-    for (const key in activePlots) {
-      if (activePlots.hasOwnProperty(key)) {
-        yscaletagsSet.add(activePlots[key].yscaletag);
-        xscaletagsSet.add(activePlots[key].xscaletag);
-      }
-    }
-
-    const yscaletags = Array.from(yscaletagsSet);
-    const xscaletags = Array.from(xscaletagsSet);
-
-    return { yscaletags, xscaletags };
-  }
+ 
 
   custumticformat(
     i: d3.NumberValue,
@@ -138,8 +120,7 @@ export class PlotAxis {
     let xscaletagsarray: string[] = [];
 
     if (plotaxies) {
-      const activePlots = getActivePlotData();
-      const { yscaletags, xscaletags } = this.getUniqueScaleTags(activePlots);
+      const { yscaletags, xscaletags } = getUniqueScaleTags();
       yscaletagsarray = yscaletags;
       xscaletagsarray = xscaletags;
     } else {

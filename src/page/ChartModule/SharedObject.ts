@@ -60,8 +60,8 @@ export function updateYscaleconfig(key: string, partialData: Partial<YscaleItemP
         // If the key does not exist, create a new YscaleItemProp object with the provided data
         Shared_Yscaleconfig[key] = {
             plotstatus: false,
-            yaxisnumer: 0,
-            yaxistag: '',
+            yaxistag:"mainyaxis",
+            yscaletag: "TR",
             xpoint: 0,
             scaleSide: '',
             ypadding: () => 0,
@@ -120,4 +120,25 @@ export function getActivePlotData(): DataToplotType {
 
     return activePlotData;
 }
+
+export function getUniqueScaleTags():{
+    yscaletags: string[];
+    xscaletags: string[];
+  } {
+    const activePlots=getActivePlotData()
+    const yscaletagsSet = new Set<string>();
+    const xscaletagsSet = new Set<string>();
+
+    for (const key in activePlots) {
+      if (activePlots.hasOwnProperty(key)) {
+        yscaletagsSet.add(activePlots[key].yscaletag);
+        xscaletagsSet.add(activePlots[key].xscaletag);
+      }
+    }
+
+    const yscaletags = Array.from(yscaletagsSet);
+    const xscaletags = Array.from(xscaletagsSet);
+
+    return { yscaletags, xscaletags };
+  }
 

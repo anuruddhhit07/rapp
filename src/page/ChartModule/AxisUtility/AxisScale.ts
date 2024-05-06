@@ -116,25 +116,25 @@ export class AxisChart {
     const YscaleConfigDefault: yAxisItemType[] = [
       {
         plotstatus: true,
-        yscaleName: "OHLC",
+        yscaletag: "OHLC",
         xaxisdataTag: "xindex",
         scaleSide: "Right",
         x_point: svgWidth - margin.right,
         changeRangeTag: true,
         highestYDataTag: "high",
         lowestYDataTag: "low",
-        yaxisnumer: 1,
+        yaxistag: "mainyaxis",
       },
       {
         plotstatus: true,
-        yscaleName: "BR",
+        yscaletag: "BR",
         xaxisdataTag: "xindex",
         scaleSide: "Right",
         x_point: 50,
         changeRangeTag: true,
         highestYDataTag: "high",
         lowestYDataTag: "low",
-        yaxisnumer: 2,
+        yaxistag: "second",
       },
     ];
 
@@ -146,8 +146,8 @@ export class AxisChart {
 
     yscaleconfigdata.forEach((item) => {
       const {
-        yscaleName,
-        yaxisnumer,
+        yscaletag,
+        yaxistag,
         plotstatus,
         x_point,
         scaleSide,
@@ -156,10 +156,10 @@ export class AxisChart {
         highestYDataTag,
         lowestYDataTag,
       } = item;
-      updateYscaleconfig(yscaleName, {
+      updateYscaleconfig(yscaletag, {
         plotstatus: plotstatus,
-        yaxistag: yscaleName,
-        yaxisnumer: yaxisnumer,
+        yaxistag: yaxistag,
+        yscaletag: yscaletag,
         xpoint: x_point, // Example value, replace with actual values
         scaleSide: scaleSide,
         ypadding: () => 0.1,
