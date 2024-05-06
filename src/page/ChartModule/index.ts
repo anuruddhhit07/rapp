@@ -17,31 +17,22 @@ import {
 } from "./SharedObject";
 
 class CandlestickChartTS {
-  //   private chartdata: ChartDataObj;
-  private setupdata: SetupChart;
   private axisChart: AxisChart;
-  private PlotDataConfig: PlotConfig;
   private svg!: d3.Selection<SVGSVGElement, any, HTMLElement, any>;
   private axisarea!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   constructor(stockdata: ChartDataIN, targetID: string) {
-    this.setupdata = SetupChart.getInstance(500, 500, { targetID: targetID });
+    SetupChart.getInstance(500, 500, { targetID: targetID });
     updateChartPlotData(arrangeData(stockdata));
     this.axisChart = AxisChart.getInstance();
-    this.PlotDataConfig = PlotConfig.getInstance();
-    
-    // setYaxisRatio()
+    PlotConfig.getInstance();
     this.setupSVG();
-    this.axisarea=this.svg.append('g')
-    const plotAxisobj:PlotAxis=PlotAxis.getInstance(this.axisarea,this.axisChart);
-    // this.axisarea=plotAxisobj.axisarea
+    
+    PlotAxis.getInstance(this.axisarea,this.axisChart);
+    
     
     
     console.log(this);
-    // console.log(Shared_ChartPlotData);
-    // console.log(Shared_ChartBaseProp);
-    // console.log(Shared_Xscaleconfig);
-    // console.log(Shared_Yscaleconfig);
-    // console.log(Shared_DataToplot)
+    
    
   }
 
@@ -79,7 +70,7 @@ class CandlestickChartTS {
       .style("fill", "lightblue")
       .style("opacity", 0.5);
 
-    // this.axisarea = this.svg.append("g");
+    this.axisarea = this.svg.append("g");
   }
 }
 
