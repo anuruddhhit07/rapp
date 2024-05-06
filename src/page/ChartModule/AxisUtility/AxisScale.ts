@@ -13,6 +13,7 @@ import {
   Shared_ChartPlotData,
   Shared_Xscaleconfig,
   Shared_Yscaleconfig,
+  getUniqueScaleTags,
   updateXscaleconfig,
   updateYscaleconfig,
 } from "../SharedObject";
@@ -26,7 +27,7 @@ export class AxisChart {
     this.setXScaleConfig();
     this.setYScaleConfig();
     this.setXscalefn();
-    // this.setYscalefn();
+    this.setYscalefn();
   }
 
   static getInstance(): AxisChart {
@@ -124,6 +125,7 @@ export class AxisChart {
         highestYDataTag: "high",
         lowestYDataTag: "low",
         yaxistag: "mainyaxis",
+        yaxisratio:null
       },
       {
         plotstatus: true,
@@ -135,6 +137,19 @@ export class AxisChart {
         highestYDataTag: "high",
         lowestYDataTag: "low",
         yaxistag: "second",
+        yaxisratio:null
+      },
+      {
+        plotstatus: true,
+        yscaletag: "TL",
+        xaxisdataTag: "xindex",
+        scaleSide: "Right",
+        x_point: 10,
+        changeRangeTag: true,
+        highestYDataTag: "high",
+        lowestYDataTag: "close",
+        yaxistag: "mainyaxis",
+        yaxisratio:null
       },
     ];
 
@@ -282,20 +297,27 @@ export class AxisChart {
           updateXscaleconfig(scaletag,{
             Xscale: Xscale
           })
-        // scaleconfig = this.updateXscaleConfig(scaleconfig, "Xscale", Xscale);
-
-        // scaleconfig = {
-        //   ...scaleconfig,
-        //   Xscale: Xscale,
-        // };
-        // this.xScaleConfig[scaletag]=scaleconfig
-        // Shared_Xscaleconfig[scaletag].Xscale = Xscale;
+        
       }
     });
   }
 
   setYscalefn() {
-    const yscaletagsarray = Object.keys(Shared_Yscaleconfig);
-    console.log("yscaletagsarray", yscaletagsarray);
+    const {yscaletags}=getUniqueScaleTags()
+    const yscaletagsarray = yscaletags;
+
+    yscaletagsarray.map((scaletag) => {
+      let scaleconfig = Shared_Yscaleconfig[scaletag];
+      if (scaleconfig.Yscale == null) {
+        if (scaleconfig.yaxisrange!=null){
+          console.log(scaletag,scaleconfig.yaxisrange,scaleconfig.datadomain())
+          const Yscale =d3.scaleLinear().range(scaleconfig.yaxisrange).domain(scaleconfig.datadomain())
+          updateYscaleconfig(scaletag,{
+            Yscale: Yscale
+          })
+        }   
+      }
+    });
   }
+
 }

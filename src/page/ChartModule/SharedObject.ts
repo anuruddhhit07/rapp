@@ -77,6 +77,8 @@ export function updateYscaleconfig(
     Shared_Yscaleconfig[key] = {
       plotstatus: false,
       yaxistag: "mainyaxis",
+      yaxisratio: null,
+      yaxisrange:null,
       yscaletag: "TR",
       xpoint: 0,
       scaleSide: "",
@@ -89,6 +91,7 @@ export function updateYscaleconfig(
       maxscaledata: () => 0,
       minscaledata: () => 0,
       datadomain: () => [0, 0],
+      Yscale: null,
       ...partialData, // Merge with provided partial data
     };
   }
@@ -162,18 +165,68 @@ export function getUniqueScaleTags(): {
 }
 
 export function getUniqueYaxisTags(): {
-    yaxistags: string[];
-    uniqueaxis:number
-  } {
-    const activePlots = getActivePlotData();
-    const yaxistagtagsSet = new Set<string>();
-    for (const key in activePlots) {
-      if (activePlots.hasOwnProperty(key)) {
-        yaxistagtagsSet.add(Shared_Yscaleconfig[activePlots[key].yscaletag].yaxistag);
-      }
+  yaxistags: string[];
+  uniqueaxis: number;
+} {
+  const activePlots = getActivePlotData();
+  const yaxistagtagsSet = new Set<string>();
+  for (const key in activePlots) {
+    if (activePlots.hasOwnProperty(key)) {
+      yaxistagtagsSet.add(
+        Shared_Yscaleconfig[activePlots[key].yscaletag].yaxistag
+      );
     }
-    const yaxistags = Array.from(yaxistagtagsSet);
-    return { yaxistags,uniqueaxis:yaxistags.length };
+  }
+  const yaxistags = Array.from(yaxistagtagsSet);
+  return { yaxistags, uniqueaxis: yaxistags.length };
+}
+
+export function updateYScaleConfigByKey(
+  keyName: keyof YscaleItemProp,
+  value: string,
+  partialData: Partial<YscaleItemProp>
+): void {
+  // Filter YScaleConfigType entries based on the provided key and value
+  const yScaleConfigEntries = Object.entries(Shared_Yscaleconfig).filter(
+    ([_, config]) => config[keyName] === value
+  );
+
+  // Update specified properties for each group
+  yScaleConfigEntries.forEach(([key, config]) => {
+    Shared_Yscaleconfig[key] = { ...config, ...partialData };
+  });
+}
+
+export function setYaxisRatio(): void {
+  const { yaxistags } = getUniqueYaxisTags();
+  // console.log("yaxistags",yaxistags)
+
+  const totalHeight = Shared_ChartBaseProp.height;
+
+  const ratioIncrement = 1 / yaxistags.length;
+  let ratioarray: number[];
+  if (yaxistags.length == 2) {
+    ratioarray = [0.7, 0.3];
+  }
+  if (yaxistags.length == 3) {
+    ratioarray = [0.6, 0.2, 0.2];
   }
 
+  // const yaxisratioObj: { [key: string]: number } = {};
+  let tempcumulativeRatio = 0;
+  yaxistags.forEach((yaxistag, index) => {
+    const ratio =
+      ratioarray && ratioarray.length > 0 ? ratioarray[index] : ratioIncrement;
+    // console.log("ratio",ratio)
+    // console.log("yaxistags",yaxistag)
+    // yaxisratioObj[yaxistag] = ratio;
 
+    const startY =
+      Shared_ChartBaseProp.margin.top +
+      Shared_ChartBaseProp.margin.innerTop +
+      totalHeight * tempcumulativeRatio;
+      const endY = startY + (totalHeight * ratio)
+    updateYScaleConfigByKey("yaxistag", yaxistag, {yaxisrange:[endY, startY], yaxisratio: ratio });
+    tempcumulativeRatio += ratio;
+  });
+}

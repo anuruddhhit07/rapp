@@ -688,6 +688,10 @@ function generateYAxisConfig(filteredYconfig) {
   if (uniqueArray.length == 3) {
     ratioarray = [0.6, 0.2, 0.2];
   }
+  if (uniqueArray.length == 4) {
+    ratioarray = [0.5, 0.2, 0.2,0.1];
+  }
+
   // console.log(ratioarray);
 
   // Iterate over each yaxistag in filteredYconfig

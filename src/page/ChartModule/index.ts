@@ -13,8 +13,7 @@ import {
   Shared_Xscaleconfig,
   Shared_Yscaleconfig,
   Shared_DataToplot,
-  getUniqueYaxisTags,
-  getActivePlotData,
+  setYaxisRatio,
 } from "./SharedObject";
 
 class CandlestickChartTS {
@@ -30,7 +29,8 @@ class CandlestickChartTS {
     updateChartPlotData(arrangeData(stockdata));
     this.axisChart = AxisChart.getInstance();
     this.PlotDataConfig = PlotConfig.getInstance();
-
+    
+    // setYaxisRatio()
     this.setupSVG();
     PlotAxis.getInstance(this.svg);
     // // this.svg=this.setupdata.setupSVG(this.svg)
@@ -41,8 +41,7 @@ class CandlestickChartTS {
     console.log(Shared_Xscaleconfig);
     console.log(Shared_Yscaleconfig);
     console.log(Shared_DataToplot)
-    console.log(getActivePlotData())
-    console.log(getUniqueYaxisTags())
+   
   }
 
   setupSVG() {

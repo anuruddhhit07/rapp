@@ -31,12 +31,15 @@ export interface xAxisItemType<T extends keyof ChartDataObj = keyof ChartDataObj
     ticlavelmappedwith: keyof ChartDataObj;
     scaleSide:'Top'|'Bottom';
     
+    
 }
 
 export interface YscaleItemProp {
     // Define properties for each configuration
     plotstatus:boolean;
     yaxistag:string;
+    yaxisratio:number|null
+    yaxisrange:[number,number] | null
     yscaletag: string;
     xpoint: number;
     scaleSide: string;
@@ -49,6 +52,7 @@ export interface YscaleItemProp {
     maxscaledata: () => number;
     minscaledata: () => number;
     datadomain: () => [number, number];
+    Yscale: ScaleLinear<number, number> | ScaleTime<number, number> | ScaleBand<string> |null
 };
 
 export interface YScaleConfigType {
@@ -59,6 +63,7 @@ export interface yAxisItemType<T extends keyof ChartDataObj = keyof ChartDataObj
     plotstatus: boolean;
     yscaletag: string;
     yaxistag:string;
+    yaxisratio:number|null;
     x_point: number;
     xaxisdataTag:keyof ChartDataObj;  // for auto yvalue change on zooming based on min and max data in xdata range
     scaleSide:'Right'|'Left';

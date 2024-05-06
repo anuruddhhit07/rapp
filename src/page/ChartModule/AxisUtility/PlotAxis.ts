@@ -5,7 +5,7 @@ import { AxisChart } from "./AxisScale";
 import { multiFormat } from "../dataUtility/dateFormat";
 import { ChartDataObj } from "../types/chartdataTypes";
 import { error } from "console";
-import { Shared_ChartPlotData, Shared_Xscaleconfig, getActivePlotData, getUniqueScaleTags } from "../SharedObject";
+import { Shared_ChartPlotData, Shared_Xscaleconfig, Shared_Yscaleconfig, getActivePlotData, getUniqueScaleTags, setYaxisRatio } from "../SharedObject";
 import { DataToplotType } from "../types/plotConfigType";
 
 export class PlotAxis {
@@ -15,6 +15,7 @@ export class PlotAxis {
     svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>) {
     
     this.rendorXaxis(svg);
+    this.rendorYaxis(svg)
   }
 
   static getInstance(
@@ -94,27 +95,13 @@ export class PlotAxis {
       Pick<XScaleConfigType[string], "scaleSide" | "ticlavelmappedwith">
     > = { scaleSide: "Bottom", ticlavelmappedwith: "xindex" }
   ) {
-    // console.log(yAxisObject);
-    // let axisGenerator;
-    // if (yAxisObject.scaleSide == "Left") {
-    //   axisGenerator = d3.axisLeft(yScale);
-    // } else {
-    //   axisGenerator = d3.axisRight(yScale);
-    // }
-    // const [start, end] = d3.extent(yScale.range());
-    // const pxPerTick = 40;
-    // const tickCount = Math.ceil((end - start) / pxPerTick);
-    // if (yscaletag == "BR") {
-    //   return axisGenerator.ticks(tickCount).tickFormat((d) => formatVolume(d));
-    // } else {
-    //   return axisGenerator.ticks(tickCount);
-    // }
+   
   }
 
   rendorXaxis(
     svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>) {
     svg.selectAll(`.x-axis`).remove();
-
+    
     const plotaxies = false;
     let yscaletagsarray: string[];
     let xscaletagsarray: string[] = [];
@@ -150,15 +137,49 @@ export class PlotAxis {
       // .style("display", plotaxis ? "block" : "none");
     });
   }
-  rendorYaxis(
-    svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,
-    axisChart: AxisChart,
-    PlotDataConfig: PlotConfig
-  ) {
-    svg.selectAll(`.axis`).remove();
+  setYscale(){
 
+  }
+  rendorYaxis(
+    svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>) {
+    svg.selectAll(`.y-axis`).remove();
+    setYaxisRatio()
     const plotaxies = false;
-    let yscaletagsarray: string[];
-    let xscaletagsarray: string[] = [];
+   
+    let yscaletagsarray: string[] = [];
+    if (plotaxies) {
+      const { yscaletags } = getUniqueScaleTags();
+      yscaletagsarray = yscaletags;
+    } else {
+      yscaletagsarray = Object.keys(Shared_Yscaleconfig);
+    }
+
+    console.log(yscaletagsarray)
+
+
+    // yscaletagsarray.map((scaletag) => {
+    //   let scaleconfig = Shared_Xscaleconfig[scaletag];
+    //   if (scaleconfig.Xscale == null) {
+    //     throw new Error(`Scale cannot be null for scaletag: ${scaletag}`);
+    //   }
+    //    svg
+    //     .append("g")
+    //     .attr("class", `axis x-axis x-axis-${scaleconfig.xscaleName}`)
+    //     .attr("transform", `translate(${0},${scaleconfig.y_point})`)
+    //     .call(
+    //       this.xaxisgenerator(
+    //         scaleconfig.Xscale as
+    //           | d3.ScaleLinear<number, number>
+    //           | d3.ScaleTime<number, number>,
+    //         {
+    //           scaleSide: scaleconfig.scaleSide,
+    //           ticlavelmappedwith: scaleconfig.ticlavelmappedwith,
+    //         }
+    //       )
+    //     );
+    //   // .style("display", plotaxis ? "block" : "none");
+    // });
+
+   
   }
 }
