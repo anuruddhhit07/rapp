@@ -24,7 +24,7 @@ export class PlotAxis {
   private axisChart: AxisChart;
   // public axisarea: d3.Selection<SVGGElement, any, HTMLElement, any>;
   private constructor(
-    axisarea:d3.Selection<SVGGElement, any, HTMLElement, any>,
+    axisarea: d3.Selection<SVGGElement, any, HTMLElement, any>,
     axisChart: AxisChart
   ) {
     this.axisChart = axisChart;
@@ -34,7 +34,7 @@ export class PlotAxis {
   }
 
   static getInstance(
-    axisarea:d3.Selection<SVGGElement, any, HTMLElement, any>,
+    axisarea: d3.Selection<SVGGElement, any, HTMLElement, any>,
     axisChart: AxisChart
   ): PlotAxis {
     if (!PlotAxis.instance) {
@@ -179,7 +179,7 @@ export class PlotAxis {
       // .style("display", plotaxis ? "block" : "none");
     });
   }
-  setYscale() {}
+
   rendorYaxis(axisarea: d3.Selection<SVGGElement, any, HTMLElement, any>) {
     axisarea.selectAll(`.y-axis`).remove();
     setYaxisRatio();
@@ -213,28 +213,42 @@ export class PlotAxis {
           )
         );
     });
+  }
 
-    // yscaletagsarray.map((scaletag) => {
-    //   let scaleconfig = Shared_Xscaleconfig[scaletag];
-    //   if (scaleconfig.Xscale == null) {
-    //     throw new Error(`Scale cannot be null for scaletag: ${scaletag}`);
-    //   }
-    //    svg
-    //     .append("g")
-    //     .attr("class", `axis x-axis x-axis-${scaleconfig.xscaleName}`)
-    //     .attr("transform", `translate(${0},${scaleconfig.y_point})`)
-    //     .call(
-    //       this.xaxisgenerator(
-    //         scaleconfig.Xscale as
-    //           | d3.ScaleLinear<number, number>
-    //           | d3.ScaleTime<number, number>,
-    //         {
-    //           scaleSide: scaleconfig.scaleSide,
-    //           ticlavelmappedwith: scaleconfig.ticlavelmappedwith,
-    //         }
-    //       )
-    //     );
-    //   // .style("display", plotaxis ? "block" : "none");
-    // });
+  updateXaxis(
+    axisarea: d3.Selection<SVGGElement, any, HTMLElement, any>,
+    currentTransformX: any
+  ) {
+    //axisarea.selectAll(`.x-axis`).remove();
+
+    const plotaxies = false;
+    let xscaletagsarray: string[] = [];
+
+    xscaletagsarray = Object.keys(Shared_Xscaleconfig);
+
+    xscaletagsarray.map((scaletag) => {
+      let scaleconfig = Shared_Xscaleconfig[scaletag];
+      if (scaleconfig.Xscale == null) {
+        throw new Error(`Scale cannot be null for scaletag: ${scaletag}`);
+      }
+
+      let currentxscale = currentTransformX.rescaleX(scaleconfig.Xscale) as
+        | d3.ScaleLinear<number, number>
+        | d3.ScaleTime<number, number>;
+
+      axisarea.selectAll(`.x-axis-${scaleconfig.xscaleName}`).call(
+        this.xaxisgenerator(
+          currentxscale as
+            | d3.ScaleLinear<number, number>
+            | d3.ScaleTime<number, number>,
+          {
+            scaleSide: scaleconfig.scaleSide,
+            ticlavelmappedwith: scaleconfig.ticlavelmappedwith,
+          }
+        ) as any
+      );
+
+    
+    });
   }
 }

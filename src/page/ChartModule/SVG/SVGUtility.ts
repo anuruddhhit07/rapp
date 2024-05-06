@@ -1,7 +1,7 @@
 // SVGUtility.ts
 
 import * as d3 from "d3";
-import { BaseType } from "d3";
+import { BaseType, groups, index } from "d3";
 
 declare module "d3" {
   interface Selection<
@@ -22,7 +22,11 @@ declare module "d3" {
     ): this;
     importData(data: any[]): this;
     translate(x: number, y: number):this
-    // Add other custom methods as needed
+    onEvent1(
+        eventName: string,
+        eventHandler: (this: SVGGElement, event: any, d: any) => void
+      ): this;
+    //   onCall(func: Function): this;
   }
 }
 
@@ -80,8 +84,23 @@ export function createGroupAdv(
       this.attr("transform", `translate(${x},${y})`);
       return this; // Return the group selection for chaining
     };
+
+    
+    group.onEvent1 = function (
+        eventName: string,
+        eventHandler: (this: SVGGElement, event: any, d: any) => void // Adjust the listener function signature
+    ) {
+        this.on(eventName, function(this: SVGGElement, event, d) { // Adjust the listener function parameters
+            return eventHandler.call(this, event, d); // Call the event handler with the correct parameters
+        });
+        return this; // Return the group selection for chaining
+    };
+
+    // group.onCall = function (func: Function) {
+    //     func.call(this); // Call the external function in the context of the group
+    //     return this; // Return the group selection for chaining
+    // };
   
-    // Add other methods as needed
   
     return group;
   }

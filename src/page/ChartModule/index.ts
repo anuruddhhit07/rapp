@@ -25,6 +25,8 @@ class CandlestickChartTS {
   AllGroup: d3.Selection<SVGGElement, any, HTMLElement, any>;
   AxisXGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   AxisYGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
+  plotaxis: PlotAxis;
+  
   constructor(stockdata: ChartDataIN, targetID: string) {
     SetupChart.getInstance(500, 500, { targetID: targetID });
     updateChartPlotData(arrangeData(stockdata));
@@ -37,22 +39,68 @@ class CandlestickChartTS {
 
     this.AllGroup = createGroupAdv(this.svg, "main-border")
     .drawBorder(0, 0, svgWidth, svgHeight, "red", 2,"blue",.2)
+    .onEvent1("mousemove", (event) => {
+      this.mousefunction(event)
+     })
 
     this.AxisXGroup = createGroupAdv(this.svg, "X-Area")
     .translate(0,svgHeight-margin.bottom)
     .drawBorder(0, 0,svgWidth-margin.right, margin.bottom, "red", 2,"green",.2)
+    .call(this.zoomX as any)
+    
 
     this.AxisYGroup = createGroupAdv(this.svg, "Y-Area")
     .translate(svgWidth-margin.right,0)
     .drawBorder(0, 0,margin.right, svgHeight-margin.bottom, "red", 2,"green",.2)
-
-
-    // this.axisGroup = createGroup(this.svg);
-    PlotAxis.getInstance(this.AllGroup, this.axisChart);
+    .onEvent1("click", (event) => {
+     this.dbclickedfunction(event)
+    })
 
     
-    // this.drawBackGround();
+
+    // this.AxisXGroup.call(this.zoomX as any);
+
+
+    this.plotaxis=PlotAxis.getInstance(this.AllGroup, this.axisChart);
+
+    
+   
   }
+
+  zoomX = d3
+      .zoom()
+      .scaleExtent([0.5, 10])
+      .translateExtent([
+        [-Shared_ChartBaseProp.width / 2, -Shared_ChartBaseProp.height / 2],
+        [Shared_ChartBaseProp.width + Shared_ChartBaseProp.width / 2, Shared_ChartBaseProp.height],
+      ])
+      .extent([
+        [0, 0],
+        [Shared_ChartBaseProp.width, Shared_ChartBaseProp.height],
+      ])
+      .on("zoom", this.zoomedX);
+
+  zoomedX(event:any){
+    console.log(event)
+    // const transform = event.transform;
+    const [x, y] = d3.pointer(event);
+    const currentTransformX = event.transform;
+    console.log(`Group zoom! at zoomxgroup:${x},y:${y},transform:${currentTransformX} `);
+    this.plotaxis.updateXaxis(this.AllGroup,currentTransformX)
+  }
+
+
+  dbclickedfunction(event:any){
+    console.log(this)
+    const [x, y] = d3.pointer(event,this.AllGroup);
+    console.log(`Group clicked! at dbclickedfunctionx:${x},y:${y} `);
+  }
+
+  mousefunction(event:any){
+    const [x, y] = d3.pointer(event);
+    console.log(`Group mousemove! at mousefunction:${x},y:${y} `);
+  }
+
 
   drawBackGround() {
     const { margin, width, height } = Shared_ChartBaseProp;
