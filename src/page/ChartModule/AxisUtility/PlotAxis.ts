@@ -22,21 +22,23 @@ import { DataToplotType } from "../types/plotConfigType";
 export class PlotAxis {
   private static instance: PlotAxis | null = null;
   private axisChart: AxisChart;
+  // public axisarea: d3.Selection<SVGGElement, any, HTMLElement, any>;
   private constructor(
-    svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,
+    axisarea:d3.Selection<SVGGElement, any, HTMLElement, any>,
     axisChart: AxisChart
   ) {
     this.axisChart = axisChart;
-    this.rendorXaxis(svg);
-    this.rendorYaxis(svg);
+    // this.axisarea = svg.append("g");
+    this.rendorXaxis(axisarea);
+    this.rendorYaxis(axisarea);
   }
 
   static getInstance(
-    svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,
+    axisarea:d3.Selection<SVGGElement, any, HTMLElement, any>,
     axisChart: AxisChart
   ): PlotAxis {
     if (!PlotAxis.instance) {
-      PlotAxis.instance = new PlotAxis(svg, axisChart);
+      PlotAxis.instance = new PlotAxis(axisarea, axisChart);
     }
     return PlotAxis.instance;
   }
@@ -118,7 +120,7 @@ export class PlotAxis {
       scaleSide === "Left" ? d3.axisLeft(yScale) : d3.axisRight(yScale);
 
     const [start, end] = d3.extent(yScale.range()) as [number, number];
-    console.log("ygenratror",yscaletag,scaleSide)
+    //console.log("ygenratror",yscaletag,scaleSide)
     const pxPerTick = 40;
     const tickCount = Math.ceil((end - start) / pxPerTick);
     if (yscaletag == "BR") {
@@ -139,8 +141,8 @@ export class PlotAxis {
     }
   }
 
-  rendorXaxis(svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>) {
-    svg.selectAll(`.x-axis`).remove();
+  rendorXaxis(axisarea: d3.Selection<SVGGElement, any, HTMLElement, any>) {
+    axisarea.selectAll(`.x-axis`).remove();
 
     const plotaxies = false;
     let yscaletagsarray: string[];
@@ -159,7 +161,7 @@ export class PlotAxis {
       if (scaleconfig.Xscale == null) {
         throw new Error(`Scale cannot be null for scaletag: ${scaletag}`);
       }
-      svg
+      axisarea
         .append("g")
         .attr("class", `axis x-axis x-axis-${scaleconfig.xscaleName}`)
         .attr("transform", `translate(${0},${scaleconfig.y_point})`)
@@ -178,8 +180,8 @@ export class PlotAxis {
     });
   }
   setYscale() {}
-  rendorYaxis(svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>) {
-    svg.selectAll(`.y-axis`).remove();
+  rendorYaxis(axisarea: d3.Selection<SVGGElement, any, HTMLElement, any>) {
+    axisarea.selectAll(`.y-axis`).remove();
     setYaxisRatio();
     this.axisChart.setYscalefn();
 
@@ -192,13 +194,12 @@ export class PlotAxis {
       yscaletagsarray = Object.keys(Shared_Yscaleconfig);
     }
 
-    console.log(yscaletagsarray);
     yscaletagsarray.map((scaletag) => {
       let scaleconfig = Shared_Yscaleconfig[scaletag];
       if (scaleconfig.Yscale == null) {
         throw new Error(`Scale cannot be null for scaletag: ${scaletag}`);
       }
-      svg
+      axisarea
         .append("g")
         .attr("class", `axis y-axis y-axis-${scaleconfig.yscaletag}`)
         .attr("transform", `translate(${scaleconfig.xpoint},${0})`)

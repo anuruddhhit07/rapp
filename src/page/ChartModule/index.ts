@@ -23,31 +23,34 @@ class CandlestickChartTS {
   private PlotDataConfig: PlotConfig;
   private svg!: d3.Selection<SVGSVGElement, any, HTMLElement, any>;
   private axisarea!: d3.Selection<SVGGElement, any, HTMLElement, any>;
-  // private margin: Margin
   constructor(stockdata: ChartDataIN, targetID: string) {
-    this.setupdata = SetupChart.getInstance(500, 200, { targetID: targetID });
+    this.setupdata = SetupChart.getInstance(500, 500, { targetID: targetID });
     updateChartPlotData(arrangeData(stockdata));
     this.axisChart = AxisChart.getInstance();
     this.PlotDataConfig = PlotConfig.getInstance();
     
     // setYaxisRatio()
     this.setupSVG();
-    PlotAxis.getInstance(this.svg,this.axisChart);
-    // // this.svg=this.setupdata.setupSVG(this.svg)
+    this.axisarea=this.svg.append('g')
+    const plotAxisobj:PlotAxis=PlotAxis.getInstance(this.axisarea,this.axisChart);
+    // this.axisarea=plotAxisobj.axisarea
+    
     
     console.log(this);
-    console.log(Shared_ChartPlotData);
-    console.log(Shared_ChartBaseProp);
-    console.log(Shared_Xscaleconfig);
-    console.log(Shared_Yscaleconfig);
-    console.log(Shared_DataToplot)
+    // console.log(Shared_ChartPlotData);
+    // console.log(Shared_ChartBaseProp);
+    // console.log(Shared_Xscaleconfig);
+    // console.log(Shared_Yscaleconfig);
+    // console.log(Shared_DataToplot)
    
   }
 
   setupSVG() {
     const { targetID, svgWidth, svgHeight, margin, width, height } =
       Shared_ChartBaseProp;
+      // console.log(Shared_ChartBaseProp)
     const svgElementExists: boolean = d3.select(`#svg-${targetID}`).empty();
+    console.log("svgElementExists",svgElementExists)
     this.svg = svgElementExists
       ? d3
           .select(`#${targetID}`)
@@ -76,7 +79,7 @@ class CandlestickChartTS {
       .style("fill", "lightblue")
       .style("opacity", 0.5);
 
-    this.axisarea = this.svg.append("g");
+    // this.axisarea = this.svg.append("g");
   }
 }
 

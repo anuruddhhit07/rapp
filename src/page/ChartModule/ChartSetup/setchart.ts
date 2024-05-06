@@ -62,7 +62,7 @@ class SetupChart {
           ] as any; // Type assertion
         }
       }
-      console.log("ChartOptionsDefault", ChartOptionsDefault);
+      //console.log("ChartOptionsDefault", ChartOptionsDefault);
       SetupChart.instance = new SetupChart(
         svgWidth,
         svgHeight,

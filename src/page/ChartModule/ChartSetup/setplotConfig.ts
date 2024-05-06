@@ -31,8 +31,8 @@ export class PlotConfig {
     const xscalekeys = Object.keys(Shared_Xscaleconfig) as (keyof XScaleConfigType)[];
     // Define a type for the keys of YScaleConfigType
     type YScaleKeys = keyof YScaleConfigType;
-    console.log("xscalekeys",xscalekeys)
-    console.log("yscalekeys",yscalekeys)
+    // console.log("xscalekeys",xscalekeys)
+    // console.log("yscalekeys",yscalekeys)
 
     // Create an array to store the plot configurations
     const plotConfigDefault: PlotConfigItemType[] = [

@@ -131,8 +131,8 @@ export class AxisChart {
         plotstatus: true,
         yscaletag: "BR",
         xaxisdataTag: "xindex",
-        scaleSide: "Right",
-        x_point: 50,
+        scaleSide: "Left",
+        x_point: margin.left+margin.innerLeft,
         changeRangeTag: true,
         highestYDataTag: "high",
         lowestYDataTag: "low",
@@ -305,7 +305,7 @@ export class AxisChart {
   setYscalefn() {
     const {yscaletags}=getUniqueScaleTags()
     const yscaletagsarray = yscaletags;
-    console.log("yscaletagsarray",yscaletagsarray)
+    //console.log("yscaletagsarray",yscaletagsarray)
 
     yscaletagsarray.map((scaletag) => {
       let scaleconfig = Shared_Yscaleconfig[scaletag];
