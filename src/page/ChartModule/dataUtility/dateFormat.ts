@@ -54,3 +54,14 @@ export const multiFormat = (i: d3.NumberValue, stockid: string = "temp:1D", xdat
 
     return fn(date);
 };
+
+export const  formatVolume=(volumei:d3.NumberValue):string=> {
+    const volume = +volumei;
+    if (volume >= 1000000) {
+      return (volume / 1000000).toFixed(0) + "M";
+    } else if (volume >= 1000) {
+      return (volume / 1000).toFixed(0) + "k";
+    } else {
+      return volume.toString();
+    }
+  }

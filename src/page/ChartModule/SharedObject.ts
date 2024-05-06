@@ -81,7 +81,7 @@ export function updateYscaleconfig(
       yaxisrange:null,
       yscaletag: "TR",
       xpoint: 0,
-      scaleSide: "",
+      scaleSide: "Left",
       ypadding: () => 0,
       transform: { k: 0 },
       scaledata_max: () => [],

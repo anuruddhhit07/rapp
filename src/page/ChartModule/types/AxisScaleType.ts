@@ -42,7 +42,7 @@ export interface YscaleItemProp {
     yaxisrange:[number,number] | null
     yscaletag: string;
     xpoint: number;
-    scaleSide: string;
+    scaleSide: 'Left'|'Right';
     ypadding: () => number;
     transform: { k: number };
     scaledata_max: () => number[];
@@ -52,7 +52,7 @@ export interface YscaleItemProp {
     maxscaledata: () => number;
     minscaledata: () => number;
     datadomain: () => [number, number];
-    Yscale: ScaleLinear<number, number> | ScaleTime<number, number> | ScaleBand<string> |null
+    Yscale: ScaleLinear<number, number> |null
 };
 
 export interface YScaleConfigType {

@@ -1,33 +1,45 @@
 import * as d3 from "d3";
 import { PlotConfig } from "../ChartSetup/setplotConfig";
-import { XScaleConfigType, XscaleItemProp } from "../types/AxisScaleType";
+import {
+  XScaleConfigType,
+  XscaleItemProp,
+  YScaleConfigType,
+} from "../types/AxisScaleType";
 import { AxisChart } from "./AxisScale";
-import { multiFormat } from "../dataUtility/dateFormat";
+import { formatVolume, multiFormat } from "../dataUtility/dateFormat";
 import { ChartDataObj } from "../types/chartdataTypes";
 import { error } from "console";
-import { Shared_ChartPlotData, Shared_Xscaleconfig, Shared_Yscaleconfig, getActivePlotData, getUniqueScaleTags, setYaxisRatio } from "../SharedObject";
+import {
+  Shared_ChartPlotData,
+  Shared_Xscaleconfig,
+  Shared_Yscaleconfig,
+  getActivePlotData,
+  getUniqueScaleTags,
+  setYaxisRatio,
+} from "../SharedObject";
 import { DataToplotType } from "../types/plotConfigType";
 
 export class PlotAxis {
   private static instance: PlotAxis | null = null;
-  private axisChart: AxisChart
+  private axisChart: AxisChart;
   private constructor(
-    svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,axisChart: AxisChart) {
-    this.axisChart=axisChart
+    svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,
+    axisChart: AxisChart
+  ) {
+    this.axisChart = axisChart;
     this.rendorXaxis(svg);
-    this.rendorYaxis(svg)
+    this.rendorYaxis(svg);
   }
 
   static getInstance(
-    svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,axisChart: AxisChart): PlotAxis {
+    svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,
+    axisChart: AxisChart
+  ): PlotAxis {
     if (!PlotAxis.instance) {
-      PlotAxis.instance = new PlotAxis(
-        svg,axisChart);
+      PlotAxis.instance = new PlotAxis(svg, axisChart);
     }
     return PlotAxis.instance;
   }
-
- 
 
   custumticformat(
     i: d3.NumberValue,
@@ -35,6 +47,10 @@ export class PlotAxis {
     datatotag: keyof ChartDataObj
   ): string | null {
     return multiFormat(i, "temp:1D", Shared_ChartPlotData[datatotag]);
+  }
+
+  customvolumformat(volume: d3.NumberValue): string | null {
+    return formatVolume(volume);
   }
 
   updateXscaleConfig<T, K extends keyof T>(
@@ -70,7 +86,7 @@ export class PlotAxis {
         .ticks(tickCount)
         .tickFormat((i: Date | d3.NumberValue) => {
           // Convert the Date or number value to a string
-          console.log("i111", i);
+          // console.log("i111", i);
           if (i instanceof Date) {
             return i.toLocaleDateString(); // Format date using toLocaleDateString
           } else {
@@ -90,18 +106,42 @@ export class PlotAxis {
     });
   }
   yaxisgenerator(
-    xScale: d3.ScaleLinear<number, number> | d3.ScaleTime<number, number>,
-    xAxisObject: Partial<
-      Pick<XScaleConfigType[string], "scaleSide" | "ticlavelmappedwith">
-    > = { scaleSide: "Bottom", ticlavelmappedwith: "xindex" }
+    yScale: d3.ScaleLinear<number, number>,
+    yAxisObject: Partial<
+      Pick<YScaleConfigType[string], "scaleSide" | "yscaletag">
+    > = { scaleSide: "Left", yscaletag: "MAIN" }
   ) {
-   
+    const scaleSide = yAxisObject.scaleSide || "Left";
+    const yscaletag = yAxisObject.yscaletag || "MAIN";
+
+    const axisGenerator =
+      scaleSide === "Left" ? d3.axisLeft(yScale) : d3.axisRight(yScale);
+
+    const [start, end] = d3.extent(yScale.range()) as [number, number];
+    console.log("ygenratror",yscaletag,scaleSide)
+    const pxPerTick = 40;
+    const tickCount = Math.ceil((end - start) / pxPerTick);
+    if (yscaletag == "BR") {
+      return axisGenerator
+        .ticks(tickCount)
+        .tickFormat((i: Date | d3.NumberValue) => {
+          // Convert the Date or number value to a string
+          // console.log("i111", i);
+          if (i instanceof Date) {
+            return i.toLocaleDateString(); // Format date using toLocaleDateString
+          } else {
+            //   return i.toString(); // Convert other values to string
+            return this.customvolumformat(i) as string;
+          }
+        });
+    } else {
+      return axisGenerator.ticks(tickCount);
+    }
   }
 
-  rendorXaxis(
-    svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>) {
+  rendorXaxis(svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>) {
     svg.selectAll(`.x-axis`).remove();
-    
+
     const plotaxies = false;
     let yscaletagsarray: string[];
     let xscaletagsarray: string[] = [];
@@ -119,7 +159,7 @@ export class PlotAxis {
       if (scaleconfig.Xscale == null) {
         throw new Error(`Scale cannot be null for scaletag: ${scaletag}`);
       }
-       svg
+      svg
         .append("g")
         .attr("class", `axis x-axis x-axis-${scaleconfig.xscaleName}`)
         .attr("transform", `translate(${0},${scaleconfig.y_point})`)
@@ -137,15 +177,11 @@ export class PlotAxis {
       // .style("display", plotaxis ? "block" : "none");
     });
   }
-  setYscale(){
-
-  }
-  rendorYaxis(
-    svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>) {
+  setYscale() {}
+  rendorYaxis(svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>) {
     svg.selectAll(`.y-axis`).remove();
-    setYaxisRatio()
-    this.axisChart.setYscalefn()
-
+    setYaxisRatio();
+    this.axisChart.setYscalefn();
 
     const plotaxies = true;
     let yscaletagsarray: string[] = [];
@@ -156,15 +192,26 @@ export class PlotAxis {
       yscaletagsarray = Object.keys(Shared_Yscaleconfig);
     }
 
-    console.log(yscaletagsarray)
+    console.log(yscaletagsarray);
     yscaletagsarray.map((scaletag) => {
-      let scaleconfig = Shared_Yscaleconfig[scaletag]
+      let scaleconfig = Shared_Yscaleconfig[scaletag];
       if (scaleconfig.Yscale == null) {
-            throw new Error(`Scale cannot be null for scaletag: ${scaletag}`);
-        }
-
-    })
-
+        throw new Error(`Scale cannot be null for scaletag: ${scaletag}`);
+      }
+      svg
+        .append("g")
+        .attr("class", `axis y-axis y-axis-${scaleconfig.yscaletag}`)
+        .attr("transform", `translate(${scaleconfig.xpoint},${0})`)
+        .call(
+          this.yaxisgenerator(
+            scaleconfig.Yscale as d3.ScaleLinear<number, number>,
+            {
+              scaleSide: scaleconfig.scaleSide,
+              yscaletag: scaleconfig.yscaletag,
+            }
+          )
+        );
+    });
 
     // yscaletagsarray.map((scaletag) => {
     //   let scaleconfig = Shared_Xscaleconfig[scaletag];
@@ -188,7 +235,5 @@ export class PlotAxis {
     //     );
     //   // .style("display", plotaxis ? "block" : "none");
     // });
-
-   
   }
 }
