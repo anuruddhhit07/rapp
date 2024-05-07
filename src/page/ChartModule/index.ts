@@ -43,6 +43,10 @@ class CandlestickChartTS {
       this.mousefunction(event)
      })
 
+     this.plotaxis=PlotAxis.getInstance(this.AllGroup, this.axisChart);
+
+
+
     this.AxisXGroup = createGroupAdv(this.svg, "X-Area")
     .translate(0,svgHeight-margin.bottom)
     .drawBorder(0, 0,svgWidth-margin.right, margin.bottom, "red", 2,"green",.2)
@@ -61,7 +65,7 @@ class CandlestickChartTS {
     // this.AxisXGroup.call(this.zoomX as any);
 
 
-    this.plotaxis=PlotAxis.getInstance(this.AllGroup, this.axisChart);
+  
 
     
    
@@ -78,7 +82,7 @@ class CandlestickChartTS {
         [0, 0],
         [Shared_ChartBaseProp.width, Shared_ChartBaseProp.height],
       ])
-      .on("zoom", this.zoomedX);
+      .on("zoom", this.zoomedX.bind(this));
 
   zoomedX(event:any){
     console.log(event)
@@ -86,7 +90,7 @@ class CandlestickChartTS {
     const [x, y] = d3.pointer(event);
     const currentTransformX = event.transform;
     console.log(`Group zoom! at zoomxgroup:${x},y:${y},transform:${currentTransformX} `);
-    this.plotaxis.updateXaxis(this.AllGroup,currentTransformX)
+    this.plotaxis.updateXaxis(currentTransformX)
   }
 
 

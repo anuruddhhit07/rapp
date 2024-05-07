@@ -23,12 +23,13 @@ export class PlotAxis {
   private static instance: PlotAxis | null = null;
   private axisChart: AxisChart;
   // public axisarea: d3.Selection<SVGGElement, any, HTMLElement, any>;
+  axisarea: d3.Selection<SVGGElement, any, HTMLElement, any>;
   private constructor(
     axisarea: d3.Selection<SVGGElement, any, HTMLElement, any>,
     axisChart: AxisChart
   ) {
     this.axisChart = axisChart;
-    // this.axisarea = svg.append("g");
+    this.axisarea = axisarea;
     this.rendorXaxis(axisarea);
     this.rendorYaxis(axisarea);
   }
@@ -41,6 +42,10 @@ export class PlotAxis {
       PlotAxis.instance = new PlotAxis(axisarea, axisChart);
     }
     return PlotAxis.instance;
+  }
+
+  public testfun():void{
+    console.log("first",this.axisarea)
   }
 
   custumticformat(
@@ -215,12 +220,14 @@ export class PlotAxis {
     });
   }
 
-  updateXaxis(
-    axisarea: d3.Selection<SVGGElement, any, HTMLElement, any>,
-    currentTransformX: any
+  
+
+  public updateXaxis(
+   currentTransformX: any
   ) {
     //axisarea.selectAll(`.x-axis`).remove();
-
+    //console.log("first",this.axisarea)
+    // return
     const plotaxies = false;
     let xscaletagsarray: string[] = [];
 
@@ -236,7 +243,7 @@ export class PlotAxis {
         | d3.ScaleLinear<number, number>
         | d3.ScaleTime<number, number>;
 
-      axisarea.selectAll(`.x-axis-${scaleconfig.xscaleName}`).call(
+      this.axisarea.selectAll(`.x-axis-${scaleconfig.xscaleName}`).call(
         this.xaxisgenerator(
           currentxscale as
             | d3.ScaleLinear<number, number>
