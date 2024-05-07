@@ -50,6 +50,14 @@ export interface ChartOptionsIn {
     margin: Margin;
 }
 
+export interface CandlestickData {
+  xData: number;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+}
+
 export interface ChartBaseSetupType {
   svgWidth: number;
   svgHeight: number;

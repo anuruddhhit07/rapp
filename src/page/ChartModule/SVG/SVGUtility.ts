@@ -2,6 +2,7 @@
 
 import * as d3 from "d3";
 import { BaseType, groups, index } from "d3";
+import { CandlestickData } from "../types/chartSetuptype";
 
 declare module "d3" {
   interface Selection<
@@ -189,4 +190,70 @@ export function drawLineOnSVG(
     .attr("stroke", plotColor) // Set color for the line
     .attr("stroke-width", 2) // Set width for the line
     .attr("d", lineGenerator as any); // Generate the line path using the line generator
+}
+
+export function drawBarChartOnSVG(
+  svgGroup: d3.Selection<SVGGElement, any, any, any>,
+  xData: number[],
+  yData: number[],
+  xScale: d3.ScaleLinear<number, number>,
+  yScale: d3.ScaleLinear<number, number>,
+  classNameTag: string,
+  yaxistag: string,
+  yaxisRange:[number,number],
+  barColor: string
+) {
+  // Calculate the width of each bar based on the scale
+  const barWidth = xScale(xData[1]) - xScale(xData[0]);
+
+  // Append a rectangle element for each data point
+  svgGroup.selectAll(".bar")
+    .data(yData)
+    .enter().append("rect")
+    .attr("class", `all barplot barplot-${classNameTag}`)
+    .attr("clip-path", `url(#clip-${yaxistag})`)
+    .attr("x", (d, i) => xScale(xData[i]) - barWidth / 4) // Adjust x position to center the bar
+    .attr("y", d => yScale(d)) // Set y position based on the data value
+    .attr("width", barWidth/2) // Set the width of the bar
+    .attr("height", d => yaxisRange[0] - yScale(d)) // Calculate the height of the bar
+    .attr("fill", barColor); // Set color for the bar
+}
+
+export function drawCandlestickOnSVG(
+  svgGroup: d3.Selection<SVGGElement, any, any, any>,
+  candlestickData: CandlestickData[],
+  xScale: d3.ScaleLinear<number, number>,
+  yScale: d3.ScaleLinear<number, number>,
+  classNameTag: string,
+  yaxistag: string,
+  bullColor: string,
+  bearColor: string
+) {
+  // Create a group for each candlestick
+  const strokeWidthScale = xScale(candlestickData[1].xData) - xScale(candlestickData[0].xData);
+  console.log("strokeWidthScale",strokeWidthScale)
+
+  const candlesticks = svgGroup.selectAll(".candlestick")
+    .data(candlestickData)
+    .enter().append("g")
+    .attr("class", "candlestick")
+
+  candlesticks.append("rect")
+    .attr("class", "body")
+    .attr("x", (d) => xScale(d.xData) - strokeWidthScale / 4)
+    .attr("y", (d) => Math.min(yScale(d.open), yScale(d.close)))
+    .attr("width", (d) => strokeWidthScale/2)
+    .attr("height", (d) => Math.abs(yScale(d.open) - yScale(d.close)))
+    .attr("fill", (d) => d.close > d.open ? bullColor : bearColor)
+    .attr("stroke", "none");
+
+  // Draw the wick (line representing high and low)
+  candlesticks.append("line")
+    .attr("class", "wick")
+    .attr("x1", 0)
+    .attr("y1", (d) => yScale(d.high))
+    .attr("x2", 0)
+    .attr("y2", (d) => yScale(d.low))
+    .attr("stroke", (d) => d.close > d.open ? bullColor : bearColor)
+    .attr("stroke-width", (d) => strokeWidthScale);
 }

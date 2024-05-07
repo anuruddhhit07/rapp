@@ -62,7 +62,7 @@ export class PlotConfig {
             plottype: "bar", // Example default value
             tagclass: "ohlc_", // Example default value
             // You can optionally omit other properties if you want to use their default values
-            plotcolor:"black",
+            plotcolor:"green",
           },
           {
             plotstatus: true,
