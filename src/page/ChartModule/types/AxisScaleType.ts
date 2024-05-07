@@ -62,13 +62,14 @@ export interface YscaleItemProp {
     scaledata_max: () => number[];
     scaledata_min: () => number[];
     changeRangeTag: boolean;
-    visrange: (minrange?:number,maxrange?:number) => [number, number];
-    maxscaledata: () => number;
-    minscaledata: () => number;
-    datadomain: (minvisrange?: number, maxvisrange?: number) => [number, number];
+    // visrange: (minrange?:number,maxrange?:number) => [number, number];
+    // maxscaledata: () => number;
+    // minscaledata: () => number;
+    // datadomain: (minvisrange?: number, maxvisrange?: number) => [number, number];
     Yscale: ScaleLinear<number, number> |null
     currentTransformY:d3.ZoomTransform
     yzoomstatus:boolean,
+    datadomain:(this: any, minvisrange?: number | undefined, maxvisrange?: number | undefined) => number[]
 };
 
 export interface YScaleConfigType {
@@ -87,4 +88,5 @@ export interface yAxisItemType<T extends keyof ChartDataObj = keyof ChartDataObj
     highestYDataTag: keyof ChartDataObj;
     lowestYDataTag: keyof ChartDataObj;
     yzoomstatus:boolean,
+    datadomain:(this: any, minvisrange?: number | undefined, maxvisrange?: number | undefined) => number[]
 }

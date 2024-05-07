@@ -95,7 +95,7 @@ export class PlotConfig {
             plotName: "LowPlot",
             Ydata: "low",
             Xdata:"xindex",
-            yscaletag: "BR",
+            yscaletag: "TL",
             xscaletag: "mainx", // Example default value
             plottype: "line1", // Example default value
             tagclass: "clsoe_", // Example default value

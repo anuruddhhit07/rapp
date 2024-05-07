@@ -13,6 +13,49 @@ import {
   updateYscaleconfig,
 } from "../SharedObject";
 
+const defaultDatadomain = function(this: any, minvisrange?: number, maxvisrange?: number) {
+  // Check if maxscaledata and minscaledata are defined before attempting to call them
+  if (this.scaledata_min && this.scaledata_max && this.transform && this.ypadding) {
+    const minData =
+      minvisrange === undefined && maxvisrange === undefined
+        ? d3.min(this.scaledata_min()) as unknown as number
+        : d3.min(this.scaledata_min().slice(minvisrange, (maxvisrange as number) + 1)) as unknown as number;
+    const maxData =
+      minvisrange === undefined && maxvisrange === undefined
+        ? d3.max(this.scaledata_max()) as unknown as number
+        : d3.max(this.scaledata_max().slice(minvisrange, (maxvisrange as number) + 1)) as unknown as number;
+    const center = (maxData + minData) / 2;
+    const newExtent = (maxData - minData) / this.transform.k / 2;
+    const newMax = center + newExtent;
+    const newMin = center - newExtent;
+    const lowerlimit = newMin > minData ? minData : newMin;
+    const higherlimit = newMax > maxData ? maxData : newMax;
+    const padding = (higherlimit - lowerlimit) * this.ypadding;
+    return [lowerlimit - padding, higherlimit + padding];
+  }
+  return [0, 0];
+};
+
+const VolumeDatadomain = function(this: any, minvisrange?: number, maxvisrange?: number) {
+  // Check if maxscaledata and minscaledata are defined before attempting to call them
+  if (this.scaledata_min && this.scaledata_max && this.transform && this.ypadding) {
+    const minData =0;
+    const maxData =
+      minvisrange === undefined && maxvisrange === undefined
+        ? d3.max(this.scaledata_max()) as unknown as number
+        : d3.max(this.scaledata_max().slice(minvisrange, (maxvisrange as number) + 1)) as unknown as number;
+    const center = (maxData + minData) / 2;
+    const newExtent = (maxData - minData) / this.transform.k / 2;
+    const newMax = center + newExtent;
+    const newMin = center - newExtent;
+    const lowerlimit = newMin > minData ? minData : newMin;
+    const higherlimit = newMax > maxData ? maxData : newMax;
+    const padding = (higherlimit - lowerlimit) * this.ypadding;
+    return [lowerlimit - padding, higherlimit + padding];
+  }
+  return [0, 0];
+};
+
 export class AxisChart {
   private static instance: AxisChart | null = null;
   // public xScaleConfig: XScaleConfigType = {};
@@ -106,6 +149,7 @@ export class AxisChart {
         yaxistag: "mainyaxis",
         yaxisratio: null,
         yzoomstatus: true,
+        datadomain:defaultDatadomain
       },
       {
         plotstatus: true,
@@ -114,11 +158,12 @@ export class AxisChart {
         scaleSide: "Left",
         x_point: margin.left + margin.innerLeft,
         changeRangeTag: true,
-        highestYDataTag: "high",
-        lowestYDataTag: "low",
+        highestYDataTag: "volume",
+        lowestYDataTag: "volume",
         yaxistag: "second",
         yaxisratio: null,
         yzoomstatus: true,
+        datadomain:VolumeDatadomain
       },
       {
         plotstatus: true,
@@ -132,6 +177,7 @@ export class AxisChart {
         yaxistag: "mainyaxis",
         yaxisratio: null,
         yzoomstatus: true,
+        datadomain:defaultDatadomain
       },
     ];
 
@@ -142,7 +188,7 @@ export class AxisChart {
     const yscaleconfigdata = this.getdefaultyaxis();
 
     yscaleconfigdata.forEach((item) => {
-      const { yscaletag, yaxistag, plotstatus, x_point, scaleSide, xaxisdataTag, changeRangeTag, highestYDataTag, lowestYDataTag, yzoomstatus } = item;
+      const { yscaletag, yaxistag, plotstatus, x_point, scaleSide, xaxisdataTag, changeRangeTag, highestYDataTag, lowestYDataTag, yzoomstatus,datadomain } = item;
       updateYscaleconfig(yscaletag, {
         plotstatus: plotstatus,
         yzoomstatus: yzoomstatus,
@@ -155,61 +201,8 @@ export class AxisChart {
         scaledata_max: () => Shared_ChartPlotData[highestYDataTag] as number[], // Example value, replace with actual values
         scaledata_min: () => Shared_ChartPlotData[lowestYDataTag] as number[], // Example value, replace with actual values
         changeRangeTag: changeRangeTag,
-        visrange: (
-          minrange: number = d3.min(Shared_ChartPlotData[xaxisdataTag] as number[]) as number,
-          maxrange: number = d3.max(Shared_ChartPlotData[xaxisdataTag] as number[]) as number
-        ) => [minrange, maxrange], // Example value, replace with actual values
-        maxscaledata() {
-          if (this.scaledata_max) {
-            if (this.changeRangeTag) {
-              if (this.visrange) {
-                const [minrange = 0, maxrange = 0] = this.visrange();
-                const highWithinRange = this.scaledata_max().filter((d, i) => i >= minrange && i <= maxrange) as number[];
-                return d3.max(highWithinRange, (d) => d) as number;
-              }
-            }
-            return d3.max(this.scaledata_max()) as number;
-          }
-          return 0;
-        },
-        minscaledata() {
-          // Example implementation
-          if (this.scaledata_min) {
-            if (changeRangeTag) {
-              if (this.visrange) {
-                const [minrange = 0, maxrange = 0] = this.visrange();
-                const lowWithinRange = this.scaledata_min().filter((d, i) => i >= minrange && i <= maxrange);
-                return d3.min(lowWithinRange, (d) => d) as number;
-              }
-            }
-            return d3.min(this.scaledata_min()) as number;
-          }
-          return 0;
-        },
-        datadomain(minvisrange?: number, maxvisrange?: number) {
-          // Check if maxscaledata and minscaledata are defined before attempting to call them
-            if (this.scaledata_min && this.scaledata_max && this.transform && this.ypadding) {
-              const minData =
-                minvisrange === undefined && maxvisrange === undefined
-                  ? d3.min(this.scaledata_min()) as number
-                  : d3.min(this.scaledata_min().slice(minvisrange, (maxvisrange as number) + 1)) as number;
-              const maxData =
-                minvisrange === undefined && maxvisrange === undefined
-                  ? d3.max(this.scaledata_max()) as number
-                  : d3.max(this.scaledata_max().slice(minvisrange, (maxvisrange as number) + 1)) as number;
-              const center = (maxData + minData) / 2;
-              const newExtent = (maxData - minData) / this.transform.k / 2;
-              const newMax = center + newExtent;
-              const newMin = center - newExtent;
-              const lowerlimit = newMin > minData ? minData : newMin;
-              const higherlimit = newMax > maxData ? maxData : newMax;
-              const padding = (higherlimit - lowerlimit) * this.ypadding;
-              return [lowerlimit - padding, higherlimit + padding];
-
-            }
-         
-          return [0, 0];
-        },
+        datadomain: datadomain,
+        
       });
     });
   }

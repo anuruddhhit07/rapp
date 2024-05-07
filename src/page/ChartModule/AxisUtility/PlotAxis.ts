@@ -309,9 +309,22 @@ export class PlotAxis {
             )
           );
 
+          // console.log("datadomain",yscaleconfig.datadomain(
+          //   newVisibleRange[0] as number,
+          //   newVisibleRange[1] as number
+          // ))
+          // console.log("datadomain2",yscaleconfig.datadomain2(
+          //   newVisibleRange[0] as number,
+          //   newVisibleRange[1] as number
+          // ))
+
         const currentTransformY =
           Shared_Yscaleconfig[yscaletag].currentTransformY;
         let currentyscale = currentTransformY.rescaleY(Yscale);
+          if (yscaletag=='BR'){
+            currentyscale.domain([0, currentyscale.domain()[1]]);
+          }
+        
 
         this.axisarea.selectAll(`.y-axis-${yscaleconfig.yscaletag}`).call(
           this.yaxisgenerator(currentyscale as d3.ScaleLinear<number, number>, {
@@ -372,6 +385,9 @@ export class PlotAxis {
       let currentyscale = currentTransformY.rescaleY(
         scaleconfig.Yscale
       ) as d3.ScaleLinear<number, number>;
+      if (scaletag=='BR'){
+        currentyscale.domain([0, currentyscale.domain()[1]]);
+      }
 
       updateYscaleconfig(scaleconfig.yscaletag, {
         currentTransformY: currentTransformY,
