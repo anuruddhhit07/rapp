@@ -22,7 +22,7 @@ class CandlestickChartTS {
   private svg!: d3.Selection<SVGSVGElement, any, HTMLElement, any>;
   private axisarea!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   axisGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
-  AllGroup: d3.Selection<SVGGElement, any, HTMLElement, any>;
+  TopGroup: d3.Selection<SVGGElement, any, HTMLElement, any>;
   AxisXGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   AxisYGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   plotaxis: PlotAxis;
@@ -37,30 +37,42 @@ class CandlestickChartTS {
 
 
 
-    this.AllGroup = createGroupAdv(this.svg, "main-border")
+    this.TopGroup = createGroupAdv(this.svg, "main-border")
     .drawBorder(0, 0, svgWidth, svgHeight, "red", 2,"blue",.2)
+    .call(this.zoomX as any)
     .onEvent1("mousemove", (event) => {
       this.mousefunction(event)
      })
 
 
+
     this.AxisXGroup = createGroupAdv(this.svg, "X-Area")
     .translate(0,svgHeight-margin.bottom)
     .drawBorder(0, 0,svgWidth-margin.right, margin.bottom, "red", 2,"green",.2)
-    .call(this.zoomX as any)
+    
     
 
     this.AxisYGroup = createGroupAdv(this.svg, "Y-Area")
     .translate(svgWidth-margin.right,0)
     .drawBorder(0, 0,margin.right, svgHeight-margin.bottom, "red", 2,"green",.2)
     .call(this.zoomY as any)
+
+    
+
+    this.AxisYGroup = createGroupAdv(this.svg, "Y-Area")
+    .translate(svgWidth-margin.right,0)
+    .drawBorder(0, 0,margin.right, svgHeight-margin.bottom, "red", 2,"green",.2)
+    .call(this.zoomY as any)
+
+
+
     
     // .onEvent1("click", (event) => {
     //  this.dbclickedfunction(event)
     // })
 
     
-    this.plotaxis=PlotAxis.getInstance(this.AllGroup, this.axisChart);
+    this.plotaxis=PlotAxis.getInstance(this.TopGroup, this.axisChart);
 
     // this.AxisXGroup.call(this.zoomX as any);
 
@@ -127,7 +139,7 @@ this.plotaxis.updateYaxis(currentTransformY,xmousepoint,ymousepoint)
 
   dbclickedfunction(event:any){
     console.log(this)
-    const [x, y] = d3.pointer(event,this.AllGroup);
+    const [x, y] = d3.pointer(event,this.TopGroup);
     console.log(`Group clicked! at dbclickedfunctionx:${x},y:${y} `);
   }
 
@@ -140,7 +152,7 @@ this.plotaxis.updateYaxis(currentTransformY,xmousepoint,ymousepoint)
   drawBackGround() {
     const { margin, width, height } = Shared_ChartBaseProp;
     this.drawPlots(
-      this.AllGroup,
+      this.TopGroup,
       margin.left + margin.innerLeft,
       margin.top + margin.innerTop,
       width,
@@ -194,18 +206,7 @@ this.plotaxis.updateYaxis(currentTransformY,xmousepoint,ymousepoint)
       .attr("width", width + 0 * margin.innerLeft)
       .attr("height", height);
 
-    // Return the SVG as a string
-    // let plotGroup = createGroup(this.svg);
-    // this.drawPlots(plotGroup,margin.left + margin.innerLeft,margin.top + margin.innerTop,20,50)
-
-    // this.svg
-    //   .append("rect")
-    //   .attr("width", "100%")
-    //   .attr("height", "100%")
-    //   .style("fill", "lightblue")
-    //   .style("opacity", 0.5);
-
-    // this.axisarea = this.svg.append("g");
+   
   }
 }
 
