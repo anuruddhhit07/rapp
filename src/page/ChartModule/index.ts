@@ -110,15 +110,15 @@ class CandlestickChartTS {
 
   zoomY = d3
     .zoom()
-    .scaleExtent([0.5, 10])
-    .translateExtent([
-      [-Shared_ChartBaseProp.width / 2, -Shared_ChartBaseProp.height / 2],
-      [Shared_ChartBaseProp.width + Shared_ChartBaseProp.width / 2, Shared_ChartBaseProp.height],
-    ])
-    .extent([
-      [0, 0],
-      [Shared_ChartBaseProp.width, Shared_ChartBaseProp.height],
-    ])
+    .scaleExtent([0.5, 1])
+    // .translateExtent([
+    //   [-Shared_ChartBaseProp.width / 2, -Shared_ChartBaseProp.height / 2],
+    //   [Shared_ChartBaseProp.width + Shared_ChartBaseProp.width / 2, Shared_ChartBaseProp.height],
+    // ])
+    // .extent([
+    //   [0, 0],
+    //   [Shared_ChartBaseProp.width, Shared_ChartBaseProp.height],
+    // ])
     .on("zoom", this.zoomedY.bind(this));
 
   zoomedY(event: any) {
@@ -179,7 +179,7 @@ class CandlestickChartTS {
     const yScale = Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag].Yscale as d3.ScaleLinear<number, number>;
 
     let newxScale = currentTransformX.rescaleX(xScale);
-    let newyScale = currentTransformY.rescaleX(yScale);
+    let newyScale = currentTransformY.rescaleY(yScale);
     
     const yaxistag = Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag].yaxistag;
 
