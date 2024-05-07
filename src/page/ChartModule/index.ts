@@ -358,7 +358,7 @@ class CandlestickChartTS {
     plotName: string,
     PlotGroupArea: d3.Selection<SVGGElement, any, HTMLElement, any>
   ) {
-    console.log("plot for OHLC data")
+    // console.log("plot for OHLC data")
     const XDATA = Shared_DataToplot[plotName].xdata() as number[];
     const open = Shared_ChartPlotData["open"];
     const high = Shared_ChartPlotData["high"];
@@ -389,8 +389,8 @@ class CandlestickChartTS {
     let newyScale = currentTransformY.rescaleY(yScale);
 
     // console.log(candlestickData)
-    console.log(newxScale.domain())
-    console.log(newyScale.domain())
+    // console.log(newxScale.domain())
+    // console.log(newyScale.domain())
 
     const yaxistag =
       Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag].yaxistag;
