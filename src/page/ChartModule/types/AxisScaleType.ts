@@ -53,6 +53,7 @@ export interface YscaleItemProp {
     minscaledata: () => number;
     datadomain: () => [number, number];
     Yscale: ScaleLinear<number, number> |null
+    yzoomstatus:boolean,
 };
 
 export interface YScaleConfigType {
@@ -70,4 +71,5 @@ export interface yAxisItemType<T extends keyof ChartDataObj = keyof ChartDataObj
     changeRangeTag:boolean,
     highestYDataTag: keyof ChartDataObj;
     lowestYDataTag: keyof ChartDataObj;
+    yzoomstatus:boolean,
 }

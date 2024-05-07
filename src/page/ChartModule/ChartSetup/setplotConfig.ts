@@ -55,12 +55,23 @@ export class PlotConfig {
           {
             plotstatus: true,
             plotName: "VolumePlot",
-            Ydata: "ohlc",
+            Ydata: "volume",
             Xdata:"xdata",
             yscaletag: "BR",
             xscaletag: "mainx", // Example default value
             plottype: "ohlc", // Example default value
             tagclass: "ohlc_", // Example default value
+            // You can optionally omit other properties if you want to use their default values
+          },
+          {
+            plotstatus: true,
+            plotName: "ClosePlot",
+            Ydata: "close",
+            Xdata:"xdata",
+            yscaletag: "TL",
+            xscaletag: "mainx", // Example default value
+            plottype: "close", // Example default value
+            tagclass: "clsoe_", // Example default value
             // You can optionally omit other properties if you want to use their default values
           },
     ];

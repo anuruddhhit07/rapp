@@ -125,7 +125,8 @@ export class AxisChart {
         highestYDataTag: "high",
         lowestYDataTag: "low",
         yaxistag: "mainyaxis",
-        yaxisratio:null
+        yaxisratio:null,
+        yzoomstatus:true
       },
       {
         plotstatus: true,
@@ -137,7 +138,8 @@ export class AxisChart {
         highestYDataTag: "high",
         lowestYDataTag: "low",
         yaxistag: "second",
-        yaxisratio:null
+        yaxisratio:null,
+        yzoomstatus:true
       },
       {
         plotstatus: true,
@@ -149,7 +151,8 @@ export class AxisChart {
         highestYDataTag: "high",
         lowestYDataTag: "close",
         yaxistag: "mainyaxis",
-        yaxisratio:null
+        yaxisratio:null,
+        yzoomstatus:true
       },
     ];
 
@@ -170,9 +173,11 @@ export class AxisChart {
         changeRangeTag,
         highestYDataTag,
         lowestYDataTag,
+        yzoomstatus
       } = item;
       updateYscaleconfig(yscaletag, {
         plotstatus: plotstatus,
+        yzoomstatus:yzoomstatus,
         yaxistag: yaxistag,
         yscaletag: yscaletag,
         xpoint: x_point, // Example value, replace with actual values

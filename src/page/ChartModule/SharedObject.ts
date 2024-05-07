@@ -92,6 +92,7 @@ export function updateYscaleconfig(
       minscaledata: () => 0,
       datadomain: () => [0, 0],
       Yscale: null,
+      yzoomstatus:false,
       ...partialData, // Merge with provided partial data
     };
   }

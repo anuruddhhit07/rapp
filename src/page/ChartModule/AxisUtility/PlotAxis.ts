@@ -260,7 +260,9 @@ export class PlotAxis {
   }
 
   public updateYaxis(
-    currentTransformY: any
+    currentTransformY: any,
+    xmousepoint:number,
+    ymousepoint:number
    ) {
      //axisarea.selectAll(`.x-axis`).remove();
      //console.log("first",this.axisarea)
@@ -269,6 +271,16 @@ export class PlotAxis {
      const { yscaletags } = getUniqueScaleTags();
      yscaletags.map((scaletag) => {
        let scaleconfig = Shared_Yscaleconfig[scaletag];
+      //  console.log(scaleconfig);
+      //  console.log(scaletag,scaleconfig.yzoomstatus);
+      if (scaleconfig.yaxisrange){
+        let insidepoint=ymousepoint>scaleconfig.yaxisrange[1]&& ymousepoint<scaleconfig.yaxisrange[0] && scaleconfig.yzoomstatus
+        if (!insidepoint){
+          return
+        }
+      }
+      
+
        if (scaleconfig.Yscale == null) {
          throw new Error(`Scale cannot be null for scaletag: ${scaletag}`);
        }

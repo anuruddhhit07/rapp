@@ -44,9 +44,6 @@ class CandlestickChartTS {
      })
 
 
-
-
-
     this.AxisXGroup = createGroupAdv(this.svg, "X-Area")
     .translate(0,svgHeight-margin.bottom)
     .drawBorder(0, 0,svgWidth-margin.right, margin.bottom, "red", 2,"green",.2)
@@ -88,11 +85,11 @@ class CandlestickChartTS {
       .on("zoom", this.zoomedX.bind(this));
 
   zoomedX(event:any){
-    console.log(event)
+    // console.log(event)
     // const transform = event.transform;
     const [x, y] = d3.pointer(event);
     const currentTransformX = event.transform;
-    console.log(`Group zoom! at zoomxgroup:${x},y:${y},transform:${currentTransformX} `);
+    // console.log(`Group zoom! at zoomxgroup:${x},y:${y},transform:${currentTransformX} `);
     this.plotaxis.updateXaxis(currentTransformX)
   }
 
@@ -100,8 +97,8 @@ class CandlestickChartTS {
   .zoom()
   .scaleExtent([0.5, 10])
   .translateExtent([
-    [-Shared_ChartBaseProp.width / 2, -Shared_ChartBaseProp.height / 2],
-    [Shared_ChartBaseProp.width + Shared_ChartBaseProp.width / 2, Shared_ChartBaseProp.height],
+    [0, 0],
+    [Shared_ChartBaseProp.width, Shared_ChartBaseProp.height],
   ])
   .extent([
     [0, 0],
@@ -110,12 +107,12 @@ class CandlestickChartTS {
   .on("zoom", this.zoomedY.bind(this));
 
 zoomedY(event:any){
-console.log(event)
+// console.log(event)
 // const transform = event.transform;
-const [x, y] = d3.pointer(event);
+const [xmousepoint, ymousepoint] = d3.pointer(event);
 const currentTransformY = event.transform;
-console.log(`Group zoom! at zoomxgroup:${x},y:${y},transform:${currentTransformY} `);
-this.plotaxis.updateYaxis(currentTransformY)
+// console.log(`Group zoom! at zoomxgroup:${xmousepoint},y:${ymousepoint},transform:${currentTransformY} `);
+this.plotaxis.updateYaxis(currentTransformY,xmousepoint,ymousepoint)
 }
 
 
@@ -127,7 +124,7 @@ this.plotaxis.updateYaxis(currentTransformY)
 
   mousefunction(event:any){
     const [x, y] = d3.pointer(event);
-    console.log(`Group mousemove! at mousefunction:${x},y:${y} `);
+    // console.log(`Group mousemove! at mousefunction:${x},y:${y} `);
   }
 
 
