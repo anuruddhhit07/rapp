@@ -256,7 +256,7 @@ export class PlotAxis {
           
           
           const currentTransformY=Shared_Yscaleconfig[yscaletag].currentTransformY
-          let currentyscale=currentTransformY.rescaleX(Yscale)
+          let currentyscale=currentTransformY.rescaleY(Yscale)
 
 
         this.axisarea.selectAll(`.y-axis-${yscaleconfig.yscaletag}`).call(
@@ -298,7 +298,7 @@ export class PlotAxis {
         throw new Error(`Scale cannot be null for scaletag: ${scaletag}`);
       }
 
-      let currentyscale = currentTransformY.rescaleX(scaleconfig.Yscale) as d3.ScaleLinear<number, number>;
+      let currentyscale = currentTransformY.rescaleY(scaleconfig.Yscale) as d3.ScaleLinear<number, number>;
 
       updateYscaleconfig(scaleconfig.yscaletag, {
         currentTransformY:currentTransformY,
