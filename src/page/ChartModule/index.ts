@@ -16,7 +16,8 @@ import {
   setYaxisRatio,
   Shared_Yaxisrange,
 } from "./SharedObject";
-import { createGroup, createGroupAdv, createRect } from "./SVG/SVGUtility";
+import { createClipPath, createGroup, createGroupAdv, createRect, drawLineOnSVG } from "./SVG/SVGUtility";
+import { yaxisrangeType } from "./types/AxisScaleType";
 
 class CandlestickChartTS {
   private axisChart: AxisChart;
@@ -29,6 +30,7 @@ class CandlestickChartTS {
   PlotGroup1!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   FrontGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   plotaxis: PlotAxis;
+  clipPathObj: { [key: keyof yaxisrangeType]: d3.Selection<SVGClipPathElement, any, HTMLElement, any> }={}
   
   constructor(stockdata: ChartDataIN, targetID: string) {
     SetupChart.getInstance(500, 500, { targetID: targetID });
@@ -62,8 +64,14 @@ class CandlestickChartTS {
     
     
     this.plotaxis=PlotAxis.getInstance(this.BackGroup, this.axisChart);
+    // createClipPath
+    console.log("Shared_yaxisrange",Shared_Yaxisrange,Object.entries(Shared_Yaxisrange));
+    for (const [yaxistag, plotGroupData] of Object.entries(Shared_Yaxisrange)) {
+      const { range, borderColor, borderWidth, fill, opacity } = plotGroupData;
+      createClipPath(this.svg,`clip-${yaxistag}`,margin.left + margin.innerLeft,range[1],width+margin.innerRight,range[0] - range[1])
+    }
 
-    // console.log("Shared_yaxisrange",Shared_Yaxisrange,Object.entries(Shared_Yaxisrange));
+    console.log(this.clipPathObj);
     // for (const [plotGroupName, plotGroupData] of Object.entries(Shared_Yaxisrange)) {
     //   const { range, borderColor, borderWidth, fill, opacity } = plotGroupData;
     //   console.log(fill);
@@ -79,6 +87,8 @@ class CandlestickChartTS {
     .onEvent1("mousemove", (event) => {
       this.mousefunction(event)
      })
+
+     this.rendorPlot()
 
   }
 
@@ -99,10 +109,10 @@ class CandlestickChartTS {
     // console.log(event)
     // const transform = event.transform;
     const [x, y] = d3.pointer(event);
-    const currentTransformX = event.transform;
+    const currentTransformX: d3.ZoomTransform = event.transform;
     // console.log(`Group zoom! at zoomxgroup:${x},y:${y},transform:${currentTransformX} `);
     this.plotaxis.updateXaxis(currentTransformX)
-
+    this.rendorPlot()
 
   }
 
@@ -133,6 +143,28 @@ const currentTransformY: d3.ZoomTransform = event.transform;
 
 // console.log(`Group zoom! at zoomxgroup:${xmousepoint},y:${ymousepoint},transform:${currentTransformY} `);
 this.plotaxis.updateYaxis(currentTransformY,xmousepoint,ymousepoint)
+this.rendorPlot()
+}
+
+
+rendorPlot(){
+console.log(Shared_DataToplot["ClosePlot"]);
+const PlotName='ClosePlot'
+const XDATA=Shared_DataToplot["ClosePlot"].xdata()
+const YDATA=Shared_DataToplot["ClosePlot"].ydata()
+const currentTransformX=Shared_Xscaleconfig[Shared_DataToplot["ClosePlot"].xscaletag].currentTransformX
+const currentTransformY=Shared_Yscaleconfig[Shared_DataToplot["ClosePlot"].yscaletag].currentTransformY
+const xScale=Shared_Xscaleconfig[Shared_DataToplot["ClosePlot"].xscaletag].Xscale as d3.ScaleLinear<number, number>
+const yScale=Shared_Yscaleconfig[Shared_DataToplot["ClosePlot"].yscaletag].Yscale as d3.ScaleLinear<number, number>
+console.log(Shared_ChartPlotData);
+console.log(XDATA);
+console.log(YDATA);
+console.log(currentTransformX);
+ this.BackGroup.selectAll(`.linePlot-${PlotName}`).remove();
+ let newxScale=currentTransformX.rescaleX(xScale)
+ let newyScale=currentTransformY.rescaleX(yScale)
+const yaxistag=Shared_Yscaleconfig[Shared_DataToplot["ClosePlot"].yscaletag].yaxistag
+  drawLineOnSVG(this.BackGroup,XDATA as number[],YDATA as number[],newxScale,newyScale,PlotName,yaxistag)
 }
 
 

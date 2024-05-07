@@ -40,7 +40,7 @@ export class PlotConfig {
             plotstatus: true,
             plotName: "MainPlot",
             Ydata: "ohlc",
-            Xdata:"xdata",
+            Xdata:"xindex",
             yscaletag: "OHLC",
             xscaletag: "mainx", // Example default value
             plottype: "ohlc", // Example default value
@@ -56,7 +56,7 @@ export class PlotConfig {
             plotstatus: true,
             plotName: "VolumePlot",
             Ydata: "volume",
-            Xdata:"xdata",
+            Xdata:"xindex",
             yscaletag: "BR",
             xscaletag: "mainx", // Example default value
             plottype: "ohlc", // Example default value
@@ -67,7 +67,7 @@ export class PlotConfig {
             plotstatus: true,
             plotName: "ClosePlot",
             Ydata: "close",
-            Xdata:"xdata",
+            Xdata:"xindex",
             yscaletag: "TL",
             xscaletag: "mainx", // Example default value
             plottype: "close", // Example default value

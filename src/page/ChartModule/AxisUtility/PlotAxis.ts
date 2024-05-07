@@ -12,6 +12,7 @@ import {
   getUniqueKeysAndYScaleTagsFromDataToplotKeyValue,
   getUniqueScaleTags,
   setYaxisRatio,
+  updateXscaleconfig,
   updateYscaleconfig,
 } from "../SharedObject";
 import { DataToplotType } from "../types/plotConfigType";
@@ -197,6 +198,10 @@ export class PlotAxis {
       }
 
       let currentxscale = currentTransformX.rescaleX(scaleconfig.Xscale) as d3.ScaleLinear<number, number> | d3.ScaleTime<number, number>;
+
+      updateXscaleconfig(scaletag, {
+        currentTransformX:currentTransformX,
+      });
 
       let newVisibleRange = [currentxscale.domain()[0], currentxscale.domain()[1]];
 

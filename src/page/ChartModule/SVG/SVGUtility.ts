@@ -104,6 +104,28 @@ export function createGroupAdv(
   
     return group;
   }
+
+  export function createClipPath(
+    svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,
+    id: string,
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ): d3.Selection<SVGClipPathElement, any, HTMLElement, any> {
+    const clipPath = svg.append("defs")
+      .append("clipPath")
+      .attr("id", id);
+  
+    clipPath.append("rect")
+      .attr("x", x)
+      .attr("y", y)
+      .attr("width", width)
+      .attr("height", height)
+      .style("fill", "steelblue");
+  
+    return clipPath;
+  }
   
   
 
@@ -141,4 +163,29 @@ export function createRect(
     .attr("y", y)
     .attr("width", width)
     .attr("height", height);
+}
+
+export function drawLineOnSVG(
+  svgGroup: d3.Selection<SVGGElement, any, any, any>,
+  xData: number[],
+  yData: number[],
+  xScale: d3.ScaleLinear<number, number>,
+  yScale: d3.ScaleLinear<number, number>,
+  classNameTag:string,
+  yaxistag:string
+) {
+  // Create a line generator
+  const lineGenerator = d3.line()
+    .x((d, i) => xScale(xData[i]))
+    .y((d, i) => yScale(yData[i]));
+  
+  // Append a path element to the SVG group
+  svgGroup.append("path")
+    .datum(yData) // Set data for the line
+    .attr("class", `all linePlot-${classNameTag}`)
+    .attr("clip-path", `url(#clip-${yaxistag})`)
+    .attr("fill", "none")
+    .attr("stroke", "steelblue") // Set color for the line
+    .attr("stroke-width", 2) // Set width for the line
+    .attr("d", lineGenerator as any); // Generate the line path using the line generator
 }

@@ -69,6 +69,7 @@ export function updateXscaleconfig(key: string, partialData: Partial<XscaleItemP
       plotstatus: false,
       zooming: false,
       Xscale: null,
+      currentTransformX:zoomIdentity,
       ...partialData,
     };
   }
@@ -282,7 +283,7 @@ export function setYaxisRatio(): void {
 
     // Shared_yaxisrange.push([endY, startY]);
 
-    updateYaxisProp(`plotGroup${index + 1}`,{
+    updateYaxisProp(yaxistag,{
       range:[endY, startY],
       fill:index==0?"red":"yellow"
     })

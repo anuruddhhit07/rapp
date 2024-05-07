@@ -26,6 +26,7 @@ export interface XscaleItemProp {
         plotstatus: boolean;
         zooming: boolean;
         Xscale: ScaleLinear<number, number> | ScaleTime<number, number> | ScaleBand<string> |null
+        currentTransformX:d3.ZoomTransform
 
 }
 export interface XScaleConfigType  {
