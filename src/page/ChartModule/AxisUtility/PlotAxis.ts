@@ -7,6 +7,7 @@ import { ChartDataObj } from "../types/chartdataTypes";
 import { error } from "console";
 import {
   Shared_ChartPlotData,
+  Shared_DataToplot,
   Shared_Xscaleconfig,
   Shared_Yscaleconfig,
   getUniqueKeysAndYScaleTagsFromDataToplotKeyValue,
@@ -202,8 +203,34 @@ export class PlotAxis {
       updateXscaleconfig(scaletag, {
         currentTransformX:currentTransformX,
       });
+      
+      const allowrange = [
+        Shared_ChartPlotData[scaleconfig.scaledatatag][0],
+        Shared_ChartPlotData[scaleconfig.scaledatatag].slice(-1)[0]
+      ];
+      
+      let newVisibleRange: (number | Date)[] = [currentxscale.domain()[0], currentxscale.domain()[1]];
 
-      let newVisibleRange = [currentxscale.domain()[0], currentxscale.domain()[1]];
+      // Convert dates to timestamps
+      newVisibleRange = newVisibleRange.map(value => {
+        return typeof value === 'number' ? value : (value as Date).getTime();
+      });
+      
+      // Check if either value is NaN and update accordingly
+      if (isNaN(newVisibleRange[0] as number)  || newVisibleRange[0]<allowrange[0]) {
+        newVisibleRange[0] = allowrange[0]; // Restore the start of the range
+      }
+      
+      if (isNaN(newVisibleRange[1] as number) || newVisibleRange[1]>allowrange[1]) {
+        newVisibleRange[1] = allowrange[1]; // Restore the end of the range
+      }
+      
+      // Convert timestamps back to dates if necessary
+      newVisibleRange = newVisibleRange.map(value => {
+        return typeof value === 'number' ? value : new Date(value);
+      });
+
+      // console.log("newVisibleRange",newVisibleRange);
 
       const { yscaletags } = getUniqueKeysAndYScaleTagsFromDataToplotKeyValue([
         ["xscaletag", scaletag],
@@ -217,14 +244,16 @@ export class PlotAxis {
           return;
         }
 
-        updateYscaleconfig(yscaletag, {
-          visrange: () => newVisibleRange as [number, number],
-        });
+        // updateYscaleconfig(yscaletag, {
+        //   visrange: () => newVisibleRange as [number, number],
+        // });
+
 
         let Yscale = d3
           .scaleLinear()
           .range(yscaleconfig.yaxisrange as [number, number])
           .domain(yscaleconfig.datadomain(newVisibleRange[0] as number ,newVisibleRange[1] as number));
+          
           
           const currentTransformY=Shared_Yscaleconfig[yscaletag].currentTransformY
           let currentyscale=currentTransformY.rescaleX(Yscale)

@@ -50,7 +50,7 @@ export class PlotConfig {
             fill: "none", // Example default value
             strokewidth: 2, // Example default value
             strokedasharray: "15,5", // Example default value
-            
+            plotcolor:"black",
           },
           {
             plotstatus: true,
@@ -59,9 +59,10 @@ export class PlotConfig {
             Xdata:"xindex",
             yscaletag: "BR",
             xscaletag: "mainx", // Example default value
-            plottype: "ohlc", // Example default value
+            plottype: "bar", // Example default value
             tagclass: "ohlc_", // Example default value
             // You can optionally omit other properties if you want to use their default values
+            plotcolor:"black",
           },
           {
             plotstatus: true,
@@ -70,8 +71,35 @@ export class PlotConfig {
             Xdata:"xindex",
             yscaletag: "TL",
             xscaletag: "mainx", // Example default value
-            plottype: "close", // Example default value
+            plottype: "line1", // Example default value
             tagclass: "clsoe_", // Example default value
+            plotcolor:"black",
+            // You can optionally omit other properties if you want to use their default values
+          },
+
+          {
+            plotstatus: true,
+            plotName: "HighPlot",
+            Ydata: "high",
+            Xdata:"xindex",
+            yscaletag: "OHLC",
+            xscaletag: "mainx", // Example default value
+            plottype: "line1", // Example default value
+            tagclass: "clsoe_", // Example default value
+            plotcolor:"black",
+            // You can optionally omit other properties if you want to use their default values
+          },
+
+          {
+            plotstatus: true,
+            plotName: "LowPlot",
+            Ydata: "low",
+            Xdata:"xindex",
+            yscaletag: "BR",
+            xscaletag: "mainx", // Example default value
+            plottype: "line1", // Example default value
+            tagclass: "clsoe_", // Example default value
+            plotcolor:"red",
             // You can optionally omit other properties if you want to use their default values
           },
     ];
@@ -98,8 +126,7 @@ export class PlotConfig {
     const plotconfigdata = this.setDefaultPlotConfig()
     // let temparray={}
     plotconfigdata.forEach((item) => {
-        const {plotstatus,plotName,Ydata,Xdata,yscaletag,xscaletag,plottype, tagclass,linetype='solid',
-        color='red',fill='none',strokewidth=2,strokedasharray='15,5'  
+        const {plotstatus,plotName,Ydata,Xdata,yscaletag,xscaletag,plottype, tagclass,linetype='solid',plotcolor,fill='none',strokewidth=2,strokedasharray='15,5'  
         }=item
         updateSharedDataToplot(plotName,{
           plotstatus: plotstatus,
@@ -110,11 +137,11 @@ export class PlotConfig {
             // xdata: "xdata",
             // xdatamap: false, // true only if xdata domain [timestamp[0],...,timestamp[1]] is different from xscaletag axis domain [0,...,timestamp.length]
             linetype: linetype,
-            color: color,
             // yscalenumber: 1,
             fill: fill,
             strokewidth: strokewidth,
             strokedasharray: strokedasharray,
+            plotcolor:plotcolor,
             plottype: plottype,
             tagclass: tagclass,
         })

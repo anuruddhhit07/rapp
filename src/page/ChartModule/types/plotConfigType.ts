@@ -10,7 +10,6 @@ export interface DataToplotObjType {
     // xdata: string;
     // xdatamap: boolean;
     linetype: "solid" | "dashed" | "dotted"; // Adjust according to possible values
-    color: string|'red'|'blue';
     // yscalenumber: number;
     fill: "none" | "solid" | string; // Adjust according to possible values
     strokewidth: number;
@@ -19,6 +18,7 @@ export interface DataToplotObjType {
     xscaletag: string;
     plottype: "ohlc" | string; // Adjust according to possible values
     tagclass: string;
+    plotcolor:string,
 }
 
 export interface DataToplotType {
@@ -39,5 +39,5 @@ export interface PlotConfigItemType<> {
     fill?: "none" | "solid" | string; // Adjust according to possible values
     strokewidth?: number;
     strokedasharray?: string;
-   
+    plotcolor:string
 }

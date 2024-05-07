@@ -119,7 +119,6 @@ export function updateSharedDataToplot(key: string, partialData: Partial<DataTop
       xdata: () => [],
       ydata: () => [],
       linetype: "solid",
-      color: "black",
       fill: "none",
       strokewidth: 1,
       strokedasharray: "",
@@ -127,6 +126,7 @@ export function updateSharedDataToplot(key: string, partialData: Partial<DataTop
       xscaletag: "",
       plottype: "ohlc",
       tagclass: "",
+      plotcolor:"black",
       ...partialData, // Merge with provided partial data
     };
   }
@@ -176,6 +176,25 @@ export function getKeysFromDataToplotKeyValue(keyValuePairs: [keyof DataToplotOb
     }
   }
   return matchingKeys;
+}
+
+export function groupDataByPlotType(): { [key: string]: string[] } {
+  const groupedData: { [key: string]: string[] } = {};
+
+  // Loop through each data object
+  Object.keys(Shared_DataToplot).forEach(key => {
+    const plotType = Shared_DataToplot[key].plottype;
+
+    // Check if the plotType exists in groupedData, if not, create an empty array for it
+    if (!groupedData[plotType]) {
+      groupedData[plotType] = [];
+    }
+
+    // Push the key into the corresponding plotType array
+    groupedData[plotType].push(key);
+  });
+
+  return groupedData;
 }
 
 export function getUniqueKeysAndYScaleTagsFromDataToplotKeyValue(keyValuePairs: [keyof DataToplotObjType, string | boolean][]): {

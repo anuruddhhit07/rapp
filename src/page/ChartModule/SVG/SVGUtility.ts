@@ -172,7 +172,8 @@ export function drawLineOnSVG(
   xScale: d3.ScaleLinear<number, number>,
   yScale: d3.ScaleLinear<number, number>,
   classNameTag:string,
-  yaxistag:string
+  yaxistag:string,
+  plotColor:string
 ) {
   // Create a line generator
   const lineGenerator = d3.line()
@@ -182,10 +183,10 @@ export function drawLineOnSVG(
   // Append a path element to the SVG group
   svgGroup.append("path")
     .datum(yData) // Set data for the line
-    .attr("class", `all linePlot-${classNameTag}`)
+    .attr("class", `all lineplot linePlot-${classNameTag}`)
     .attr("clip-path", `url(#clip-${yaxistag})`)
     .attr("fill", "none")
-    .attr("stroke", "steelblue") // Set color for the line
+    .attr("stroke", plotColor) // Set color for the line
     .attr("stroke-width", 2) // Set width for the line
     .attr("d", lineGenerator as any); // Generate the line path using the line generator
 }
