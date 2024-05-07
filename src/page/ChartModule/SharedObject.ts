@@ -1,3 +1,4 @@
+import { zoomIdentity } from "d3";
 import { defaultChartBaseProp } from "./SharedDefaultValue";
 import {
   XScaleConfigType,
@@ -82,7 +83,7 @@ export function updateYscaleconfig(
       yscaletag: "TR",
       xpoint: 0,
       scaleSide: "Left",
-      ypadding: () => 0,
+      ypadding: 0,
       transform: { k: 0 },
       scaledata_max: () => [],
       scaledata_min: () => [],
@@ -90,8 +91,9 @@ export function updateYscaleconfig(
       visrange: (minrange?: number, maxrange?: number) => [0, 0],
       maxscaledata: () => 0,
       minscaledata: () => 0,
-      datadomain: () => [0, 0],
+      datadomain: (minvisrange?: number, maxvisrange?: number) => [0, 0],
       Yscale: null,
+      currentTransformY:zoomIdentity,
       yzoomstatus:false,
       ...partialData, // Merge with provided partial data
     };
@@ -143,6 +145,62 @@ export function getActivePlotData(): DataToplotType {
 
   return activePlotData;
 }
+
+export function getKeyFromDataToplotKeyValue(keyToMatch: keyof DataToplotObjType, valueToMatch: string): string | null {
+  for (const key in Shared_DataToplot) {
+      if (Shared_DataToplot.hasOwnProperty(key) && Shared_DataToplot[key][keyToMatch] === valueToMatch) {
+          return key;
+      }
+  }
+  return null; // Return null if no matching key is found
+}
+
+export function getKeysFromDataToplotKeyValue(keyValuePairs: [keyof DataToplotObjType, string|boolean][]): string[] {
+  const matchingKeys: string[] = [];
+  for (const key in Shared_DataToplot) {
+      if (Shared_DataToplot.hasOwnProperty(key)) {
+          let isMatch = true;
+          for (const [keyToMatch, valueToMatch] of keyValuePairs) {
+              if (Shared_DataToplot[key][keyToMatch] !== valueToMatch) {
+                  isMatch = false;
+                  break;
+              }
+          }
+          if (isMatch) {
+              matchingKeys.push(key);
+          }
+      }
+  }
+  return matchingKeys;
+}
+
+export function getUniqueKeysAndYScaleTagsFromDataToplotKeyValue(keyValuePairs: [keyof DataToplotObjType, string|boolean][]): { keys: string[], yscaletags: string[] } {
+  const matchingKeys: { keys: string[], yscaletags: string[] } = { keys: [], yscaletags: [] };
+  const keyYScaleTagSet: Set<string> = new Set();
+
+  for (const key in Shared_DataToplot) {
+      if (Shared_DataToplot.hasOwnProperty(key)) {
+          let isMatch = true;
+          for (const [keyToMatch, valueToMatch] of keyValuePairs) {
+              if (Shared_DataToplot[key][keyToMatch] !== valueToMatch) {
+                  isMatch = false;
+                  break;
+              }
+          }
+          if (isMatch) {
+              const yscaletag = Shared_DataToplot[key].yscaletag;
+              const keyYScaleTag = `${key}-${yscaletag}`;
+              if (!keyYScaleTagSet.has(keyYScaleTag)) {
+                  matchingKeys.keys.push(key);
+                  matchingKeys.yscaletags.push(yscaletag);
+                  keyYScaleTagSet.add(keyYScaleTag);
+              }
+          }
+      }
+  }
+  return matchingKeys;
+}
+
 
 export function getUniqueScaleTags(): {
   yscaletags: string[];

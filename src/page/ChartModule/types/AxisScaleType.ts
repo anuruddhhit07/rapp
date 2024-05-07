@@ -43,7 +43,7 @@ export interface YscaleItemProp {
     yscaletag: string;
     xpoint: number;
     scaleSide: 'Left'|'Right';
-    ypadding: () => number;
+    ypadding:number;
     transform: { k: number };
     scaledata_max: () => number[];
     scaledata_min: () => number[];
@@ -51,8 +51,9 @@ export interface YscaleItemProp {
     visrange: (minrange?:number,maxrange?:number) => [number, number];
     maxscaledata: () => number;
     minscaledata: () => number;
-    datadomain: () => [number, number];
+    datadomain: (minvisrange?: number, maxvisrange?: number) => [number, number];
     Yscale: ScaleLinear<number, number> |null
+    currentTransformY:d3.ZoomTransform
     yzoomstatus:boolean,
 };
 

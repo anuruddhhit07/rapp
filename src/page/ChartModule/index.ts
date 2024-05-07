@@ -91,6 +91,8 @@ class CandlestickChartTS {
     const currentTransformX = event.transform;
     // console.log(`Group zoom! at zoomxgroup:${x},y:${y},transform:${currentTransformX} `);
     this.plotaxis.updateXaxis(currentTransformX)
+
+
   }
 
   zoomY = d3
@@ -110,7 +112,14 @@ zoomedY(event:any){
 // console.log(event)
 // const transform = event.transform;
 const [xmousepoint, ymousepoint] = d3.pointer(event);
-const currentTransformY = event.transform;
+const currentTransformY: d3.ZoomTransform = event.transform;
+
+// console.log("new currentTransformY",currentTransformY);
+
+// const currentTransformYy = this.AxisYGroup.property("__zoom");
+//  console.log("old currentTransformY",currentTransformYy);
+
+
 // console.log(`Group zoom! at zoomxgroup:${xmousepoint},y:${ymousepoint},transform:${currentTransformY} `);
 this.plotaxis.updateYaxis(currentTransformY,xmousepoint,ymousepoint)
 }
