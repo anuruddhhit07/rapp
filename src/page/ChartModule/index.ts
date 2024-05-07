@@ -112,7 +112,7 @@ class CandlestickChartTS {
     .zoom()
     .scaleExtent([0.5, 1])
     // .translateExtent([
-    //   [-Shared_ChartBaseProp.width / 2, -Shared_ChartBaseProp.height / 2],
+    //   [-0*Shared_ChartBaseProp.width / 2, -Shared_ChartBaseProp.height / 2],
     //   [Shared_ChartBaseProp.width + Shared_ChartBaseProp.width / 2, Shared_ChartBaseProp.height],
     // ])
     // .extent([
