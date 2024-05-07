@@ -321,9 +321,10 @@ export class PlotAxis {
         const currentTransformY =
           Shared_Yscaleconfig[yscaletag].currentTransformY;
         let currentyscale = currentTransformY.rescaleY(Yscale);
-          if (yscaletag=='BR'){
-            currentyscale.domain([0, currentyscale.domain()[1]]);
-          }
+
+          // if (yscaletag=='BR'){
+          //   currentyscale.domain([0, currentyscale.domain()[1]]);
+          // }
         
 
         this.axisarea.selectAll(`.y-axis-${yscaleconfig.yscaletag}`).call(
@@ -385,9 +386,10 @@ export class PlotAxis {
       let currentyscale = currentTransformY.rescaleY(
         scaleconfig.Yscale
       ) as d3.ScaleLinear<number, number>;
-      if (scaletag=='BR'){
-        currentyscale.domain([0, currentyscale.domain()[1]]);
-      }
+
+      // if (scaletag=='BR'){
+      //   currentyscale.domain([0, currentyscale.domain()[1]]);
+      // }
 
       updateYscaleconfig(scaleconfig.yscaletag, {
         currentTransformY: currentTransformY,

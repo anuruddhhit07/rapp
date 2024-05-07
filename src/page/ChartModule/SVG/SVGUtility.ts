@@ -219,42 +219,7 @@ export function drawBarChartOnSVG(
     .attr("fill", barColor); // Set color for the bar
 }
 
-export function drawCandlestickOnSVG1(
-  svgGroup: d3.Selection<SVGGElement, any, any, any>,
-  candlestickData: CandlestickData[],
-  xScale: d3.ScaleLinear<number, number>,
-  yScale: d3.ScaleLinear<number, number>,
-  classNameTag: string,
-  yaxistag: string,
-  bullColor: string,
-  bearColor: string
-) {
-  // Create a group for each candlestick
-  const strokeWidthScale = xScale(candlestickData[1].xData) - xScale(candlestickData[0].xData);
-  console.log("strokeWidthScale",strokeWidthScale)
 
-  const candlesticks = svgGroup.selectAll(".candlestick")
-    .data(candlestickData)
-    .enter()
-    .attr("class", "candlestick")
-    .append("rect")
-    .attr("x", (d) => xScale(d.xData) - strokeWidthScale / 4)
-    .attr("y", (d) => Math.min(yScale(d.open), yScale(d.close)))
-    .attr("width", (d) => strokeWidthScale/2)
-    .attr("height", (d) => Math.abs(yScale(d.open) - yScale(d.close)))
-    .attr("fill", (d) => d.close > d.open ? bullColor : bearColor)
-    .attr("stroke", "none");
-
-  // Draw the wick (line representing high and low)
-  // candlesticks.append("line")
-  //   .attr("class", "wick")
-  //   .attr("x1", 0)
-  //   .attr("y1", (d) => yScale(d.high))
-  //   .attr("x2", 0)
-  //   .attr("y2", (d) => yScale(d.low))
-  //   .attr("stroke", (d) => d.close > d.open ? bullColor : bearColor)
-  //   .attr("stroke-width", (d) => strokeWidthScale);
-}
 
 
 export function drawCandlestickOnSVG(
