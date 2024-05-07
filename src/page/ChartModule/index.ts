@@ -14,6 +14,7 @@ import {
   Shared_Yscaleconfig,
   Shared_DataToplot,
   setYaxisRatio,
+  Shared_Yaxisrange,
 } from "./SharedObject";
 import { createGroup, createGroupAdv, createRect } from "./SVG/SVGUtility";
 
@@ -22,9 +23,11 @@ class CandlestickChartTS {
   private svg!: d3.Selection<SVGSVGElement, any, HTMLElement, any>;
   private axisarea!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   axisGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
-  TopGroup: d3.Selection<SVGGElement, any, HTMLElement, any>;
+  BackGroup: d3.Selection<SVGGElement, any, HTMLElement, any>;
   AxisXGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   AxisYGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
+  PlotGroup1!: d3.Selection<SVGGElement, any, HTMLElement, any>;
+  FrontGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   plotaxis: PlotAxis;
   
   constructor(stockdata: ChartDataIN, targetID: string) {
@@ -33,16 +36,15 @@ class CandlestickChartTS {
     this.axisChart = AxisChart.getInstance();
     PlotConfig.getInstance();
     this.setupSVG();
-    const {svgWidth,svgHeight,margin}=Shared_ChartBaseProp
+    const {svgWidth,svgHeight,margin,width,height}=Shared_ChartBaseProp
 
 
-
-    this.TopGroup = createGroupAdv(this.svg, "main-border")
+    this.BackGroup = createGroupAdv(this.svg, "main-border")
     .drawBorder(0, 0, svgWidth, svgHeight, "red", 2,"blue",.2)
-    .call(this.zoomX as any)
-    .onEvent1("mousemove", (event) => {
-      this.mousefunction(event)
-     })
+    // .call(this.zoomX as any)
+    // .onEvent1("mousemove", (event) => {
+    //   this.mousefunction(event)
+    //  })
 
 
 
@@ -58,29 +60,26 @@ class CandlestickChartTS {
     .call(this.zoomY as any)
 
     
-
-    this.AxisYGroup = createGroupAdv(this.svg, "Y-Area")
-    .translate(svgWidth-margin.right,0)
-    .drawBorder(0, 0,margin.right, svgHeight-margin.bottom, "red", 2,"green",.2)
-    .call(this.zoomY as any)
-
-
-
     
-    // .onEvent1("click", (event) => {
-    //  this.dbclickedfunction(event)
-    // })
+    this.plotaxis=PlotAxis.getInstance(this.BackGroup, this.axisChart);
 
-    
-    this.plotaxis=PlotAxis.getInstance(this.TopGroup, this.axisChart);
+    // console.log("Shared_yaxisrange",Shared_Yaxisrange,Object.entries(Shared_Yaxisrange));
+    // for (const [plotGroupName, plotGroupData] of Object.entries(Shared_Yaxisrange)) {
+    //   const { range, borderColor, borderWidth, fill, opacity } = plotGroupData;
+    //   console.log(fill);
+    //   // Create the plot group dynamically
+    //   const plotGroup = createGroupAdv(this.svg, `plotaclass-${plotGroupName}`)
+    //     .translate(0, 0)
+    //     .drawBorder(margin.left+margin.innerLeft, range[1], width+margin.innerRight, range[0] - range[1], borderColor, borderWidth, fill, opacity)
+    // }
 
-    // this.AxisXGroup.call(this.zoomX as any);
+    this.FrontGroup = createGroupAdv(this.svg, "main-border")
+    .drawBorder(margin.left+margin.innerLeft, margin.top+margin.innerTop, width+margin.innerRight, height, "red", 2,"blue",.3)
+    .call(this.zoomX as any)
+    .onEvent1("mousemove", (event) => {
+      this.mousefunction(event)
+     })
 
-
-  
-
-    
-   
   }
 
   zoomX = d3
@@ -139,20 +138,20 @@ this.plotaxis.updateYaxis(currentTransformY,xmousepoint,ymousepoint)
 
   dbclickedfunction(event:any){
     console.log(this)
-    const [x, y] = d3.pointer(event,this.TopGroup);
+    const [x, y] = d3.pointer(event,this.BackGroup);
     console.log(`Group clicked! at dbclickedfunctionx:${x},y:${y} `);
   }
 
   mousefunction(event:any){
     const [x, y] = d3.pointer(event);
-    // console.log(`Group mousemove! at mousefunction:${x},y:${y} `);
+    console.log(`Group mousemove! at mousefunction:${x},y:${y} `);
   }
 
 
   drawBackGround() {
     const { margin, width, height } = Shared_ChartBaseProp;
     this.drawPlots(
-      this.TopGroup,
+      this.BackGroup,
       margin.left + margin.innerLeft,
       margin.top + margin.innerTop,
       width,

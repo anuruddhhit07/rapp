@@ -1,11 +1,6 @@
 import { zoomIdentity } from "d3";
 import { defaultChartBaseProp } from "./SharedDefaultValue";
-import {
-  XScaleConfigType,
-  XscaleItemProp,
-  YScaleConfigType,
-  YscaleItemProp,
-} from "./types/AxisScaleType";
+import { XScaleConfigType, XscaleItemProp, YScaleConfigType, YaxisPropItem, YscaleItemProp, yaxisrangeType } from "./types/AxisScaleType";
 import { ChartBaseSetupType } from "./types/chartSetuptype";
 import { ChartDataObj } from "./types/chartdataTypes";
 import { DataToplotObjType, DataToplotType } from "./types/plotConfigType";
@@ -27,21 +22,35 @@ export let Shared_Xscaleconfig: XScaleConfigType = {};
 export let Shared_Yscaleconfig: YScaleConfigType = {};
 
 export let Shared_DataToplot: DataToplotType = {};
+export let Shared_Yaxisrange: yaxisrangeType = {};
 
 export function updateChartPlotData(data: ChartDataObj) {
   Shared_ChartPlotData = data;
 }
 
-export function updateChartBaseProp(
-  partialData: Partial<ChartBaseSetupType>
-): void {
+export function updateChartBaseProp(partialData: Partial<ChartBaseSetupType>): void {
   Object.assign(Shared_ChartBaseProp, partialData);
 }
 
-export function updateXscaleconfig(
-  key: string,
-  partialData: Partial<XscaleItemProp>
-): void {
+export function updateYaxisProp(key: string, partialData: Partial<YaxisPropItem>): void {
+  // Check if the key already exists in Xscaleconfig
+  if (Shared_Yaxisrange.hasOwnProperty(key)) {
+    // Merge the partial data with the existing XscaleItemProp object
+    Shared_Yaxisrange[key] = { ...Shared_Yaxisrange[key], ...partialData };
+  } else {
+    // If the key does not exist, create a new XscaleItemProp object with the provided data
+    Shared_Yaxisrange[key] = {
+      range: [0, 0],
+      borderColor: "red",
+      borderWidth: 2,
+      fill: "green",
+      opacity: 0.2,
+      ...partialData,
+    };
+  }
+}
+
+export function updateXscaleconfig(key: string, partialData: Partial<XscaleItemProp>): void {
   // Check if the key already exists in Xscaleconfig
   if (Shared_Xscaleconfig.hasOwnProperty(key)) {
     // Merge the partial data with the existing XscaleItemProp object
@@ -65,10 +74,7 @@ export function updateXscaleconfig(
   }
 }
 
-export function updateYscaleconfig(
-  key: string,
-  partialData: Partial<YscaleItemProp>
-): void {
+export function updateYscaleconfig(key: string, partialData: Partial<YscaleItemProp>): void {
   // Check if the key already exists in Yscaleconfig
   if (Shared_Yscaleconfig.hasOwnProperty(key)) {
     // Merge the partial data with the existing YscaleItemProp object
@@ -79,7 +85,7 @@ export function updateYscaleconfig(
       plotstatus: false,
       yaxistag: "mainyaxis",
       yaxisratio: null,
-      yaxisrange:null,
+      yaxisrange: null,
       yscaletag: "TR",
       xpoint: 0,
       scaleSide: "Left",
@@ -93,17 +99,14 @@ export function updateYscaleconfig(
       minscaledata: () => 0,
       datadomain: (minvisrange?: number, maxvisrange?: number) => [0, 0],
       Yscale: null,
-      currentTransformY:zoomIdentity,
-      yzoomstatus:false,
+      currentTransformY: zoomIdentity,
+      yzoomstatus: false,
       ...partialData, // Merge with provided partial data
     };
   }
 }
 
-export function updateSharedDataToplot(
-  key: string,
-  partialData: Partial<DataToplotObjType>
-): void {
+export function updateSharedDataToplot(key: string, partialData: Partial<DataToplotObjType>): void {
   // Check if the key already exists in Shared_DataToplot
   if (Shared_DataToplot.hasOwnProperty(key)) {
     // Merge the partial data with the existing DataToplotObjType object
@@ -148,59 +151,61 @@ export function getActivePlotData(): DataToplotType {
 
 export function getKeyFromDataToplotKeyValue(keyToMatch: keyof DataToplotObjType, valueToMatch: string): string | null {
   for (const key in Shared_DataToplot) {
-      if (Shared_DataToplot.hasOwnProperty(key) && Shared_DataToplot[key][keyToMatch] === valueToMatch) {
-          return key;
-      }
+    if (Shared_DataToplot.hasOwnProperty(key) && Shared_DataToplot[key][keyToMatch] === valueToMatch) {
+      return key;
+    }
   }
   return null; // Return null if no matching key is found
 }
 
-export function getKeysFromDataToplotKeyValue(keyValuePairs: [keyof DataToplotObjType, string|boolean][]): string[] {
+export function getKeysFromDataToplotKeyValue(keyValuePairs: [keyof DataToplotObjType, string | boolean][]): string[] {
   const matchingKeys: string[] = [];
   for (const key in Shared_DataToplot) {
-      if (Shared_DataToplot.hasOwnProperty(key)) {
-          let isMatch = true;
-          for (const [keyToMatch, valueToMatch] of keyValuePairs) {
-              if (Shared_DataToplot[key][keyToMatch] !== valueToMatch) {
-                  isMatch = false;
-                  break;
-              }
-          }
-          if (isMatch) {
-              matchingKeys.push(key);
-          }
+    if (Shared_DataToplot.hasOwnProperty(key)) {
+      let isMatch = true;
+      for (const [keyToMatch, valueToMatch] of keyValuePairs) {
+        if (Shared_DataToplot[key][keyToMatch] !== valueToMatch) {
+          isMatch = false;
+          break;
+        }
       }
+      if (isMatch) {
+        matchingKeys.push(key);
+      }
+    }
   }
   return matchingKeys;
 }
 
-export function getUniqueKeysAndYScaleTagsFromDataToplotKeyValue(keyValuePairs: [keyof DataToplotObjType, string|boolean][]): { keys: string[], yscaletags: string[] } {
-  const matchingKeys: { keys: string[], yscaletags: string[] } = { keys: [], yscaletags: [] };
+export function getUniqueKeysAndYScaleTagsFromDataToplotKeyValue(keyValuePairs: [keyof DataToplotObjType, string | boolean][]): {
+  keys: string[];
+  yscaletags: string[];
+} {
+  const matchingKeys: { keys: string[]; yscaletags: string[] } = { keys: [], yscaletags: [] };
   const keyYScaleTagSet: Set<string> = new Set();
 
   for (const key in Shared_DataToplot) {
-      if (Shared_DataToplot.hasOwnProperty(key)) {
-          let isMatch = true;
-          for (const [keyToMatch, valueToMatch] of keyValuePairs) {
-              if (Shared_DataToplot[key][keyToMatch] !== valueToMatch) {
-                  isMatch = false;
-                  break;
-              }
-          }
-          if (isMatch) {
-              const yscaletag = Shared_DataToplot[key].yscaletag;
-              const keyYScaleTag = `${key}-${yscaletag}`;
-              if (!keyYScaleTagSet.has(keyYScaleTag)) {
-                  matchingKeys.keys.push(key);
-                  matchingKeys.yscaletags.push(yscaletag);
-                  keyYScaleTagSet.add(keyYScaleTag);
-              }
-          }
+    if (Shared_DataToplot.hasOwnProperty(key)) {
+      let isMatch = true;
+      for (const [keyToMatch, valueToMatch] of keyValuePairs) {
+        if (Shared_DataToplot[key][keyToMatch] !== valueToMatch) {
+          isMatch = false;
+          break;
+        }
       }
+      if (isMatch) {
+        const yscaletag = Shared_DataToplot[key].yscaletag;
+        const keyYScaleTag = `${key}-${yscaletag}`;
+        if (!keyYScaleTagSet.has(keyYScaleTag)) {
+          matchingKeys.keys.push(key);
+          matchingKeys.yscaletags.push(yscaletag);
+          keyYScaleTagSet.add(keyYScaleTag);
+        }
+      }
+    }
   }
   return matchingKeys;
 }
-
 
 export function getUniqueScaleTags(): {
   yscaletags: string[];
@@ -231,24 +236,16 @@ export function getUniqueYaxisTags(): {
   const yaxistagtagsSet = new Set<string>();
   for (const key in activePlots) {
     if (activePlots.hasOwnProperty(key)) {
-      yaxistagtagsSet.add(
-        Shared_Yscaleconfig[activePlots[key].yscaletag].yaxistag
-      );
+      yaxistagtagsSet.add(Shared_Yscaleconfig[activePlots[key].yscaletag].yaxistag);
     }
   }
   const yaxistags = Array.from(yaxistagtagsSet);
   return { yaxistags, uniqueaxis: yaxistags.length };
 }
 
-export function updateYScaleConfigByKey(
-  keyName: keyof YscaleItemProp,
-  value: string,
-  partialData: Partial<YscaleItemProp>
-): void {
+export function updateYScaleConfigByKey(keyName: keyof YscaleItemProp, value: string, partialData: Partial<YscaleItemProp>): void {
   // Filter YScaleConfigType entries based on the provided key and value
-  const yScaleConfigEntries = Object.entries(Shared_Yscaleconfig).filter(
-    ([_, config]) => config[keyName] === value
-  );
+  const yScaleConfigEntries = Object.entries(Shared_Yscaleconfig).filter(([_, config]) => config[keyName] === value);
 
   // Update specified properties for each group
   yScaleConfigEntries.forEach(([key, config]) => {
@@ -274,18 +271,21 @@ export function setYaxisRatio(): void {
   // const yaxisratioObj: { [key: string]: number } = {};
   let tempcumulativeRatio = 0;
   yaxistags.forEach((yaxistag, index) => {
-    const ratio =
-      ratioarray && ratioarray.length > 0 ? ratioarray[index] : ratioIncrement;
+    const ratio = ratioarray && ratioarray.length > 0 ? ratioarray[index] : ratioIncrement;
     // console.log("ratio",ratio)
     // console.log("yaxistags",yaxistag)
     // yaxisratioObj[yaxistag] = ratio;
 
-    const startY =
-      Shared_ChartBaseProp.margin.top +
-      Shared_ChartBaseProp.margin.innerTop +
-      totalHeight * tempcumulativeRatio;
-      const endY = startY + (totalHeight * ratio)
-    updateYScaleConfigByKey("yaxistag", yaxistag, {yaxisrange:[endY, startY], yaxisratio: ratio });
+    const startY = Shared_ChartBaseProp.margin.top + Shared_ChartBaseProp.margin.innerTop + totalHeight * tempcumulativeRatio;
+    const endY = startY + totalHeight * ratio;
+    updateYScaleConfigByKey("yaxistag", yaxistag, { yaxisrange: [endY, startY], yaxisratio: ratio });
+
+    // Shared_yaxisrange.push([endY, startY]);
+
+    updateYaxisProp(`plotGroup${index + 1}`,{
+      range:[endY, startY],
+      fill:index==0?"red":"yellow"
+    })
     tempcumulativeRatio += ratio;
   });
 }
@@ -304,7 +304,7 @@ export function setYaxisRatio(): void {
 //           updateYscaleconfig(scaletag,{
 //             Yscale: Yscale
 //           })
-//         }   
+//         }
 //       }
 //     });
 // }

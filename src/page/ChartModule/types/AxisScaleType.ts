@@ -1,6 +1,19 @@
 import { ScaleBand, ScaleLinear, ScaleTime } from "d3";
 import { ChartDataObj } from "./chartdataTypes";
 
+
+export interface YaxisPropItem {
+    range:[number, number],
+    borderColor: string,
+    borderWidth: number,
+    fill:string,
+    opacity:number
+}
+
+export type yaxisrangeType = {
+    [key: string]: YaxisPropItem
+}; ;
+
 export interface XscaleItemProp {
     xscaleName:string;
         y_point: number;
