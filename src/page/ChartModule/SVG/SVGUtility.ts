@@ -268,8 +268,6 @@ export function drawCandlestickOnSVG(
   yScale: d3.ScaleLinear<number, number>,
   classNameTag: string,
   yaxistag: string,
-  bullColor: string,
-  bearColor: string
 ) {
   // Create a group for each candlestick
   const tickwidth = xScale(1) - xScale(0);

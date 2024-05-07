@@ -405,9 +405,7 @@ class CandlestickChartTS {
       newxScale,
       newyScale,
       plotName,
-      yaxistag,
-      'green',
-      'red',
+      yaxistag
     );
   }
 
