@@ -262,7 +262,7 @@ class CandlestickChartTS {
         }
 
         if (plotType == "ohlc") {
-          this.BackGroup.selectAll(`.candlestick`).remove();
+          this.BackGroup.selectAll(`.ohlcplot`).remove();
           // Loop through the keys corresponding to the current plot type
           groupedplotData[plotType].forEach((PlotName) => {
             // console.log(`Key: ${PlotName}`);
@@ -365,13 +365,13 @@ class CandlestickChartTS {
     const low = Shared_ChartPlotData["low"];
     const close = Shared_ChartPlotData["close"];
 
-    const candlestickData: CandlestickData[] = XDATA.map((value, index) => ({
-      xData: value,
-      open: open[index],
-      high: high[index],
-      low: low[index],
-      close: close[index],
-    }));
+    // const candlestickData: CandlestickData[] = XDATA.map((value, index) => ({
+    //   xData: value,
+    //   open: open[index],
+    //   high: high[index],
+    //   low: low[index],
+    //   close: close[index],
+    // }));
 
     let plotColor = Shared_DataToplot[plotName].plotcolor;
     const currentTransformX =
@@ -388,7 +388,7 @@ class CandlestickChartTS {
     let newxScale = currentTransformX.rescaleX(xScale);
     let newyScale = currentTransformY.rescaleY(yScale);
 
-    console.log(candlestickData)
+    // console.log(candlestickData)
     console.log(newxScale.domain())
     console.log(newyScale.domain())
 
@@ -397,7 +397,11 @@ class CandlestickChartTS {
     const yaxisRange = Shared_Yaxisrange[yaxistag].range;
     drawCandlestickOnSVG(
       PlotGroupArea,
-      candlestickData,
+      XDATA,
+      open,
+      high,
+      low,
+      close,
       newxScale,
       newyScale,
       plotName,

@@ -219,7 +219,7 @@ export function drawBarChartOnSVG(
     .attr("fill", barColor); // Set color for the bar
 }
 
-export function drawCandlestickOnSVG(
+export function drawCandlestickOnSVG1(
   svgGroup: d3.Selection<SVGGElement, any, any, any>,
   candlestickData: CandlestickData[],
   xScale: d3.ScaleLinear<number, number>,
@@ -235,11 +235,9 @@ export function drawCandlestickOnSVG(
 
   const candlesticks = svgGroup.selectAll(".candlestick")
     .data(candlestickData)
-    .enter().append("g")
+    .enter()
     .attr("class", "candlestick")
-
-  candlesticks.append("rect")
-    .attr("class", "body")
+    .append("rect")
     .attr("x", (d) => xScale(d.xData) - strokeWidthScale / 4)
     .attr("y", (d) => Math.min(yScale(d.open), yScale(d.close)))
     .attr("width", (d) => strokeWidthScale/2)
@@ -248,12 +246,85 @@ export function drawCandlestickOnSVG(
     .attr("stroke", "none");
 
   // Draw the wick (line representing high and low)
-  candlesticks.append("line")
-    .attr("class", "wick")
-    .attr("x1", 0)
-    .attr("y1", (d) => yScale(d.high))
-    .attr("x2", 0)
-    .attr("y2", (d) => yScale(d.low))
-    .attr("stroke", (d) => d.close > d.open ? bullColor : bearColor)
-    .attr("stroke-width", (d) => strokeWidthScale);
+  // candlesticks.append("line")
+  //   .attr("class", "wick")
+  //   .attr("x1", 0)
+  //   .attr("y1", (d) => yScale(d.high))
+  //   .attr("x2", 0)
+  //   .attr("y2", (d) => yScale(d.low))
+  //   .attr("stroke", (d) => d.close > d.open ? bullColor : bearColor)
+  //   .attr("stroke-width", (d) => strokeWidthScale);
+}
+
+
+export function drawCandlestickOnSVG(
+  svgGroup: d3.Selection<SVGGElement, any, any, any>,
+  xdata:number[],
+  open:number[],
+  high:number[],
+  low:number[],
+  close:number[],
+  xScale: d3.ScaleLinear<number, number>,
+  yScale: d3.ScaleLinear<number, number>,
+  classNameTag: string,
+  yaxistag: string,
+  bullColor: string,
+  bearColor: string
+) {
+  // Create a group for each candlestick
+  const tickwidth = xScale(1) - xScale(0);
+    const cdxdata = xdata;
+    const wick = svgGroup.selectAll(".wickplot").data(cdxdata);
+    const candlesticks = svgGroup.selectAll(".candleplot").data(cdxdata);
+
+    wick
+    .enter()
+    .append("line")
+    .attr("class", `all ohlcplot wickplot wickplot-${classNameTag}`)
+    .attr("clip-path", `url(#clip-${yaxistag})`)
+    .merge(wick as any)
+    .attr("x1", (d, i) => xScale(i))
+    .attr("y1", (d, i) => yScale(high[i]))
+    .attr("x2", (d, i) => xScale(i))
+    .attr("y2", (d, i) => yScale(low[i]))
+    .attr("stroke", "black")
+    .attr("stroke-width", 1)
+
+    wick.exit().remove();
+
+    
+    candlesticks
+      .enter()
+      .append("rect")
+      .attr("class", `all ohlcplot candleplot candleplot-${classNameTag}`)
+      .attr("clip-path", `url(#clip-${yaxistag})`)
+      .merge(candlesticks as any)
+      .attr("x", (d, i) => xScale(xdata[i]) - tickwidth / 4)
+      .attr("y", (d, i) => {
+        // console.log(d,i,filteredData.close[i]);
+        return yScale(
+          Math.max(open[i], close[i])
+        );
+      })
+      .attr("width", tickwidth / 2)
+      .attr("height", (d, i) => {
+        // console.log(d,currentYscale(d),this.yAxisRange[currentyaxis][0]-currentYscale(d))
+        return Math.abs(
+          yScale(open[i]) -
+          yScale(close[i])
+        ) == 0
+          ? yScale(close[i]) * 0.001
+          : Math.abs(
+            yScale(open[i]) -
+            yScale(close[i])
+          );
+      })
+      .attr("fill", (d, i) =>
+        open[i] > close[i] ? "red" : "green"
+      )
+      .attr("stroke", "black")
+      .attr("stroke-width", 1);
+
+    candlesticks.exit().remove();
+
 }
