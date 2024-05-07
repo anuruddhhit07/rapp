@@ -258,4 +258,36 @@ export class PlotAxis {
     
     });
   }
+
+  public updateYaxis(
+    currentTransformY: any
+   ) {
+     //axisarea.selectAll(`.x-axis`).remove();
+     //console.log("first",this.axisarea)
+     // return
+   
+     const { yscaletags } = getUniqueScaleTags();
+     yscaletags.map((scaletag) => {
+       let scaleconfig = Shared_Yscaleconfig[scaletag];
+       if (scaleconfig.Yscale == null) {
+         throw new Error(`Scale cannot be null for scaletag: ${scaletag}`);
+       }
+ 
+       let currentyscale = currentTransformY.rescaleX(scaleconfig.Yscale) as
+         | d3.ScaleLinear<number, number>
+ 
+       this.axisarea.selectAll(`.y-axis-${scaleconfig.yscaletag}`).call(
+         this.yaxisgenerator(
+           currentyscale as
+             | d3.ScaleLinear<number, number>,
+           {
+            scaleSide: scaleconfig.scaleSide,
+            yscaletag: scaleconfig.yscaletag,
+           }
+         ) as any
+       );
+ 
+     
+     });
+   }
 }

@@ -43,7 +43,7 @@ class CandlestickChartTS {
       this.mousefunction(event)
      })
 
-     this.plotaxis=PlotAxis.getInstance(this.AllGroup, this.axisChart);
+
 
 
 
@@ -56,11 +56,14 @@ class CandlestickChartTS {
     this.AxisYGroup = createGroupAdv(this.svg, "Y-Area")
     .translate(svgWidth-margin.right,0)
     .drawBorder(0, 0,margin.right, svgHeight-margin.bottom, "red", 2,"green",.2)
-    .onEvent1("click", (event) => {
-     this.dbclickedfunction(event)
-    })
+    .call(this.zoomY as any)
+    
+    // .onEvent1("click", (event) => {
+    //  this.dbclickedfunction(event)
+    // })
 
     
+    this.plotaxis=PlotAxis.getInstance(this.AllGroup, this.axisChart);
 
     // this.AxisXGroup.call(this.zoomX as any);
 
@@ -92,6 +95,28 @@ class CandlestickChartTS {
     console.log(`Group zoom! at zoomxgroup:${x},y:${y},transform:${currentTransformX} `);
     this.plotaxis.updateXaxis(currentTransformX)
   }
+
+  zoomY = d3
+  .zoom()
+  .scaleExtent([0.5, 10])
+  .translateExtent([
+    [-Shared_ChartBaseProp.width / 2, -Shared_ChartBaseProp.height / 2],
+    [Shared_ChartBaseProp.width + Shared_ChartBaseProp.width / 2, Shared_ChartBaseProp.height],
+  ])
+  .extent([
+    [0, 0],
+    [Shared_ChartBaseProp.width, Shared_ChartBaseProp.height],
+  ])
+  .on("zoom", this.zoomedY.bind(this));
+
+zoomedY(event:any){
+console.log(event)
+// const transform = event.transform;
+const [x, y] = d3.pointer(event);
+const currentTransformY = event.transform;
+console.log(`Group zoom! at zoomxgroup:${x},y:${y},transform:${currentTransformY} `);
+this.plotaxis.updateYaxis(currentTransformY)
+}
 
 
   dbclickedfunction(event:any){
