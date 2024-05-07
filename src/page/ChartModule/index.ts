@@ -31,6 +31,7 @@ class CandlestickChartTS {
   AxisYGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   PlotGroup1!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   FrontGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
+  ResetButton!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   plotaxis: PlotAxis;
   clipPathObj: { [key: keyof yaxisrangeType]: d3.Selection<SVGClipPathElement, any, HTMLElement, any> } = {};
 
@@ -81,6 +82,14 @@ class CandlestickChartTS {
       .onEvent1("mousemove", (event) => {
         this.mousefunction(event);
       });
+
+      this.ResetButton = createGroupAdv(this.svg, "reset-area")
+      .drawBorder(svgWidth-margin.right, svgHeight-margin.bottom, margin.right, margin.bottom, "red", 2, "blue", 0.2)
+      .onEvent1("click", (event) => {
+        this.resetplot(event);
+      });
+
+
 
     this.rendorPlot();
   }
@@ -133,7 +142,7 @@ class CandlestickChartTS {
     //  console.log("old currentTransformY",currentTransformYy);
 
     // console.log(`Group zoom! at zoomxgroup:${xmousepoint},y:${ymousepoint},transform:${currentTransformY} `);
-    this.plotaxis.updateYaxis(currentTransformY, xmousepoint, ymousepoint);
+    this.plotaxis.updateYaxis(currentTransformY, ymousepoint);
     this.rendorPlot();
   }
 
@@ -192,8 +201,20 @@ class CandlestickChartTS {
     // console.log(`Group clicked! at dbclickedfunctionx:${x},y:${y} `);
   }
 
+  resetplot(event: any) {
+    const [x, y] = d3.pointer(event);
+    console.log(`Reset Button! at resetplot:${x},y:${y} `);
+    let currentTransform=d3.zoomIdentity
+    this.plotaxis.updateXaxis(currentTransform)
+    this.plotaxis.updateYaxis(currentTransform);
+    this.rendorPlot();
+
+  }
+
   mousefunction(event: any) {
     const [x, y] = d3.pointer(event);
+    
+     
     // console.log(`Group mousemove! at mousefunction:${x},y:${y} `);
   }
 
