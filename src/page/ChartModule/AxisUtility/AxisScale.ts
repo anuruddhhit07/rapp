@@ -154,8 +154,8 @@ export class AxisChart {
       {
         plotstatus: true,
         yscaletag: "TL",
-        scaleSide: "Right",
-        x_point: 10,
+        scaleSide: "Left",
+        x_point: margin.left + margin.innerLeft,
         changeRangeTag: false,
         highestYDataTag: "high",
         lowestYDataTag: "close",
