@@ -18,7 +18,7 @@ import {
   getKeysFromDataToplotKeyValue,
   groupDataByPlotType,
 } from "./SharedObject";
-import { createClipPath, createGroup, createGroupAdv, createRect, drawBarChartOnSVG, drawCandlestickOnSVG, drawLineOnSVG } from "./SVG/SVGUtility";
+import { createClipPath, createGroupAdv, createMultipleSqure, createRect, drawBarChartOnSVG, drawCandlestickOnSVG, drawLineOnSVG } from "./SVG/SVGUtility";
 import { yaxisrangeType } from "./types/AxisScaleType";
 
 class CandlestickChartTS {
@@ -90,6 +90,11 @@ class CandlestickChartTS {
       .onEvent1("click", (event) => {
         this.resetplot(event);
       });
+
+      createMultipleSqure(this.svg,"top-button-panel").translate(100,30)
+      // .drawBorder(0,0,100,20,"green",3,"yellow",1)
+      .createSquaresHorizontally(6,30,2,Array(6).fill(true,1,2))
+      .attachClickEvent(this.buttonClick)
 
     this.rendorPlot();
   }
@@ -275,6 +280,14 @@ class CandlestickChartTS {
     const yaxistag = Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag].yaxistag;
     const yaxisRange = Shared_Yaxisrange[yaxistag].range;
     drawCandlestickOnSVG(PlotGroupArea, XDATA, open, high, low, close, newxScale, newyScale, plotName, yaxistag);
+  }
+
+  buttonClick(event: any,event2:any,event3:any) {
+    // console.log("Clicked square with ID:", event.target.id);
+    console.log(event);
+    console.log(event2);
+    console.log(event3);
+    
   }
 
   dbclickedfunction(event: any) {

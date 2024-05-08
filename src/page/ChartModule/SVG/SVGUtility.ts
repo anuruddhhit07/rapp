@@ -5,150 +5,197 @@ import { BaseType, groups, index } from "d3";
 import { CandlestickData } from "../types/chartSetuptype";
 
 declare module "d3" {
-  interface Selection<
-    GElement extends BaseType,
-    Datum,
-    PElement extends BaseType,
-    PDatum
-  > {
-    drawBorder(
-      x: number,
-      y: number,
-      width: number,
-      height: number,
-      borderColor: string,
-      borderWidth: number,
-      fill:string,
-      opacity:number
-    ): this;
+  interface Selection<GElement extends BaseType, Datum, PElement extends BaseType, PDatum> {
+    drawBorder(x: number, y: number, width: number, height: number, borderColor: string, borderWidth: number, fill: string, opacity: number): this;
     importData(data: any[]): this;
-    translate(x: number, y: number):this
-    onEvent1(
-        eventName: string,
-        eventHandler: (this: SVGGElement, event: any, d: any) => void
-      ): this;
-    //   onCall(func: Function): this;
+    translate(x: number, y: number): this;
+    onEvent1(eventName: string, eventHandler: (this: SVGGElement, event: any, d: any) => void): this;
+    createSquaresHorizontally( numSquares: number,squareWidth: number,spacing: number,pressstate:boolean[]):this
+    attachClickEvent(callback: (id: string, className: string, pressstate: boolean) => void):this
   }
 }
 
 export function createGroupAdv(
-    svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,
-    className: string // Add a parameter for the class name
-  ): d3.Selection<SVGGElement, any, HTMLElement, any> {
-    const group = svg.append("g");
-  
-    // Set the class attribute for the group
-    group.attr("class", className);
-  
-    // Add a method to draw a border around the group
-    group.drawBorder = function (
-      x: number,
-      y: number,
-      width: number,
-      height: number,
-      borderColor: string,
-      borderWidth: number,
-      fill:string,
-      opacity:number
-    ) {
-      this.append("rect")
-        .attr("class", `${className}-border`) // Add class attribute
-        .attr("x", x)
-        .attr("y", y)
-        .attr("width", width)
-        .attr("height", height)
-        .attr("opacity", opacity)
-        .attr("fill", fill)
-        .style("stroke", borderColor)
-        .style("stroke-width", borderWidth);
-      return this; // Return the group selection for chaining
-    };
-  
-    // Add a method to import data to the group
-    group.importData = function (data: any[]) {
-      // Example: bind data to group elements
-      const rects = this.selectAll("rect")
-        .data(data)
-        .enter()
-        .append("rect")
-        .attr("class", `${className}-data`) // Add class attribute
-        .attr("x", (d, i) => i * 30)
-        .attr("y", 0)
-        .attr("width", 20)
-        .attr("height", (d) => d.value)
-        .style("fill", "steelblue");
-      return this; // Return the group selection for chaining
-    };
-  
-    // Add a method to translate the group
-    group.translate = function (x: number, y: number) {
-      this.attr("transform", `translate(${x},${y})`);
-      return this; // Return the group selection for chaining
-    };
+  svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,
+  className: string // Add a parameter for the class name
+): d3.Selection<SVGGElement, any, HTMLElement, any> {
+  const group = svg.append("g");
 
-    
-    group.onEvent1 = function (
-        eventName: string,
-        eventHandler: (this: SVGGElement, event: any, d: any) => void // Adjust the listener function signature
-    ) {
-        this.on(eventName, function(this: SVGGElement, event, d) { // Adjust the listener function parameters
-            return eventHandler.call(this, event, d); // Call the event handler with the correct parameters
-        });
-        return this; // Return the group selection for chaining
-    };
+  // Set the class attribute for the group
+  group.attr("class", className);
 
-    // group.onCall = function (func: Function) {
-    //     func.call(this); // Call the external function in the context of the group
-    //     return this; // Return the group selection for chaining
-    // };
-  
-  
-    return group;
-  }
-
-  export function createClipPath(
-    svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,
-    id: string,
-    x: number,
-    y: number,
-    width: number,
-    height: number
-  ): d3.Selection<SVGClipPathElement, any, HTMLElement, any> {
-    const clipPath = svg.append("defs")
-      .append("clipPath")
-      .attr("id", id);
-  
-    clipPath.append("rect")
+  // Add a method to draw a border around the group
+  group.drawBorder = function (x: number, y: number, width: number, height: number, borderColor: string, borderWidth: number, fill: string, opacity: number) {
+    this.append("rect")
+      .attr("class", `${className}-border`) // Add class attribute
       .attr("x", x)
       .attr("y", y)
       .attr("width", width)
       .attr("height", height)
-      .style("fill", "steelblue");
-  
-    return clipPath;
-  }
-  
-  
+      .attr("opacity", opacity)
+      .attr("fill", fill)
+      .style("stroke", borderColor)
+      .style("stroke-width", borderWidth);
+    return this; // Return the group selection for chaining
+  };
 
-export function createGroup(
-  svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>
-): d3.Selection<SVGGElement, any, HTMLElement, any> {
-  return svg.append("g");
+  // Add a method to import data to the group
+  group.importData = function (data: any[]) {
+    // Example: bind data to group elements
+    const rects = this.selectAll("rect")
+      .data(data)
+      .enter()
+      .append("rect")
+      .attr("class", `${className}-data`) // Add class attribute
+      .attr("x", (d, i) => i * 30)
+      .attr("y", 0)
+      .attr("width", 20)
+      .attr("height", (d) => d.value)
+      .style("fill", "steelblue");
+    return this; // Return the group selection for chaining
+  };
+
+  // Add a method to translate the group
+  group.translate = function (x: number, y: number) {
+    this.attr("transform", `translate(${x},${y})`);
+    return this; // Return the group selection for chaining
+  };
+
+  group.onEvent1 = function (
+    eventName: string,
+    eventHandler: (this: SVGGElement, event: any, d: any) => void // Adjust the listener function signature
+  ) {
+    this.on(eventName, function (this: SVGGElement, event, d) {
+      // Adjust the listener function parameters
+      return eventHandler.call(this, event, d); // Call the event handler with the correct parameters
+    });
+    return this; // Return the group selection for chaining
+  };
+
+  // group.onCall = function (func: Function) {
+  //     func.call(this); // Call the external function in the context of the group
+  //     return this; // Return the group selection for chaining
+  // };
+
+  return group;
 }
 
-export function createLine(
+export function createClipPath(
   svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,
-  x1: number,
-  y1: number,
-  x2: number,
-  y2: number
-): void {
-  svg
-    .append("line")
-    .attr("x1", x1)
-    .attr("y1", y1)
-    .attr("x2", x2)
-    .attr("y2", y2);
+  id: string,
+  x: number,
+  y: number,
+  width: number,
+  height: number
+): d3.Selection<SVGClipPathElement, any, HTMLElement, any> {
+  const clipPath = svg.append("defs").append("clipPath").attr("id", id);
+
+  clipPath.append("rect").attr("x", x).attr("y", y).attr("width", width).attr("height", height).style("fill", "steelblue");
+
+  return clipPath;
+}
+
+export function createMultipleSqure(
+  svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,
+  className: string // Add a parameter for the class name
+): d3.Selection<SVGGElement, any, HTMLElement, any> {
+  const group = svg.append("g");
+
+  // Set the class attribute for the group
+  group.attr("class", className);
+
+  // Define squaresData array
+  let squaresData: { x: number; y: number; size: number; id: string; class: string; pressstate: boolean; }[];
+
+  // Add method to translate the group
+  group.translate = function (x: number, y: number) {
+    this.attr("transform", `translate(${x},${y})`);
+    return this; // Return the group selection for chaining
+  };
+
+  // Add method to draw border
+  group.drawBorder = function (x: number, y: number, width: number, height: number, borderColor: string, borderWidth: number, fill: string, opacity: number) {
+    this.append("rect")
+      .attr("class", `${className}-border`) // Add class attribute
+      .attr("x", x)
+      .attr("y", y)
+      .attr("width", width)
+      .attr("height", height)
+      .attr("opacity", opacity)
+      .attr("fill", fill)
+      .style("stroke", borderColor)
+      .style("stroke-width", borderWidth);
+    return this; // Return the group selection for chaining
+  };
+
+  // Add method to create squares horizontally
+  group.createSquaresHorizontally = function (
+    numSquares: number,
+    squareWidth: number,
+    spacing: number,
+    pressstate: boolean[] | undefined = undefined
+  ) {
+
+    squaresData = Array.from({ length: numSquares }, (_, i) => ({
+      x: i * (squareWidth + spacing),
+      y: 0,
+      size: squareWidth,
+      id: `${className}_square_${i}`,
+      class: `${className}-square`,
+      pressstate: pressstate ? pressstate[i] : false
+    }));
+
+    console.log("squaresData",squaresData);
+
+    this.selectAll("rect")
+      .data(squaresData)
+      .enter()
+      .append("rect")
+      .attr("x", (d) => d.x)
+      .attr("y", (d) => d.y)
+      .attr("width", (d) => d.size)
+      .attr("height", (d) => d.size)
+      .attr("id", (d) => d.id)
+      .attr("class", (d) => d.class)
+      .style("fill", (d) => d.pressstate ? "green" : "steelblue");
+
+    return this; // Return the group selection for chaining
+  };
+
+  // Add method to attach click event to squares
+  group.attachClickEvent = function (callback: (id: string, className: string, pressstate: boolean) => void) {
+    this.selectAll("rect")
+    .on("click", function (d) {
+      const rect = d3.select(this);
+      const id = rect.attr("id");
+      const className = rect.attr("class");
+
+      // Find the index of the clicked rectangle in the squaresData array
+      const dataIndex = squaresData.findIndex(item => item.id === id);
+
+      if (dataIndex !== -1) {
+        // Toggle the pressstate in the squaresData array
+        squaresData[dataIndex].pressstate = !squaresData[dataIndex].pressstate;
+
+        // Update the fill color based on the updated pressstate
+        rect.style("fill", squaresData[dataIndex].pressstate ? "green" : "steelblue");
+
+        // Call the callback function with square ID, class name, and pressstate
+        callback(id, className, squaresData[dataIndex].pressstate);
+      }
+    });
+    return this; // Return the group selection for chaining
+  };
+
+  return group;
+}
+
+
+
+
+
+export function createLine(svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>, x1: number, y1: number, x2: number, y2: number): void {
+  svg.append("line").attr("x1", x1).attr("y1", y1).attr("x2", x2).attr("y2", y2);
 }
 
 export function createRect(
@@ -158,12 +205,7 @@ export function createRect(
   width: number,
   height: number
 ): d3.Selection<SVGRectElement, any, HTMLElement, any> {
-  return svg
-    .append("rect")
-    .attr("x", x)
-    .attr("y", y)
-    .attr("width", width)
-    .attr("height", height);
+  return svg.append("rect").attr("x", x).attr("y", y).attr("width", width).attr("height", height);
 }
 
 export function drawLineOnSVG(
@@ -172,17 +214,19 @@ export function drawLineOnSVG(
   yData: number[],
   xScale: d3.ScaleLinear<number, number>,
   yScale: d3.ScaleLinear<number, number>,
-  classNameTag:string,
-  yaxistag:string,
-  plotColor:string
+  classNameTag: string,
+  yaxistag: string,
+  plotColor: string
 ) {
   // Create a line generator
-  const lineGenerator = d3.line()
+  const lineGenerator = d3
+    .line()
     .x((d, i) => xScale(xData[i]))
     .y((d, i) => yScale(yData[i]));
-  
+
   // Append a path element to the SVG group
-  svgGroup.append("path")
+  svgGroup
+    .append("path")
     .datum(yData) // Set data for the line
     .attr("class", `all lineplot linePlot-${classNameTag}`)
     .attr("clip-path", `url(#clip-${yaxistag})`)
@@ -200,47 +244,46 @@ export function drawBarChartOnSVG(
   yScale: d3.ScaleLinear<number, number>,
   classNameTag: string,
   yaxistag: string,
-  yaxisRange:[number,number],
+  yaxisRange: [number, number],
   barColor: string
 ) {
   // Calculate the width of each bar based on the scale
   const barWidth = xScale(xData[1]) - xScale(xData[0]);
 
   // Append a rectangle element for each data point
-  svgGroup.selectAll(".bar")
+  svgGroup
+    .selectAll(".bar")
     .data(yData)
-    .enter().append("rect")
+    .enter()
+    .append("rect")
     .attr("class", `all barplot barplot-${classNameTag}`)
     .attr("clip-path", `url(#clip-${yaxistag})`)
     .attr("x", (d, i) => xScale(xData[i]) - barWidth / 4) // Adjust x position to center the bar
-    .attr("y", d => yScale(d)) // Set y position based on the data value
-    .attr("width", barWidth/2) // Set the width of the bar
-    .attr("height", d => yaxisRange[0] - yScale(d)) // Calculate the height of the bar
+    .attr("y", (d) => yScale(d)) // Set y position based on the data value
+    .attr("width", barWidth / 2) // Set the width of the bar
+    .attr("height", (d) => yaxisRange[0] - yScale(d)) // Calculate the height of the bar
     .attr("fill", barColor); // Set color for the bar
 }
 
-
-
-
 export function drawCandlestickOnSVG(
   svgGroup: d3.Selection<SVGGElement, any, any, any>,
-  xdata:number[],
-  open:number[],
-  high:number[],
-  low:number[],
-  close:number[],
+  xdata: number[],
+  open: number[],
+  high: number[],
+  low: number[],
+  close: number[],
   xScale: d3.ScaleLinear<number, number>,
   yScale: d3.ScaleLinear<number, number>,
   classNameTag: string,
-  yaxistag: string,
+  yaxistag: string
 ) {
   // Create a group for each candlestick
   const tickwidth = xScale(1) - xScale(0);
-    const cdxdata = xdata;
-    const wick = svgGroup.selectAll(".wickplot").data(cdxdata);
-    const candlesticks = svgGroup.selectAll(".candleplot").data(cdxdata);
+  const cdxdata = xdata;
+  const wick = svgGroup.selectAll(".wickplot").data(cdxdata);
+  const candlesticks = svgGroup.selectAll(".candleplot").data(cdxdata);
 
-    wick
+  wick
     .enter()
     .append("line")
     .attr("class", `all ohlcplot wickplot wickplot-${classNameTag}`)
@@ -251,43 +294,29 @@ export function drawCandlestickOnSVG(
     .attr("x2", (d, i) => xScale(i))
     .attr("y2", (d, i) => yScale(low[i]))
     .attr("stroke", "black")
-    .attr("stroke-width", 1)
+    .attr("stroke-width", 1);
 
-    wick.exit().remove();
+  wick.exit().remove();
 
-    
-    candlesticks
-      .enter()
-      .append("rect")
-      .attr("class", `all ohlcplot candleplot candleplot-${classNameTag}`)
-      .attr("clip-path", `url(#clip-${yaxistag})`)
-      .merge(candlesticks as any)
-      .attr("x", (d, i) => xScale(xdata[i]) - tickwidth / 4)
-      .attr("y", (d, i) => {
-        // console.log(d,i,filteredData.close[i]);
-        return yScale(
-          Math.max(open[i], close[i])
-        );
-      })
-      .attr("width", tickwidth / 2)
-      .attr("height", (d, i) => {
-        // console.log(d,currentYscale(d),this.yAxisRange[currentyaxis][0]-currentYscale(d))
-        return Math.abs(
-          yScale(open[i]) -
-          yScale(close[i])
-        ) == 0
-          ? yScale(close[i]) * 0.001
-          : Math.abs(
-            yScale(open[i]) -
-            yScale(close[i])
-          );
-      })
-      .attr("fill", (d, i) =>
-        open[i] > close[i] ? "red" : "green"
-      )
-      .attr("stroke", "black")
-      .attr("stroke-width", 1);
+  candlesticks
+    .enter()
+    .append("rect")
+    .attr("class", `all ohlcplot candleplot candleplot-${classNameTag}`)
+    .attr("clip-path", `url(#clip-${yaxistag})`)
+    .merge(candlesticks as any)
+    .attr("x", (d, i) => xScale(xdata[i]) - tickwidth / 4)
+    .attr("y", (d, i) => {
+      // console.log(d,i,filteredData.close[i]);
+      return yScale(Math.max(open[i], close[i]));
+    })
+    .attr("width", tickwidth / 2)
+    .attr("height", (d, i) => {
+      // console.log(d,currentYscale(d),this.yAxisRange[currentyaxis][0]-currentYscale(d))
+      return Math.abs(yScale(open[i]) - yScale(close[i])) == 0 ? yScale(close[i]) * 0.001 : Math.abs(yScale(open[i]) - yScale(close[i]));
+    })
+    .attr("fill", (d, i) => (open[i] > close[i] ? "red" : "green"))
+    .attr("stroke", "black")
+    .attr("stroke-width", 1);
 
-    candlesticks.exit().remove();
-
+  candlesticks.exit().remove();
 }
