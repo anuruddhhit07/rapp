@@ -19,10 +19,25 @@ import {
   groupDataByPlotType,
   updateSharedDataToplot,
 } from "./SharedObject";
-import { createClipPath, createGroupAdv, createMultipleSqure, createRect, drawBarChartOnSVG, drawCandlestickOnSVG, drawLineOnSVG, drawScatterPlotOnSVG } from "./SVG/SVGUtility";
+import {
+  createClipPath,
+  createGroupAdv,
+  createMultipleSqure,
+  createRect,
+  drawBarChartOnSVG,
+  drawCandlestickOnSVG,
+  drawLineOnSVG,
+  drawScatterPlotOnSVG,
+} from "./SVG/SVGUtility";
 import { yaxisrangeType } from "./types/AxisScaleType";
 
-const mapButtontoChart={'top-button-panel_square_0':"ScatterPlot",'top-button-panel_square_1':"MainPlot",'top-button-panel_square_2':"VolumePlot",'top-button-panel_square_3':"id1"}
+const mapButtontoChart = {
+  "top-button-panel_square_0": "ScatterPlot",
+  "top-button-panel_square_1": "MainPlot",
+  "top-button-panel_square_2": "VolumePlot",
+  "top-button-panel_square_3": "ClosePlot",
+  "top-button-panel_square_4": "HighPlot",
+};
 
 class CandlestickChartTS {
   private axisChart: AxisChart;
@@ -97,10 +112,11 @@ class CandlestickChartTS {
         this.resetplot(event);
       });
 
-      createMultipleSqure(this.svg,"top-button-panel").translate(100,30)
+    createMultipleSqure(this.svg, "top-button-panel")
+      .translate(100, 30)
       // .drawBorder(0,0,100,20,"green",3,"yellow",1)
-      .createSquaresHorizontally(6,30,2,Array(6).fill(true,0,3))
-      .attachClickEvent(this.buttonClick.bind(this))
+      .createSquaresHorizontally(6, 30, 2, Array(6).fill(true, 0, 5))
+      .attachClickEvent(this.buttonClick.bind(this));
 
     this.rendorPlot();
   }
@@ -128,7 +144,6 @@ class CandlestickChartTS {
 
     const currentTransformX: d3.ZoomTransform = event.transform;
     // console.log("currentTransformX",currentTransformX);
-
 
     // console.log(`Group zoom! at zoomxgroup:${x},y:${y},transform:${currentTransformX} `);
     this.plotaxis.updateXaxis(currentTransformX);
@@ -164,17 +179,24 @@ class CandlestickChartTS {
     this.rendorPlot();
   }
 
-  getclippath(){
-    this.svg.select('defs').selectAll('*').remove();
+  getclippath() {
+    this.svg.select("defs").selectAll("*").remove();
     for (const [yaxistag, plotGroupData] of Object.entries(Shared_Yaxisrange)) {
       const { range, borderColor, borderWidth, fill, opacity } = plotGroupData;
       // console.log(yaxistag,range);
-      createClipPath(this.svg, `clip-${yaxistag}`, Shared_ChartBaseProp.margin.left + Shared_ChartBaseProp.margin.innerLeft, range[1], Shared_ChartBaseProp.width + Shared_ChartBaseProp.margin.innerRight, range[0] - range[1]);
+      createClipPath(
+        this.svg,
+        `clip-${yaxistag}`,
+        Shared_ChartBaseProp.margin.left + Shared_ChartBaseProp.margin.innerLeft,
+        range[1],
+        Shared_ChartBaseProp.width + Shared_ChartBaseProp.margin.innerRight,
+        range[0] - range[1]
+      );
     }
   }
 
   rendorPlot() {
-    this.getclippath()
+    this.getclippath();
     const groupedplotData = groupDataByPlotType();
     // console.log("groupplot", groupedplotData);
 
@@ -231,7 +253,6 @@ class CandlestickChartTS {
           });
         }
 
-
         if (plotType == "scatter") {
           this.BackGroup.selectAll(`.scatterplot`).remove();
           // Loop through the keys corresponding to the current plot type
@@ -245,8 +266,6 @@ class CandlestickChartTS {
             // Do something with the data object
           });
         }
-
-
       }
     }
   }
@@ -323,14 +342,13 @@ class CandlestickChartTS {
     // console.log("plot for OHLC data")
     const XDATA = Shared_DataToplot[plotName].xdata() as number[];
     const Ydata = Shared_DataToplot[plotName].ydata() as number[];
-   
-  
+
     const scatterdataobj: ScatterDataType[] = XDATA.map((value, index) => ({
       xData: value,
       yData: Ydata[index],
-      label:`${index}`,
-      color:'red',
-      size:2
+      label: `${index}`,
+      color: "red",
+      size: 2,
     }));
 
     let plotColor = Shared_DataToplot[plotName].plotcolor;
@@ -349,11 +367,10 @@ class CandlestickChartTS {
     const yaxistag = Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag].yaxistag;
     const yaxisRange = Shared_Yaxisrange[yaxistag].range;
 
-    
-    drawScatterPlotOnSVG(PlotGroupArea,scatterdataobj, newxScale, newyScale, plotName, yaxistag);
+    drawScatterPlotOnSVG(PlotGroupArea, scatterdataobj, newxScale, newyScale, plotName, yaxistag);
   }
 
-  buttonClick(id: any,className:any,pressstate:any) {
+  buttonClick(id: any, className: any, pressstate: any) {
     // console.log("Clicked square with ID:", event.target.id);
     // console.log(id);
     // console.log(className);
@@ -361,18 +378,14 @@ class CandlestickChartTS {
 
     // console.log(Shared_DataToplot);
 
-    if (pressstate!=undefined){
+    if (pressstate != undefined) {
       let plotname = mapButtontoChart[id as keyof typeof mapButtontoChart];
-      updateSharedDataToplot(plotname,{plotstatus:pressstate})
+      updateSharedDataToplot(plotname, { plotstatus: pressstate });
     }
-    
+
     // console.log(Shared_DataToplot);
-    this.plotaxis.rendorYaxis()
-    this.rendorPlot()
-
-
-
-    
+    this.plotaxis.rendorYaxis();
+    this.rendorPlot();
   }
 
   dbclickedfunction(event: any) {
