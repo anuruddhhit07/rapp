@@ -88,9 +88,22 @@ export function createClipPath(
   width: number,
   height: number
 ): d3.Selection<SVGClipPathElement, any, HTMLElement, any> {
-  const clipPath = svg.append("defs").append("clipPath").attr("id", id);
+  // Select the existing defs element if available, or create a new one
+  let defs:d3.Selection<d3.BaseType, any, HTMLElement, any> = svg.select('defs') ;
+  if (defs.empty()) {
+    defs = svg.append('defs') as any;
+  }
 
-  clipPath.append("rect").attr("x", x).attr("y", y).attr("width", width).attr("height", height).style("fill", "steelblue");
+  // Append the clip path to the defs element
+  const clipPath = defs.append('clipPath').attr('id', id).attr('class', 'clipplot');
+
+  // Append a rect to the clip path
+  clipPath.append('rect')
+    .attr('x', x)
+    .attr('y', y)
+    .attr('width', width)
+    .attr('height', height)
+    .style('fill', 'steelblue');
 
   return clipPath;
 }
@@ -105,7 +118,7 @@ export function createMultipleSqure(
   group.attr("class", className);
 
   // Define squaresData array
-  let squaresData: { x: number; y: number; size: number; id: string; class: string; pressstate: boolean; }[];
+  let squaresData: { x: number; y: number; size: number; id: string; class: string; pressstate: boolean| undefined; }[];
 
   // Add method to translate the group
   group.translate = function (x: number, y: number) {
@@ -142,7 +155,7 @@ export function createMultipleSqure(
       size: squareWidth,
       id: `${className}_square_${i}`,
       class: `${className}-square`,
-      pressstate: pressstate ? pressstate[i] : false
+      pressstate: pressstate ? pressstate[i] : undefined 
     }));
 
     console.log("squaresData",squaresData);
@@ -157,7 +170,10 @@ export function createMultipleSqure(
       .attr("height", (d) => d.size)
       .attr("id", (d) => d.id)
       .attr("class", (d) => d.class)
-      .style("fill", (d) => d.pressstate ? "green" : "steelblue");
+      .style("fill", (d) => {
+        if (typeof d.pressstate === 'undefined') return "gray"; // Color for undefined state
+        return d.pressstate ? "green" : "steelblue"; // Colors for true and false states
+      });
 
     return this; // Return the group selection for chaining
   };
@@ -174,15 +190,18 @@ export function createMultipleSqure(
       const dataIndex = squaresData.findIndex(item => item.id === id);
 
       if (dataIndex !== -1) {
-        // Toggle the pressstate in the squaresData array
-        squaresData[dataIndex].pressstate = !squaresData[dataIndex].pressstate;
+        // Toggle the pressstate in the squaresData array only if it's not undefined
+        if (typeof squaresData[dataIndex].pressstate !== 'undefined') {
+          squaresData[dataIndex].pressstate = !squaresData[dataIndex].pressstate;
 
-        // Update the fill color based on the updated pressstate
-        rect.style("fill", squaresData[dataIndex].pressstate ? "green" : "steelblue");
+          // Update the fill color based on the updated pressstate
+          rect.style("fill", squaresData[dataIndex].pressstate ? "green" : "steelblue");
+        }
 
         // Call the callback function with square ID, class name, and pressstate
-        callback(id, className, squaresData[dataIndex].pressstate);
+        callback(id, className, squaresData[dataIndex].pressstate as boolean);
       }
+
     });
     return this; // Return the group selection for chaining
   };

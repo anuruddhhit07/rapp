@@ -32,6 +32,10 @@ export function updateChartBaseProp(partialData: Partial<ChartBaseSetupType>): v
   Object.assign(Shared_ChartBaseProp, partialData);
 }
 
+export function resetYaxisrange():void{
+  Shared_Yaxisrange={}
+}
+
 export function updateYaxisProp(key: string, partialData: Partial<YaxisPropItem>): void {
   // Check if the key already exists in Xscaleconfig
   if (Shared_Yaxisrange.hasOwnProperty(key)) {
@@ -251,13 +255,16 @@ export function getUniqueYaxisTags(): {
   uniqueaxis: number;
 } {
   const activePlots = getActivePlotData();
+  // console.log("activePlots",activePlots);
   const yaxistagtagsSet = new Set<string>();
   for (const key in activePlots) {
     if (activePlots.hasOwnProperty(key)) {
       yaxistagtagsSet.add(Shared_Yscaleconfig[activePlots[key].yscaletag].yaxistag);
     }
   }
-  const yaxistags = Array.from(yaxistagtagsSet);
+
+  const yaxistags = Array.from(yaxistagtagsSet).sort();
+  // console.log("yaxistags",yaxistags);
   return { yaxistags, uniqueaxis: yaxistags.length };
 }
 
@@ -272,6 +279,7 @@ export function updateYScaleConfigByKey(keyName: keyof YscaleItemProp, value: st
 }
 
 export function setYaxisRatio(): void {
+  resetYaxisrange()
   const { yaxistags } = getUniqueYaxisTags();
   // console.log("yaxistags",yaxistags)
 
@@ -296,6 +304,7 @@ export function setYaxisRatio(): void {
 
     const startY = Shared_ChartBaseProp.margin.top + Shared_ChartBaseProp.margin.innerTop + totalHeight * tempcumulativeRatio;
     const endY = startY + totalHeight * ratio;
+    // console.log(yaxistag,[endY, startY]);
     updateYScaleConfigByKey("yaxistag", yaxistag, { yaxisrange: [endY, startY], yaxisratio: ratio });
 
     // Shared_yaxisrange.push([endY, startY]);

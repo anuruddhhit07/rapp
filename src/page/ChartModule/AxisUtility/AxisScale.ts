@@ -1,5 +1,5 @@
 import SetupChart from "../ChartSetup/setchart";
-import { XScaleConfigType, YScaleConfigType, xAxisItemType, yAxisItemType } from "../types/AxisScaleType";
+import { XScaleConfigType, YScaleConfigType, xAxisItemType, yAxisItemType, yaxisrangeType } from "../types/AxisScaleType";
 import { ChartOptions, Margin } from "../types/chartSetuptype";
 import { ChartDataObj } from "../types/chartdataTypes";
 import * as d3 from "d3";
@@ -7,6 +7,7 @@ import {
   Shared_ChartBaseProp,
   Shared_ChartPlotData,
   Shared_Xscaleconfig,
+  Shared_Yaxisrange,
   Shared_Yscaleconfig,
   getUniqueScaleTags,
   updateXscaleconfig,
@@ -145,7 +146,7 @@ export class AxisChart {
         changeRangeTag: true,
         highestYDataTag: "high",
         lowestYDataTag: "low",
-        yaxistag: "mainyaxis",
+        yaxistag: "1mainyaxis",
         yaxisratio: null,
         yzoomstatus: true,
         datadomain:defaultDatadomain
@@ -171,7 +172,7 @@ export class AxisChart {
         changeRangeTag: false,
         highestYDataTag: "high",
         lowestYDataTag: "close",
-        yaxistag: "mainyaxis",
+        yaxistag: "1mainyaxis",
         yaxisratio: null,
         yzoomstatus: true,
         datadomain:defaultDatadomain
@@ -182,6 +183,11 @@ export class AxisChart {
   }
 
   setYScaleConfig() {
+    // const yscalekeys = Object.keys(Shared_Yscaleconfig) as (keyof YScaleConfigType)[];
+    // const ysaxiskeys = Object.keys(Shared_Yaxisrange) as (keyof yaxisrangeType)[];
+
+    // console.log(yscalekeys,ysaxiskeys);
+
     const yscaleconfigdata = this.getdefaultyaxis();
 
     yscaleconfigdata.forEach((item) => {
@@ -202,6 +208,9 @@ export class AxisChart {
         
       });
     });
+
+  
+
   }
 
   // getYScaleConfigType() {
@@ -252,19 +261,19 @@ export class AxisChart {
   setYscalefn() {
     const { yscaletags } = getUniqueScaleTags();
     const yscaletagsarray = yscaletags;
-    //console.log("yscaletagsarray",yscaletagsarray)
+    // console.log("yscaletagsarray",yscaletagsarray)
 
     yscaletagsarray.map((scaletag) => {
       let scaleconfig = Shared_Yscaleconfig[scaletag];
-      if (scaleconfig.Yscale == null) {
+      // if (scaleconfig.Yscale == null) {
         if (scaleconfig.yaxisrange != null) {
-          console.log(scaletag, scaleconfig.yaxisrange, scaleconfig.datadomain());
+          // console.log(scaletag, scaleconfig.yaxisrange, scaleconfig.datadomain());
           const Yscale = d3.scaleLinear().range(scaleconfig.yaxisrange).domain(scaleconfig.datadomain());
           updateYscaleconfig(scaletag, {
             Yscale: Yscale,
           });
         }
-      }
+      // }
     });
   }
 }

@@ -17,9 +17,12 @@ import {
   Shared_Yaxisrange,
   getKeysFromDataToplotKeyValue,
   groupDataByPlotType,
+  updateSharedDataToplot,
 } from "./SharedObject";
 import { createClipPath, createGroupAdv, createMultipleSqure, createRect, drawBarChartOnSVG, drawCandlestickOnSVG, drawLineOnSVG } from "./SVG/SVGUtility";
 import { yaxisrangeType } from "./types/AxisScaleType";
+
+const mapButtontoChart={'top-button-panel_square_0':"id1",'top-button-panel_square_1':"MainPlot",'top-button-panel_square_2':"VolumePlot",'top-button-panel_square_3':"id1"}
 
 class CandlestickChartTS {
   private axisChart: AxisChart;
@@ -61,14 +64,17 @@ class CandlestickChartTS {
       .call(this.zoomY as any);
 
     this.plotaxis = PlotAxis.getInstance(this.BackGroup, this.axisChart);
-    // createClipPath
-    console.log("Shared_yaxisrange", Shared_Yaxisrange, Object.entries(Shared_Yaxisrange));
-    for (const [yaxistag, plotGroupData] of Object.entries(Shared_Yaxisrange)) {
-      const { range, borderColor, borderWidth, fill, opacity } = plotGroupData;
-      createClipPath(this.svg, `clip-${yaxistag}`, margin.left + margin.innerLeft, range[1], width + margin.innerRight, range[0] - range[1]);
-    }
 
-    console.log(this.clipPathObj);
+    // this.getclippath()
+    // createClipPath
+    // console.log("Shared_yaxisrange", Shared_Yaxisrange, Object.entries(Shared_Yaxisrange));
+
+    // for (const [yaxistag, plotGroupData] of Object.entries(Shared_Yaxisrange)) {
+    //   const { range, borderColor, borderWidth, fill, opacity } = plotGroupData;
+    //   createClipPath(this.svg, `clip-${yaxistag}`, margin.left + margin.innerLeft, range[1], width + margin.innerRight, range[0] - range[1]);
+    // }
+
+    // console.log(this.clipPathObj);
     // for (const [plotGroupName, plotGroupData] of Object.entries(Shared_Yaxisrange)) {
     //   const { range, borderColor, borderWidth, fill, opacity } = plotGroupData;
     //   console.log(fill);
@@ -93,8 +99,8 @@ class CandlestickChartTS {
 
       createMultipleSqure(this.svg,"top-button-panel").translate(100,30)
       // .drawBorder(0,0,100,20,"green",3,"yellow",1)
-      .createSquaresHorizontally(6,30,2,Array(6).fill(true,1,2))
-      .attachClickEvent(this.buttonClick)
+      .createSquaresHorizontally(6,30,2,Array(6).fill(true,1,3))
+      .attachClickEvent(this.buttonClick.bind(this))
 
     this.rendorPlot();
   }
@@ -151,9 +157,19 @@ class CandlestickChartTS {
     this.rendorPlot();
   }
 
+  getclippath(){
+    this.svg.select('defs').selectAll('*').remove();
+    for (const [yaxistag, plotGroupData] of Object.entries(Shared_Yaxisrange)) {
+      const { range, borderColor, borderWidth, fill, opacity } = plotGroupData;
+      console.log(yaxistag,range);
+      createClipPath(this.svg, `clip-${yaxistag}`, Shared_ChartBaseProp.margin.left + Shared_ChartBaseProp.margin.innerLeft, range[1], Shared_ChartBaseProp.width + Shared_ChartBaseProp.margin.innerRight, range[0] - range[1]);
+    }
+  }
+
   rendorPlot() {
+    this.getclippath()
     const groupedplotData = groupDataByPlotType();
-    console.log("groupplot", groupedplotData);
+    // console.log("groupplot", groupedplotData);
 
     // console.log(Shared_DataToplot["ClosePlot"]);
     for (let plotType in groupedplotData) {
@@ -198,9 +214,6 @@ class CandlestickChartTS {
           this.BackGroup.selectAll(`.ohlcplot`).remove();
           // Loop through the keys corresponding to the current plot type
           groupedplotData[plotType].forEach((PlotName) => {
-            // console.log(`Key: ${PlotName}`);
-            // console.log(object);
-            // Access the data object using the key
             const plotstatus = Shared_DataToplot[PlotName].plotstatus;
 
             if (!plotstatus) return;
@@ -282,11 +295,25 @@ class CandlestickChartTS {
     drawCandlestickOnSVG(PlotGroupArea, XDATA, open, high, low, close, newxScale, newyScale, plotName, yaxistag);
   }
 
-  buttonClick(event: any,event2:any,event3:any) {
+  buttonClick(id: any,className:any,pressstate:any) {
     // console.log("Clicked square with ID:", event.target.id);
-    console.log(event);
-    console.log(event2);
-    console.log(event3);
+    // console.log(id);
+    // console.log(className);
+    // console.log(pressstate);
+
+    // console.log(Shared_DataToplot);
+
+    if (pressstate!=undefined){
+      let plotname = mapButtontoChart[id as keyof typeof mapButtontoChart];
+      updateSharedDataToplot(plotname,{plotstatus:pressstate})
+    }
+    
+    console.log(Shared_DataToplot);
+    this.plotaxis.rendorYaxis()
+    this.rendorPlot()
+
+
+
     
   }
 

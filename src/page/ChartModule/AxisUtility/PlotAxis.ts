@@ -13,6 +13,7 @@ import {
   Shared_ChartPlotData,
   Shared_DataToplot,
   Shared_Xscaleconfig,
+  Shared_Yaxisrange,
   Shared_Yscaleconfig,
   getUniqueKeysAndYScaleTagsFromDataToplotKeyValue,
   getUniqueScaleTags,
@@ -33,8 +34,8 @@ export class PlotAxis {
   ) {
     this.axisChart = axisChart;
     this.axisarea = axisarea;
-    this.rendorXaxis(axisarea);
-    this.rendorYaxis(axisarea);
+    this.rendorXaxis();
+    this.rendorYaxis();
   }
 
   static getInstance(
@@ -149,8 +150,8 @@ export class PlotAxis {
     }
   }
 
-  rendorXaxis(axisarea: d3.Selection<SVGGElement, any, HTMLElement, any>) {
-    axisarea.selectAll(`.x-axis`).remove();
+  rendorXaxis() {
+    this.axisarea.selectAll(`.x-axis`).remove();
 
     const plotaxies = false;
     let yscaletagsarray: string[];
@@ -169,7 +170,7 @@ export class PlotAxis {
       if (scaleconfig.Xscale == null) {
         throw new Error(`Scale cannot be null for scaletag: ${scaletag}`);
       }
-      axisarea
+      this.axisarea
         .append("g")
         .attr("class", `axis x-axis x-axis-${scaleconfig.xscaleName}`)
         .attr("transform", `translate(${0},${scaleconfig.y_point})`)
@@ -188,10 +189,13 @@ export class PlotAxis {
     });
   }
 
-  rendorYaxis(axisarea: d3.Selection<SVGGElement, any, HTMLElement, any>) {
-    axisarea.selectAll(`.y-axis`).remove();
+  rendorYaxis() {
+    this.axisarea.selectAll(`.y-axis`).remove();
+    // console.log(Shared_Yaxisrange);
     setYaxisRatio();
+    // console.log(Shared_Yaxisrange);
     this.axisChart.setYscalefn();
+
 
     const plotaxies = true;
     let yscaletagsarray: string[] = [];
@@ -207,7 +211,7 @@ export class PlotAxis {
       if (scaleconfig.Yscale == null) {
         throw new Error(`Scale cannot be null for scaletag: ${scaletag}`);
       }
-      axisarea
+      this.axisarea
         .append("g")
         .attr("class", `axis y-axis y-axis-${scaleconfig.yscaletag}`)
         .attr("transform", `translate(${scaleconfig.xpoint},${0})`)
