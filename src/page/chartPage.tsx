@@ -16,7 +16,7 @@ const ChartPage = () => {
   }, []); // Empty dependency array ensures the effect runs only once, similar to componentDidMount in class components
 
   return (
-    <div id={divId}>
+    <div id={divId} style={{ margin: '20px' }}>
       {/* Placeholder for chart */}
     </div>
   );

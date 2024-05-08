@@ -18,15 +18,7 @@ import {
   getKeysFromDataToplotKeyValue,
   groupDataByPlotType,
 } from "./SharedObject";
-import {
-  createClipPath,
-  createGroup,
-  createGroupAdv,
-  createRect,
-  drawBarChartOnSVG,
-  drawCandlestickOnSVG,
-  drawLineOnSVG,
-} from "./SVG/SVGUtility";
+import { createClipPath, createGroup, createGroupAdv, createRect, drawBarChartOnSVG, drawCandlestickOnSVG, drawLineOnSVG } from "./SVG/SVGUtility";
 import { yaxisrangeType } from "./types/AxisScaleType";
 
 class CandlestickChartTS {
@@ -42,12 +34,7 @@ class CandlestickChartTS {
   ResetButton!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   plotaxis: PlotAxis;
   clipPathObj: {
-    [key: keyof yaxisrangeType]: d3.Selection<
-      SVGClipPathElement,
-      any,
-      HTMLElement,
-      any
-    >;
+    [key: keyof yaxisrangeType]: d3.Selection<SVGClipPathElement, any, HTMLElement, any>;
   } = {};
 
   constructor(stockdata: ChartDataIN, targetID: string) {
@@ -58,16 +45,7 @@ class CandlestickChartTS {
     this.setupSVG();
     const { svgWidth, svgHeight, margin, width, height } = Shared_ChartBaseProp;
 
-    this.BackGroup = createGroupAdv(this.svg, "main-border").drawBorder(
-      0,
-      0,
-      svgWidth,
-      svgHeight,
-      "red",
-      2,
-      "blue",
-      0.2
-    );
+    this.BackGroup = createGroupAdv(this.svg, "main-border").drawBorder(0, 0, svgWidth, svgHeight, "red", 2, "blue", 0.2);
     // .call(this.zoomX as any)
     // .onEvent1("mousemove", (event) => {
     //   this.mousefunction(event)
@@ -75,48 +53,19 @@ class CandlestickChartTS {
 
     this.AxisXGroup = createGroupAdv(this.svg, "X-Area")
       .translate(0, svgHeight - margin.bottom)
-      .drawBorder(
-        0,
-        0,
-        svgWidth - margin.right,
-        margin.bottom,
-        "red",
-        2,
-        "green",
-        0.2
-      );
+      .drawBorder(0, 0, svgWidth - margin.right, margin.bottom, "red", 2, "green", 0.2);
 
     this.AxisYGroup = createGroupAdv(this.svg, "Y-Area")
       .translate(svgWidth - margin.right, 0)
-      .drawBorder(
-        0,
-        0,
-        margin.right,
-        svgHeight - margin.bottom,
-        "red",
-        2,
-        "green",
-        0.2
-      )
+      .drawBorder(0, 0, margin.right, svgHeight - margin.bottom, "red", 2, "green", 0.2)
       .call(this.zoomY as any);
 
     this.plotaxis = PlotAxis.getInstance(this.BackGroup, this.axisChart);
     // createClipPath
-    console.log(
-      "Shared_yaxisrange",
-      Shared_Yaxisrange,
-      Object.entries(Shared_Yaxisrange)
-    );
+    console.log("Shared_yaxisrange", Shared_Yaxisrange, Object.entries(Shared_Yaxisrange));
     for (const [yaxistag, plotGroupData] of Object.entries(Shared_Yaxisrange)) {
       const { range, borderColor, borderWidth, fill, opacity } = plotGroupData;
-      createClipPath(
-        this.svg,
-        `clip-${yaxistag}`,
-        margin.left + margin.innerLeft,
-        range[1],
-        width + margin.innerRight,
-        range[0] - range[1]
-      );
+      createClipPath(this.svg, `clip-${yaxistag}`, margin.left + margin.innerLeft, range[1], width + margin.innerRight, range[0] - range[1]);
     }
 
     console.log(this.clipPathObj);
@@ -130,32 +79,14 @@ class CandlestickChartTS {
     // }
 
     this.FrontGroup = createGroupAdv(this.svg, "main-border")
-      .drawBorder(
-        margin.left + margin.innerLeft,
-        margin.top + margin.innerTop,
-        width + margin.innerRight,
-        height,
-        "red",
-        2,
-        "blue",
-        0
-      )
+      .drawBorder(margin.left + margin.innerLeft, margin.top + margin.innerTop, width + margin.innerRight, height, "red", 2, "blue", 0)
       .call(this.zoomX as any)
       .onEvent1("mousemove", (event) => {
         this.mousefunction(event);
       });
 
     this.ResetButton = createGroupAdv(this.svg, "reset-area")
-      .drawBorder(
-        svgWidth - margin.right,
-        svgHeight - margin.bottom,
-        margin.right,
-        margin.bottom,
-        "red",
-        2,
-        "blue",
-        0.2
-      )
+      .drawBorder(svgWidth - margin.right, svgHeight - margin.bottom, margin.right, margin.bottom, "red", 2, "blue", 0.2)
       .onEvent1("click", (event) => {
         this.resetplot(event);
       });
@@ -168,10 +99,7 @@ class CandlestickChartTS {
     .scaleExtent([0.5, 10])
     .translateExtent([
       [-Shared_ChartBaseProp.width / 2, (-0 * Shared_ChartBaseProp.height) / 2],
-      [
-        Shared_ChartBaseProp.width + Shared_ChartBaseProp.width / 2,
-        0 * Shared_ChartBaseProp.height,
-      ],
+      [Shared_ChartBaseProp.width + Shared_ChartBaseProp.width / 2, 0 * Shared_ChartBaseProp.height],
     ])
     .extent([
       [0, 0],
@@ -281,83 +209,41 @@ class CandlestickChartTS {
     }
   }
 
-  drawPlotLineByName(
-    plotName: string,
-    PlotGroupArea: d3.Selection<SVGGElement, any, HTMLElement, any>
-  ) {
+  drawPlotLineByName(plotName: string, PlotGroupArea: d3.Selection<SVGGElement, any, HTMLElement, any>) {
     const XDATA = Shared_DataToplot[plotName].xdata();
     const YDATA = Shared_DataToplot[plotName].ydata();
     let plotColor = Shared_DataToplot[plotName].plotcolor;
-    const currentTransformX =
-      Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag]
-        .currentTransformX;
-    const currentTransformY =
-      Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag]
-        .currentTransformY;
-    const xScale = Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag]
-      .Xscale as d3.ScaleLinear<number, number>;
-    const yScale = Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag]
-      .Yscale as d3.ScaleLinear<number, number>;
+    const currentTransformX = Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag].currentTransformX;
+    const currentTransformY = Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag].currentTransformY;
+    const xScale = Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag].Xscale as d3.ScaleLinear<number, number>;
+    const yScale = Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag].Yscale as d3.ScaleLinear<number, number>;
 
     let newxScale = currentTransformX.rescaleX(xScale);
     let newyScale = currentTransformY.rescaleY(yScale);
 
-    const yaxistag =
-      Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag].yaxistag;
+    const yaxistag = Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag].yaxistag;
 
-    drawLineOnSVG(
-      PlotGroupArea,
-      XDATA as number[],
-      YDATA as number[],
-      newxScale,
-      newyScale,
-      plotName,
-      yaxistag,
-      plotColor
-    );
+    drawLineOnSVG(PlotGroupArea, XDATA as number[], YDATA as number[], newxScale, newyScale, plotName, yaxistag, plotColor);
   }
 
-  drawPlotBarByName(
-    plotName: string,
-    PlotGroupArea: d3.Selection<SVGGElement, any, HTMLElement, any>
-  ) {
+  drawPlotBarByName(plotName: string, PlotGroupArea: d3.Selection<SVGGElement, any, HTMLElement, any>) {
     const XDATA = Shared_DataToplot[plotName].xdata();
     const YDATA = Shared_DataToplot[plotName].ydata();
     let plotColor = Shared_DataToplot[plotName].plotcolor;
-    const currentTransformX =
-      Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag]
-        .currentTransformX;
-    const currentTransformY =
-      Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag]
-        .currentTransformY;
-    const xScale = Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag]
-      .Xscale as d3.ScaleLinear<number, number>;
-    const yScale = Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag]
-      .Yscale as d3.ScaleLinear<number, number>;
+    const currentTransformX = Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag].currentTransformX;
+    const currentTransformY = Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag].currentTransformY;
+    const xScale = Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag].Xscale as d3.ScaleLinear<number, number>;
+    const yScale = Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag].Yscale as d3.ScaleLinear<number, number>;
 
     let newxScale = currentTransformX.rescaleX(xScale);
     let newyScale = currentTransformY.rescaleY(yScale);
 
-    const yaxistag =
-      Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag].yaxistag;
+    const yaxistag = Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag].yaxistag;
     const yaxisRange = Shared_Yaxisrange[yaxistag].range;
-    drawBarChartOnSVG(
-      PlotGroupArea,
-      XDATA as number[],
-      YDATA as number[],
-      newxScale,
-      newyScale,
-      plotName,
-      yaxistag,
-      yaxisRange,
-      plotColor
-    );
+    drawBarChartOnSVG(PlotGroupArea, XDATA as number[], YDATA as number[], newxScale, newyScale, plotName, yaxistag, yaxisRange, plotColor);
   }
 
-  drawPlotOHLCByName(
-    plotName: string,
-    PlotGroupArea: d3.Selection<SVGGElement, any, HTMLElement, any>
-  ) {
+  drawPlotOHLCByName(plotName: string, PlotGroupArea: d3.Selection<SVGGElement, any, HTMLElement, any>) {
     // console.log("plot for OHLC data")
     const XDATA = Shared_DataToplot[plotName].xdata() as number[];
     const open = Shared_ChartPlotData["open"];
@@ -374,16 +260,10 @@ class CandlestickChartTS {
     // }));
 
     let plotColor = Shared_DataToplot[plotName].plotcolor;
-    const currentTransformX =
-      Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag]
-        .currentTransformX;
-    const currentTransformY =
-      Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag]
-        .currentTransformY;
-    const xScale = Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag]
-      .Xscale as d3.ScaleLinear<number, number>;
-    const yScale = Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag]
-      .Yscale as d3.ScaleLinear<number, number>;
+    const currentTransformX = Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag].currentTransformX;
+    const currentTransformY = Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag].currentTransformY;
+    const xScale = Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag].Xscale as d3.ScaleLinear<number, number>;
+    const yScale = Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag].Yscale as d3.ScaleLinear<number, number>;
 
     let newxScale = currentTransformX.rescaleX(xScale);
     let newyScale = currentTransformY.rescaleY(yScale);
@@ -392,21 +272,9 @@ class CandlestickChartTS {
     // console.log(newxScale.domain())
     // console.log(newyScale.domain())
 
-    const yaxistag =
-      Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag].yaxistag;
+    const yaxistag = Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag].yaxistag;
     const yaxisRange = Shared_Yaxisrange[yaxistag].range;
-    drawCandlestickOnSVG(
-      PlotGroupArea,
-      XDATA,
-      open,
-      high,
-      low,
-      close,
-      newxScale,
-      newyScale,
-      plotName,
-      yaxistag
-    );
+    drawCandlestickOnSVG(PlotGroupArea, XDATA, open, high, low, close, newxScale, newyScale, plotName, yaxistag);
   }
 
   dbclickedfunction(event: any) {
@@ -432,13 +300,7 @@ class CandlestickChartTS {
 
   drawBackGround() {
     const { margin, width, height } = Shared_ChartBaseProp;
-    this.drawPlots(
-      this.BackGroup,
-      margin.left + margin.innerLeft,
-      margin.top + margin.innerTop,
-      width,
-      height
-    )
+    this.drawPlots(this.BackGroup, margin.left + margin.innerLeft, margin.top + margin.innerTop, width, height)
       .attr("fill", "blue")
       .attr("opacity", 0.1);
   }
@@ -455,27 +317,15 @@ class CandlestickChartTS {
   }
 
   setupSVG() {
-    const { targetID, svgWidth, svgHeight, margin, width, height } =
-      Shared_ChartBaseProp;
+    const { targetID, svgWidth, svgHeight, margin, width, height } = Shared_ChartBaseProp;
     // console.log(Shared_ChartBaseProp)
     const svgElementExists: boolean = d3.select(`#svg-${targetID}`).empty();
     console.log("svgElementExists", svgElementExists);
     this.svg = svgElementExists
-      ? d3
-          .select(`#${targetID}`)
-          .append("svg")
-          .attr("id", `svg-${targetID}`)
-          .attr("width", svgWidth)
-          .attr("height", svgHeight)
+      ? d3.select(`#${targetID}`).append("svg").attr("id", `svg-${targetID}`).attr("width", svgWidth).attr("height", svgHeight)
       : d3.select(`#svg-${targetID}`);
 
-    this.svg
-      .append("rect")
-      .attr("width", svgWidth)
-      .attr("height", svgHeight)
-      .style("fill", "none")
-      .style("stroke", "black")
-      .style("stroke-width", 1);
+    this.svg.append("rect").attr("width", svgWidth).attr("height", svgHeight).style("fill", "none").style("stroke", "black").style("stroke-width", 1);
 
     this.svg
       .append("defs")
