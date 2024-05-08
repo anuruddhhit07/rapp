@@ -92,12 +92,12 @@ export class PlotConfig {
 
           {
             plotstatus: true,
-            plotName: "LowPlot",
+            plotName: "ScatterPlot",
             Ydata: "low",
             Xdata:"xindex",
-            yscaletag: "TL",
+            yscaletag: "BR2",
             xscaletag: "mainx", // Example default value
-            plottype: "line1", // Example default value
+            plottype: "scatter", // Example default value
             tagclass: "clsoe_", // Example default value
             plotcolor:"red",
             // You can optionally omit other properties if you want to use their default values

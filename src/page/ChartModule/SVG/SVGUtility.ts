@@ -2,7 +2,7 @@
 
 import * as d3 from "d3";
 import { BaseType, groups, index } from "d3";
-import { CandlestickData } from "../types/chartSetuptype";
+import { CandlestickData, MulitlineLineChartData, ScatterDataType } from "../types/chartSetuptype";
 
 declare module "d3" {
   interface Selection<GElement extends BaseType, Datum, PElement extends BaseType, PDatum> {
@@ -284,6 +284,8 @@ export function drawBarChartOnSVG(
     .attr("fill", barColor); // Set color for the bar
 }
 
+
+
 export function drawCandlestickOnSVG(
   svgGroup: d3.Selection<SVGGElement, any, any, any>,
   xdata: number[],
@@ -338,4 +340,77 @@ export function drawCandlestickOnSVG(
     .attr("stroke-width", 1);
 
   candlesticks.exit().remove();
+}
+
+export function drawMultipleLineChartOnSVG(
+  svgGroup: d3.Selection<SVGGElement, any, any, any>,
+  lineData: MulitlineLineChartData[],
+  classNameTag: string,
+) {
+  // Create line generators for each line
+  const lineGenerators: any[] = [];
+
+  lineData.forEach((data) => {
+    const lineGenerator = d3.line()
+      .x((d: any) => d.x1)
+      .y((d: any) => d.y1);
+
+    lineGenerators.push(lineGenerator);
+  });
+
+  // Draw lines
+  lineData.forEach((data, index) => {
+    svgGroup.append("path")
+      .datum([data]) // Set data for the line
+      .attr("class", `all multiline multiline-line multiline-${classNameTag}`)
+      .attr("d", lineGenerators[index])
+      .attr("stroke", data.color)
+      .attr("stroke-width", 2) // Adjust the stroke width as needed
+      .attr("fill", "none");
+  });
+
+  // Add labels to the lines
+  lineData.forEach((data) => {
+    svgGroup.append("text")
+    .attr("class", `all multiline multiline-label multiline-label-${classNameTag}`)
+      .attr("x", (data.x1 + data.x2) / 2)
+      .attr("y", (data.y1 + data.y2) / 2)
+      .text(data.label)
+      .attr("fill", data.color)
+      .attr("text-anchor", "middle");
+  });
+}
+
+
+export function drawScatterPlotOnSVG(
+  svgGroup: d3.Selection<SVGGElement, any, any, any>,
+  scatterData: ScatterDataType[],
+  xScale: d3.ScaleLinear<number, number>,
+  yScale: d3.ScaleLinear<number, number>,
+  classNameTag: string,
+  yaxistag: string
+) {
+  // Draw the scatter plot points
+  svgGroup.selectAll(".scatter-point")
+    .data(scatterData)
+    .enter().append("circle")
+    .attr("class", ` all scatterplot scatter-point  scatter-point-${classNameTag}`)
+    .attr("clip-path", `url(#clip-${yaxistag})`)
+    .attr("cx", (d) => xScale(d.xData))
+    .attr("cy", (d) => yScale(d.yData))
+    .attr("r", (d) => d.size)
+    .attr("fill", (d) => d.color)
+    .attr("stroke", "none");
+
+  // Add labels to the scatter plot points
+  svgGroup.selectAll(".scatter-label")
+    .data(scatterData)
+    .enter().append("text")
+    .attr("class", `all scatterplot scatter-label scatter-label-${classNameTag}`)
+    .attr("clip-path", `url(#clip-${yaxistag})`)
+    .attr("x", (d) => xScale(d.xData) + 5) // Adjust the offset as needed
+    .attr("y", (d) => yScale(d.yData) - 5) // Adjust the offset as needed
+    .text((d) => d.label)
+    .attr("fill", "black")
+    .style("font-size", "10px"); // Adjust the font size as needed
 }

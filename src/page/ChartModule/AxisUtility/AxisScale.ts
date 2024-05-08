@@ -153,6 +153,19 @@ export class AxisChart {
       },
       {
         plotstatus: true,
+        yscaletag: "TL",
+        scaleSide: "Right",
+        x_point: 10,
+        changeRangeTag: false,
+        highestYDataTag: "high",
+        lowestYDataTag: "close",
+        yaxistag: "1mainyaxis",
+        yaxisratio: null,
+        yzoomstatus: true,
+        datadomain:defaultDatadomain
+      },
+      {
+        plotstatus: true,
         yscaletag: "BR",
         scaleSide: "Left",
         x_point: margin.left + margin.innerLeft,
@@ -166,17 +179,18 @@ export class AxisChart {
       },
       {
         plotstatus: true,
-        yscaletag: "TL",
-        scaleSide: "Right",
-        x_point: 10,
-        changeRangeTag: false,
-        highestYDataTag: "high",
-        lowestYDataTag: "close",
-        yaxistag: "1mainyaxis",
+        yscaletag: "BR2",
+        scaleSide: "Left",
+        x_point: margin.left + margin.innerLeft,
+        changeRangeTag: true,
+        highestYDataTag: "low",
+        lowestYDataTag: "low",
+        yaxistag: "third",
         yaxisratio: null,
         yzoomstatus: true,
         datadomain:defaultDatadomain
       },
+     
     ];
 
     return YscaleConfigDefault.filter((item) => item.plotstatus == true);

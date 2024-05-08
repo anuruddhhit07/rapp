@@ -3,7 +3,7 @@ import { PlotAxis } from "./AxisUtility/PlotAxis";
 import SetupChart from "./ChartSetup/setchart";
 import { PlotConfig } from "./ChartSetup/setplotConfig";
 import { arrangeData } from "./dataUtility/arrangeData";
-import { CandlestickData, ChartOptions, Margin } from "./types/chartSetuptype";
+import { CandlestickData, ChartOptions, Margin, ScatterDataType } from "./types/chartSetuptype";
 import { ChartDataIN, ChartDataObj } from "./types/chartdataTypes";
 import * as d3 from "d3";
 import {
@@ -19,10 +19,10 @@ import {
   groupDataByPlotType,
   updateSharedDataToplot,
 } from "./SharedObject";
-import { createClipPath, createGroupAdv, createMultipleSqure, createRect, drawBarChartOnSVG, drawCandlestickOnSVG, drawLineOnSVG } from "./SVG/SVGUtility";
+import { createClipPath, createGroupAdv, createMultipleSqure, createRect, drawBarChartOnSVG, drawCandlestickOnSVG, drawLineOnSVG, drawScatterPlotOnSVG } from "./SVG/SVGUtility";
 import { yaxisrangeType } from "./types/AxisScaleType";
 
-const mapButtontoChart={'top-button-panel_square_0':"id1",'top-button-panel_square_1':"MainPlot",'top-button-panel_square_2':"VolumePlot",'top-button-panel_square_3':"id1"}
+const mapButtontoChart={'top-button-panel_square_0':"ScatterPlot",'top-button-panel_square_1':"MainPlot",'top-button-panel_square_2':"VolumePlot",'top-button-panel_square_3':"id1"}
 
 class CandlestickChartTS {
   private axisChart: AxisChart;
@@ -99,7 +99,7 @@ class CandlestickChartTS {
 
       createMultipleSqure(this.svg,"top-button-panel").translate(100,30)
       // .drawBorder(0,0,100,20,"green",3,"yellow",1)
-      .createSquaresHorizontally(6,30,2,Array(6).fill(true,1,3))
+      .createSquaresHorizontally(6,30,2,Array(6).fill(true,0,3))
       .attachClickEvent(this.buttonClick.bind(this))
 
     this.rendorPlot();
@@ -230,6 +230,23 @@ class CandlestickChartTS {
             // Do something with the data object
           });
         }
+
+
+        if (plotType == "scatter") {
+          this.BackGroup.selectAll(`.scatterplot`).remove();
+          // Loop through the keys corresponding to the current plot type
+          groupedplotData[plotType].forEach((PlotName) => {
+            const plotstatus = Shared_DataToplot[PlotName].plotstatus;
+
+            if (!plotstatus) return;
+
+            this.drawPlotScatterByName(PlotName, this.BackGroup);
+
+            // Do something with the data object
+          });
+        }
+
+
       }
     }
   }
@@ -300,6 +317,40 @@ class CandlestickChartTS {
     const yaxistag = Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag].yaxistag;
     const yaxisRange = Shared_Yaxisrange[yaxistag].range;
     drawCandlestickOnSVG(PlotGroupArea, XDATA, open, high, low, close, newxScale, newyScale, plotName, yaxistag);
+  }
+
+  drawPlotScatterByName(plotName: string, PlotGroupArea: d3.Selection<SVGGElement, any, HTMLElement, any>) {
+    // console.log("plot for OHLC data")
+    const XDATA = Shared_DataToplot[plotName].xdata() as number[];
+    const Ydata = Shared_DataToplot[plotName].ydata() as number[];
+   
+  
+    const scatterdataobj: ScatterDataType[] = XDATA.map((value, index) => ({
+      xData: value,
+      yData: Ydata[index],
+      label:`${index}`,
+      color:'red',
+      size:2
+    }));
+
+    let plotColor = Shared_DataToplot[plotName].plotcolor;
+    const currentTransformX = Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag].currentTransformX;
+    const currentTransformY = Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag].currentTransformY;
+    const xScale = Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag].Xscale as d3.ScaleLinear<number, number>;
+    const yScale = Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag].Yscale as d3.ScaleLinear<number, number>;
+
+    let newxScale = currentTransformX.rescaleX(xScale);
+    let newyScale = currentTransformY.rescaleY(yScale);
+
+    // console.log(candlestickData)
+    // console.log(newxScale.domain())
+    // console.log(newyScale.domain())
+
+    const yaxistag = Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag].yaxistag;
+    const yaxisRange = Shared_Yaxisrange[yaxistag].range;
+
+    
+    drawScatterPlotOnSVG(PlotGroupArea,scatterdataobj, newxScale, newyScale, plotName, yaxistag);
   }
 
   buttonClick(id: any,className:any,pressstate:any) {

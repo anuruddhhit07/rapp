@@ -58,6 +58,23 @@ export interface CandlestickData {
   close: number;
 }
 
+export interface MulitlineLineChartData {
+  x1: number;
+  x2: number;
+  y1: number;
+  y2: number;
+  label: string;
+  color: string;
+}
+
+export interface ScatterDataType {
+  xData: number;
+  yData: number;
+  label: string;
+  color: string;
+  size: number;
+}
+
 export interface ChartBaseSetupType {
   svgWidth: number;
   svgHeight: number;
