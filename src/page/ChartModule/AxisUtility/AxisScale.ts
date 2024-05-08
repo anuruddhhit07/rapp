@@ -140,7 +140,6 @@ export class AxisChart {
       {
         plotstatus: true,
         yscaletag: "OHLC",
-        xaxisdataTag: "xindex",
         scaleSide: "Right",
         x_point: svgWidth - margin.right,
         changeRangeTag: true,
@@ -154,7 +153,6 @@ export class AxisChart {
       {
         plotstatus: true,
         yscaletag: "BR",
-        xaxisdataTag: "xindex",
         scaleSide: "Left",
         x_point: margin.left + margin.innerLeft,
         changeRangeTag: true,
@@ -168,7 +166,6 @@ export class AxisChart {
       {
         plotstatus: true,
         yscaletag: "TL",
-        xaxisdataTag: "xindex",
         scaleSide: "Right",
         x_point: 10,
         changeRangeTag: false,
@@ -188,7 +185,7 @@ export class AxisChart {
     const yscaleconfigdata = this.getdefaultyaxis();
 
     yscaleconfigdata.forEach((item) => {
-      const { yscaletag, yaxistag, plotstatus, x_point, scaleSide, xaxisdataTag, changeRangeTag, highestYDataTag, lowestYDataTag, yzoomstatus,datadomain } = item;
+      const { yscaletag, yaxistag, plotstatus, x_point, scaleSide, changeRangeTag, highestYDataTag, lowestYDataTag, yzoomstatus,datadomain } = item;
       updateYscaleconfig(yscaletag, {
         plotstatus: plotstatus,
         yzoomstatus: yzoomstatus,

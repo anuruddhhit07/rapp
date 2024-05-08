@@ -82,7 +82,6 @@ export interface yAxisItemType<T extends keyof ChartDataObj = keyof ChartDataObj
     yaxistag:string;
     yaxisratio:number|null;
     x_point: number;
-    xaxisdataTag:keyof ChartDataObj;  // for auto yvalue change on zooming based on min and max data in xdata range
     scaleSide:'Right'|'Left';
     changeRangeTag:boolean,
     highestYDataTag: keyof ChartDataObj;

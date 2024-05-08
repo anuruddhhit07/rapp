@@ -19,6 +19,8 @@ export interface DataToplotObjType {
     plottype: "ohlc" | string; // Adjust according to possible values
     tagclass: string;
     plotcolor:string,
+
+    
 }
 
 export interface DataToplotType {
