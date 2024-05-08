@@ -127,7 +127,7 @@ class CandlestickChartTS {
     // console.log("newcurrentTransformX0", newcurrentTransformX0);
 
     const currentTransformX: d3.ZoomTransform = event.transform;
-    console.log("currentTransformX",currentTransformX);
+    // console.log("currentTransformX",currentTransformX);
 
 
     // console.log(`Group zoom! at zoomxgroup:${x},y:${y},transform:${currentTransformX} `);
@@ -168,7 +168,7 @@ class CandlestickChartTS {
     this.svg.select('defs').selectAll('*').remove();
     for (const [yaxistag, plotGroupData] of Object.entries(Shared_Yaxisrange)) {
       const { range, borderColor, borderWidth, fill, opacity } = plotGroupData;
-      console.log(yaxistag,range);
+      // console.log(yaxistag,range);
       createClipPath(this.svg, `clip-${yaxistag}`, Shared_ChartBaseProp.margin.left + Shared_ChartBaseProp.margin.innerLeft, range[1], Shared_ChartBaseProp.width + Shared_ChartBaseProp.margin.innerRight, range[0] - range[1]);
     }
   }
@@ -315,7 +315,7 @@ class CandlestickChartTS {
       updateSharedDataToplot(plotname,{plotstatus:pressstate})
     }
     
-    console.log(Shared_DataToplot);
+    // console.log(Shared_DataToplot);
     this.plotaxis.rendorYaxis()
     this.rendorPlot()
 
