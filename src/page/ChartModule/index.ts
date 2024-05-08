@@ -56,7 +56,7 @@ class CandlestickChartTS {
   } = {};
 
   constructor(stockdata: ChartDataIN, targetID: string) {
-    SetupChart.getInstance(500, 500, { targetID: targetID });
+    SetupChart.getInstance(500, 700, { targetID: targetID });
     updateChartPlotData(arrangeData(stockdata));
     this.axisChart = AxisChart.getInstance();
     PlotConfig.getInstance();
@@ -102,9 +102,9 @@ class CandlestickChartTS {
     this.FrontGroup = createGroupAdv(this.svg, "main-border")
       .drawBorder(margin.left + margin.innerLeft, margin.top + margin.innerTop, width + margin.innerRight, height, "red", 2, "blue", 0)
       .call(this.zoomX as any)
-      .onEvent1("mousemove", (event) => {
-        this.mousefunction(event);
-      });
+      // .onEvent1("mousemove", (event) => {
+      //   this.mousefunction(event);
+      // });
 
     this.ResetButton = createGroupAdv(this.svg, "reset-area")
       .drawBorder(svgWidth - margin.right, svgHeight - margin.bottom, margin.right, margin.bottom, "red", 2, "blue", 0.2)
@@ -124,14 +124,14 @@ class CandlestickChartTS {
   zoomX = d3
     .zoom()
     .scaleExtent([0.5, 10])
-    .translateExtent([
-      [-Shared_ChartBaseProp.width / 2, (-0 * Shared_ChartBaseProp.height) / 2],
-      [Shared_ChartBaseProp.width + Shared_ChartBaseProp.width / 2, 0 * Shared_ChartBaseProp.height],
-    ])
-    .extent([
-      [0, 0],
-      [Shared_ChartBaseProp.width, 0],
-    ])
+    // .translateExtent([
+    //   [-Shared_ChartBaseProp.width / 2, (-0 * Shared_ChartBaseProp.height) / 2],
+    //   [Shared_ChartBaseProp.width + Shared_ChartBaseProp.width / 2, 0 * Shared_ChartBaseProp.height],
+    // ])
+    // .extent([
+    //   [0, 0],
+    //   [Shared_ChartBaseProp.width, 0],
+    // ])
     .on("zoom", this.zoomedX.bind(this));
 
   zoomedX(event: any) {
