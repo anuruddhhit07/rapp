@@ -122,7 +122,14 @@ class CandlestickChartTS {
     // console.log(event)
     // const transform = event.transform;
     const [x, y] = d3.pointer(event);
+
+    // const newcurrentTransformX0 = d3.zoomTransform(this.FrontGroup.node() as any);
+    // console.log("newcurrentTransformX0", newcurrentTransformX0);
+
     const currentTransformX: d3.ZoomTransform = event.transform;
+    console.log("currentTransformX",currentTransformX);
+
+
     // console.log(`Group zoom! at zoomxgroup:${x},y:${y},transform:${currentTransformX} `);
     this.plotaxis.updateXaxis(currentTransformX);
     this.rendorPlot();
@@ -326,9 +333,12 @@ class CandlestickChartTS {
   resetplot(event: any) {
     const [x, y] = d3.pointer(event);
     console.log(`Reset Button! at resetplot:${x},y:${y} `);
-    let currentTransform = d3.zoomIdentity;
-    this.plotaxis.updateXaxis(currentTransform);
-    this.plotaxis.updateYaxis(currentTransform);
+    this.FrontGroup.call(this.zoomX.transform as any, d3.zoomIdentity);
+    this.AxisYGroup.call(this.zoomY.transform as any, d3.zoomIdentity);
+
+    // let currentTransform = d3.zoomIdentity;
+    // this.plotaxis.updateXaxis(currentTransform);
+    // this.plotaxis.updateYaxis(currentTransform);
     this.rendorPlot();
   }
 
