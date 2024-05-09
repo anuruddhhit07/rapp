@@ -32,6 +32,7 @@ import {
 import { yaxisrangeType } from "./types/AxisScaleType";
 
 import { xscaleObj } from "./types/ScaleTypes";
+import SVGClass from "./SVG/SvgClassModel";
 
 const mapButtontoChart = {
   "top-button-panel_square_0": "ScatterPlot",
@@ -47,6 +48,7 @@ class CandlestickChartTS {
   // private axisChart: AxisChart;
   private svg!: d3.Selection<SVGSVGElement, any, HTMLElement, any>;
   private axisarea!: d3.Selection<SVGGElement, any, HTMLElement, any>;
+  private SVGClass:SVGClass
   axisGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   BackGroup: d3.Selection<SVGGElement, any, HTMLElement, any>;
   AxisXGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
@@ -54,20 +56,29 @@ class CandlestickChartTS {
   PlotGroup1!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   FrontGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   ResetButton!: d3.Selection<SVGGElement, any, HTMLElement, any>;
+  Buttonpanel!: void
   // plotaxis: PlotAxis;
   clipPathObj: {
     [key: keyof yaxisrangeType]: d3.Selection<SVGClipPathElement, any, HTMLElement, any>;
   } = {};
 
   constructor(stockdata: ChartDataIN, targetID: string) {
-    SetupChart.getInstance(1500, 700, { targetID: targetID });
+    SetupChart.getInstance(700, 700, { targetID: targetID });
     updateChartPlotData(arrangeData(stockdata));
+    this.SVGClass=SVGClass.getInstance()
+    this.svg=this.SVGClass.svg
+    console.log(this.SVGClass);
     // this.axisChart = AxisChart.getInstance();
     // PlotConfig.getInstance();
-    this.setupSVG();
-    const { svgWidth, svgHeight, margin, width, height } = Shared_ChartBaseProp;
+    // this.setupSVG();
+    // const { svgWidth, svgHeight, margin, width, height } = Shared_ChartBaseProp;
 
-    this.BackGroup = createGroupAdv(this.svg, "main-border").drawBorder(0, 0, svgWidth, svgHeight, "red", 2, "blue", 0.2);
+    this.BackGroup = this.SVGClass.BackGroup
+    this.AxisYGroup =this.SVGClass.AxisXGroup
+    this.FrontGroup=this.SVGClass.FrontGroup
+    this.ResetButton=this.SVGClass.ResetButton
+    this.Buttonpanel=this.SVGClass.createbuttonpanel(this.buttonClick.bind(this))
+
     // .call(this.zoomX as any)
     // .onEvent1("mousemove", (event) => {
     //   this.mousefunction(event)
@@ -78,15 +89,15 @@ class CandlestickChartTS {
     //   .drawBorder(0, 0, svgWidth - margin.right, margin.bottom, "red", 2, "green", 0.2)
     
 
-    this.AxisYGroup = createGroupAdv(this.svg, "Y-Area")
-      .translate(svgWidth - margin.right, 0)
-      .drawBorder(0, 0, margin.right, svgHeight - margin.bottom, "red", 2, "green", 0.2)
+    // this.AxisYGroup = createGroupAdv(this.svg, "Y-Area")
+    //   .translate(svgWidth - margin.right, 0)
+    //   .drawBorder(0, 0, margin.right, svgHeight - margin.bottom, "red", 2, "green", 0.2)
       // .call(this.zoomY as any);
 
       
 
-    this.FrontGroup = createGroupAdv(this.svg, "main-border")
-      .drawBorder(margin.left + margin.innerLeft, margin.top + margin.innerTop, width + margin.innerRight, height, "red", 2, "blue", 0)
+    // this.FrontGroup = createGroupAdv(this.svg, "main-border")
+    //   .drawBorder(margin.left + margin.innerLeft, margin.top + margin.innerTop, width + margin.innerRight, height, "red", 2, "blue", 0)
       // .call(this.zoomX as any)
       // .onEvent1("mousemove", (event) => {
       //   this.mousefunction(event);
@@ -95,19 +106,23 @@ class CandlestickChartTS {
       // this.plotaxis = PlotAxis.getInstance(this.BackGroup,this.FrontGroup,this.AxisYGroup, this.axisChart);
       
 
-    this.ResetButton = createGroupAdv(this.svg, "reset-area")
-      .drawBorder(svgWidth - margin.right, svgHeight - margin.bottom, margin.right, margin.bottom, "red", 2, "blue", 0.2)
-      .onEvent1("click", (event) => {
-        // this.resetplot(event);
-      });
+    // this.ResetButton = createGroupAdv(this.svg, "reset-area")
+    //   .drawBorder(svgWidth - margin.right, svgHeight - margin.bottom, margin.right, margin.bottom, "red", 2, "blue", 0.2)
+    //   .onEvent1("click", (event) => {
+    //     // this.resetplot(event);
+    //   });
 
-    createMultipleSqure(this.svg, "top-button-panel")
-      .translate(100, 30)
-      // .drawBorder(0,0,100,20,"green",3,"yellow",1)
-      .createSquaresHorizontally(6, 30, 2, Array(6).fill(true, 0, 5))
+    // createMultipleSqure(this.svg, "top-button-panel")
+    //   .translate(100, 30)
+    //   // .drawBorder(0,0,100,20,"green",3,"yellow",1)
+    //   .createSquaresHorizontally(6, 30, 2, Array(6).fill(true, 0, 5))
       // .attachClickEvent(this.buttonClick.bind(this));
 
     // this.rendorPlot();
+  }
+
+  buttonClick(id: any, className: any, pressstate: any) {
+console.log(id,className);
   }
 
   // zoomX = d3
