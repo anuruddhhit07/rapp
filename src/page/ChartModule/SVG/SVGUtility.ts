@@ -388,7 +388,8 @@ export function drawScatterPlotOnSVG(
   xScale: d3.ScaleLinear<number, number>,
   yScale: d3.ScaleLinear<number, number>,
   classNameTag: string,
-  yaxistag: string
+  yaxistag: string,
+  labelstatus:boolean
 ) {
   // Draw the scatter plot points
   svgGroup.selectAll(".scatter-point")
@@ -403,7 +404,8 @@ export function drawScatterPlotOnSVG(
     .attr("stroke", "none");
 
   // Add labels to the scatter plot points
-  svgGroup.selectAll(".scatter-label")
+  if (labelstatus){
+    svgGroup.selectAll(".scatter-label")
     .data(scatterData)
     .enter().append("text")
     .attr("class", `all scatterplot scatter-label scatter-label-${classNameTag}`)
@@ -413,4 +415,6 @@ export function drawScatterPlotOnSVG(
     .text((d) => d.label)
     .attr("fill", "black")
     .style("font-size", "10px"); // Adjust the font size as needed
+  }
+  
 }

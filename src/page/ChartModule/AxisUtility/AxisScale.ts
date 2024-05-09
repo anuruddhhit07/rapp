@@ -73,7 +73,7 @@ export class AxisChart {
     this.setXScaleConfig();
     this.setYScaleConfig();
     this.setXscalefn();
-    // this.setYscalefn();
+    this.setYscalefn();
   }
 
   static getInstance(): AxisChart {
@@ -163,9 +163,9 @@ export class AxisChart {
         yscaletag: "TL",
         scaleSide: "Left",
         x_point: margin.left + margin.innerLeft,
-        changeRangeTag: false,
-        highestYDataTag: "high",
-        lowestYDataTag: "low",
+        changeRangeTag: true,
+        highestYDataTag: "close",
+        lowestYDataTag: "close",
         yaxistag: "1mainyaxis",
         yaxisratio: null,
         yzoomstatus: true,
@@ -283,11 +283,12 @@ export class AxisChart {
   setYscalefn() {
     const { yscaletags } = getUniqueScaleTags();
     const yscaletagsarray = yscaletags;
-    // console.log("yscaletagsarray",yscaletagsarray)
+    console.log("yscaletagsarray",yscaletagsarray)
 
     yscaletagsarray.map((scaletag) => {
       let scaleconfig = Shared_Yscaleconfig[scaletag];
-      // if (scaleconfig.Yscale == null) {
+      console.log(scaleconfig.Yscale);
+      if (scaleconfig.Yscale == null) {
         if (scaleconfig.yaxisrange != null) {
           // console.log(scaletag, scaleconfig.yaxisrange, scaleconfig.datadomain());
           const Yscale = d3.scaleLinear().range(scaleconfig.yaxisrange).domain(scaleconfig.datadomain());
@@ -295,7 +296,23 @@ export class AxisChart {
             Yscale: Yscale,
           });
         }
-      // }
+       
+      }
+      else {
+        if (scaleconfig.yaxisrange != null) {
+          
+          if (scaleconfig.Yscale!=null){
+            console.log(scaleconfig.Yscale?.domain());
+            const Yscale = d3.scaleLinear().range(scaleconfig.yaxisrange).domain(scaleconfig.Yscale.domain())
+            updateYscaleconfig(scaletag, {
+              Yscale: Yscale,
+            });
+
+          }
+         
+        }
+      }
+
     });
   }
 }

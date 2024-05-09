@@ -368,9 +368,10 @@ class CandlestickChartTS {
     // console.log(newyScale.domain())
 
     const yaxistag = Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag].yaxistag;
-    const yaxisRange = Shared_Yaxisrange[yaxistag].range;
+    // const yaxisRange = Shared_Yaxisrange[yaxistag].range;
+    const abelstatus=false
 
-    drawScatterPlotOnSVG(PlotGroupArea, scatterdataobj, newxScale, newyScale, plotName, yaxistag);
+    drawScatterPlotOnSVG(PlotGroupArea, scatterdataobj, newxScale, newyScale, plotName, yaxistag,abelstatus);
   }
 
   buttonClick(id: any, className: any, pressstate: any) {

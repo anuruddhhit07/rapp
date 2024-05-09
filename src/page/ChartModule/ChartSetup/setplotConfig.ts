@@ -65,7 +65,7 @@ export class PlotConfig {
             plotcolor:"green",
           },
           {
-            plotstatus: false,
+            plotstatus: true,
             plotName: "ClosePlot",
             Ydata: "close",
             Xdata:"xindex",

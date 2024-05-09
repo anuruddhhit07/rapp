@@ -208,6 +208,7 @@ export class PlotAxis {
     setYaxisRatio();
     // console.log(Shared_Yaxisrange);
     this.axisChart.setYscalefn();
+    
 
 
     const plotaxies = true;
@@ -221,6 +222,9 @@ export class PlotAxis {
 
     yscaletagsarray.map((scaletag) => {
       let scaleconfig = Shared_Yscaleconfig[scaletag];
+      console.log(scaletag,scaleconfig.currentTransformY);
+      console.log(scaletag,scaleconfig.Yscale?.domain());
+      let currentYscale = scaleconfig.currentTransformY.rescaleY(scaleconfig.Yscale as d3.ScaleLinear<number, number, never>) as d3.ScaleLinear<number, number>;
       if (scaleconfig.Yscale == null) {
         throw new Error(`Scale cannot be null for scaletag: ${scaletag}`);
       }
@@ -230,7 +234,7 @@ export class PlotAxis {
         .attr("transform", `translate(${scaleconfig.xpoint},${0})`)
         .call(
           this.yaxisgenerator(
-            scaleconfig.Yscale as d3.ScaleLinear<number, number>,
+            currentYscale as d3.ScaleLinear<number, number>,
             {
               scaleSide: scaleconfig.scaleSide,
               yscaletag: scaleconfig.yscaletag,
@@ -247,7 +251,7 @@ export class PlotAxis {
 
     const currentTransformX = this.Xzoomarea.property("__zoom");
     const currentTransformY = this.Yzoomarea.property("__zoom");
-    console.log(currentTransformX,currentTransformY);
+    // console.log(currentTransformX,currentTransformY);
 
     xscaletagsarray = Object.keys(Shared_Xscaleconfig);
 
@@ -375,7 +379,7 @@ export class PlotAxis {
       let scaleconfig = Shared_Yscaleconfig[scaletag];
       //  console.log(scaleconfig);
       //  console.log(scaletag,scaleconfig.yzoomstatus);
-      console.log(ymousepoint,scaleconfig.yaxisrange);
+      // console.log(ymousepoint,scaleconfig.yaxisrange);
 
       if (ymousepoint!=undefined ) {
         if (scaleconfig.yaxisrange) {
