@@ -92,7 +92,7 @@ export class AxisChart {
         scaleSide: "Bottom",
         scaleType: "linear",
         scaledatatag: "xindex",
-        scalerange: [margin.left + margin.innerLeft, svgWidth - margin.right - margin.innerRight*0],
+        scalerange: [margin.left + margin.innerLeft, svgWidth - margin.right - margin.innerRight],
         ticlavelmappedwith: "timestamp", // just to display axis tick and reverse map if any dataplot have axis defeind in timestamp
         plotstatus: true,
         zooming: true,
@@ -213,7 +213,7 @@ export class AxisChart {
 
     yscaleconfigdata.forEach((item) => {
       const { yscaletag, yaxistag, plotstatus, x_point, scaleSide, changeRangeTag, highestYDataTag, lowestYDataTag, yzoomstatus,datadomain } = item;
-      console.log(yscaletag,highestYDataTag,lowestYDataTag);
+      // console.log(yscaletag,highestYDataTag,lowestYDataTag);
       updateYscaleconfig(yscaletag, {
         plotstatus: plotstatus,
         yzoomstatus: yzoomstatus,
@@ -283,11 +283,11 @@ export class AxisChart {
   setYscalefn() {
     const { yscaletags } = getUniqueScaleTags();
     const yscaletagsarray = yscaletags;
-    console.log("yscaletagsarray",yscaletagsarray)
+    // console.log("yscaletagsarray",yscaletagsarray)
 
     yscaletagsarray.map((scaletag) => {
       let scaleconfig = Shared_Yscaleconfig[scaletag];
-      console.log(scaleconfig.Yscale);
+      // console.log(scaleconfig.Yscale);
       if (scaleconfig.Yscale == null) {
         if (scaleconfig.yaxisrange != null) {
           // console.log(scaletag, scaleconfig.yaxisrange, scaleconfig.datadomain());
@@ -302,7 +302,7 @@ export class AxisChart {
         if (scaleconfig.yaxisrange != null) {
           
           if (scaleconfig.Yscale!=null){
-            console.log(scaleconfig.Yscale?.domain());
+            // console.log(scaleconfig.Yscale?.domain());
             const Yscale = d3.scaleLinear().range(scaleconfig.yaxisrange).domain(scaleconfig.Yscale.domain())
             updateYscaleconfig(scaletag, {
               Yscale: Yscale,

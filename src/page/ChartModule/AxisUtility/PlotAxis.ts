@@ -222,8 +222,8 @@ export class PlotAxis {
 
     yscaletagsarray.map((scaletag) => {
       let scaleconfig = Shared_Yscaleconfig[scaletag];
-      console.log(scaletag,scaleconfig.currentTransformY);
-      console.log(scaletag,scaleconfig.Yscale?.domain());
+      // console.log(scaletag,scaleconfig.currentTransformY);
+      // console.log(scaletag,scaleconfig.Yscale?.domain());
       let currentYscale = scaleconfig.currentTransformY.rescaleY(scaleconfig.Yscale as d3.ScaleLinear<number, number, never>) as d3.ScaleLinear<number, number>;
       if (scaleconfig.Yscale == null) {
         throw new Error(`Scale cannot be null for scaletag: ${scaletag}`);

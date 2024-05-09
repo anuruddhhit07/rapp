@@ -56,7 +56,7 @@ class CandlestickChartTS {
   } = {};
 
   constructor(stockdata: ChartDataIN, targetID: string) {
-    SetupChart.getInstance(500, 700, { targetID: targetID });
+    SetupChart.getInstance(1500, 700, { targetID: targetID });
     updateChartPlotData(arrangeData(stockdata));
     this.axisChart = AxisChart.getInstance();
     PlotConfig.getInstance();
@@ -438,7 +438,7 @@ class CandlestickChartTS {
     const { targetID, svgWidth, svgHeight, margin, width, height } = Shared_ChartBaseProp;
     // console.log(Shared_ChartBaseProp)
     const svgElementExists: boolean = d3.select(`#svg-${targetID}`).empty();
-    console.log("svgElementExists", svgElementExists);
+    // console.log("svgElementExists", svgElementExists);
     this.svg = svgElementExists
       ? d3.select(`#${targetID}`).append("svg").attr("id", `svg-${targetID}`).attr("width", svgWidth).attr("height", svgHeight)
       : d3.select(`#svg-${targetID}`);

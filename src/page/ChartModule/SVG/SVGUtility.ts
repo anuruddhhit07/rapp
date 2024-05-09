@@ -158,7 +158,7 @@ export function createMultipleSqure(
       pressstate: pressstate ? pressstate[i] : undefined 
     }));
 
-    console.log("squaresData",squaresData);
+    // console.log("squaresData",squaresData);
 
     this.selectAll("rect")
       .data(squaresData)
