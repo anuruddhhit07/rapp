@@ -15,7 +15,7 @@ export type yaxisrangeType = {
 }; ;
 
 export interface XscaleItemProp {
-    xscaleName:string;
+        xscaleName:string;
         y_point: number;
         scaleSide: 'Top'|'Bottom';
         scaleType: 'linear' | 'scaleband' | 'TimeScale';
