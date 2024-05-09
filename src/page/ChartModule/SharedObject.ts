@@ -28,6 +28,8 @@ export function updateChartPlotData(data: ChartDataObj) {
   Shared_ChartPlotData = data;
 }
 
+
+
 export function updateChartBaseProp(partialData: Partial<ChartBaseSetupType>): void {
   Object.assign(Shared_ChartBaseProp, partialData);
 }

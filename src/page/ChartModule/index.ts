@@ -6,6 +6,7 @@ import { arrangeData } from "./dataUtility/arrangeData";
 import { CandlestickData, ChartOptions, Margin, ScatterDataType } from "./types/chartSetuptype";
 import { ChartDataIN, ChartDataObj } from "./types/chartdataTypes";
 import * as d3 from "d3";
+import {  createPlotdataObj  } from "./types/PlotDataUtility";
 import {
   Shared_ChartPlotData,
   updateChartPlotData,
@@ -31,8 +32,28 @@ import {
 } from "./SVG/SVGUtility";
 import { yaxisrangeType } from "./types/AxisScaleType";
 
-import { xscaleObj } from "./types/ScaleTypes";
+import { xscaleObj } from "./types/XScaleUtility";
 import SVGClass from "./SVG/SvgClassModel";
+
+const plotDataObj = createPlotdataObj();
+console.log(plotDataObj)
+
+//Set the active callback function
+plotDataObj.setActiveCallback((activeIds) => {
+  console.log("Active plot IDs:", activeIds.plotid);
+  console.log("Active xscale IDs:", activeIds.xscaleid);
+  console.log("Active yscale IDs:", activeIds.yscaleid);
+});
+
+plotDataObj.data.push({
+  id: "4",
+  PlotName: "PL4",
+  plotstatus: true,
+  Xdata: 123,
+  Ydata: 456,
+  xscaleTage: 'BOT1',
+  yscaleTage: 'TR1'
+});
 
 const mapButtontoChart = {
   "top-button-panel_square_0": "ScatterPlot",
@@ -65,6 +86,7 @@ class CandlestickChartTS {
   constructor(stockdata: ChartDataIN, targetID: string) {
     SetupChart.getInstance(700, 700, { targetID: targetID });
     updateChartPlotData(arrangeData(stockdata));
+    
     this.SVGClass=SVGClass.getInstance()
     this.svg=this.SVGClass.svg
     console.log(this.SVGClass);
@@ -78,7 +100,9 @@ class CandlestickChartTS {
     this.FrontGroup=this.SVGClass.FrontGroup
     this.ResetButton=this.SVGClass.ResetButton
     this.Buttonpanel=this.SVGClass.createbuttonpanel(this.buttonClick.bind(this))
-
+    // update_plotDataObj()
+   
+  //  console.log("PlotDataObj",plotDataObj)
     // .call(this.zoomX as any)
     // .onEvent1("mousemove", (event) => {
     //   this.mousefunction(event)
