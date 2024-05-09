@@ -27,29 +27,38 @@ export class PlotAxis {
   private static instance: PlotAxis | null = null;
   private axisChart: AxisChart;
   // public axisarea: d3.Selection<SVGGElement, any, HTMLElement, any>;
-  axisarea: d3.Selection<SVGGElement, any, HTMLElement, any>;
+  axisplotarea: d3.Selection<SVGGElement, any, HTMLElement, any>;
+  Xzoomarea: d3.Selection<SVGGElement, any, HTMLElement, any>;
+  Yzoomarea: d3.Selection<SVGGElement, any, HTMLElement, any>;
   private constructor(
-    axisarea: d3.Selection<SVGGElement, any, HTMLElement, any>,
+    axisplotarea: d3.Selection<SVGGElement, any, HTMLElement, any>,
+    Xzoomarea: d3.Selection<SVGGElement, any, HTMLElement, any>,
+    Yzoomarea: d3.Selection<SVGGElement, any, HTMLElement, any>,
     axisChart: AxisChart
   ) {
     this.axisChart = axisChart;
-    this.axisarea = axisarea;
+    this.axisplotarea = axisplotarea;
+    this.Xzoomarea = Xzoomarea;
+    this.Yzoomarea = Yzoomarea;
     this.rendorXaxis();
     this.rendorYaxis();
+   
   }
 
   static getInstance(
-    axisarea: d3.Selection<SVGGElement, any, HTMLElement, any>,
+    axisplotarea: d3.Selection<SVGGElement, any, HTMLElement, any>,
+    Xzoomarea: d3.Selection<SVGGElement, any, HTMLElement, any>,
+    Yzoomarea: d3.Selection<SVGGElement, any, HTMLElement, any>,
     axisChart: AxisChart
   ): PlotAxis {
     if (!PlotAxis.instance) {
-      PlotAxis.instance = new PlotAxis(axisarea, axisChart);
+      PlotAxis.instance = new PlotAxis(axisplotarea,Xzoomarea,Yzoomarea, axisChart);
     }
     return PlotAxis.instance;
   }
 
   public testfun(): void {
-    console.log("first", this.axisarea);
+    console.log("first", this.axisplotarea);
   }
 
   custumticformat(
@@ -151,7 +160,11 @@ export class PlotAxis {
   }
 
   rendorXaxis() {
-    this.axisarea.selectAll(`.x-axis`).remove();
+    this.axisplotarea.selectAll(`.x-axis`).remove();
+
+    // const currentTransformX = this.Xzoomarea.property("__zoom");
+    // const currentTransformY = this.Yzoomarea.property("__zoom");
+    // console.log(currentTransformX,currentTransformY);
 
     const plotaxies = false;
     let yscaletagsarray: string[];
@@ -170,7 +183,7 @@ export class PlotAxis {
       if (scaleconfig.Xscale == null) {
         throw new Error(`Scale cannot be null for scaletag: ${scaletag}`);
       }
-      this.axisarea
+      this.axisplotarea
         .append("g")
         .attr("class", `axis x-axis x-axis-${scaleconfig.xscaleName}`)
         .attr("transform", `translate(${0},${scaleconfig.y_point})`)
@@ -190,7 +203,7 @@ export class PlotAxis {
   }
 
   rendorYaxis() {
-    this.axisarea.selectAll(`.y-axis`).remove();
+    this.axisplotarea.selectAll(`.y-axis`).remove();
     // console.log(Shared_Yaxisrange);
     setYaxisRatio();
     // console.log(Shared_Yaxisrange);
@@ -211,7 +224,7 @@ export class PlotAxis {
       if (scaleconfig.Yscale == null) {
         throw new Error(`Scale cannot be null for scaletag: ${scaletag}`);
       }
-      this.axisarea
+      this.axisplotarea
         .append("g")
         .attr("class", `axis y-axis y-axis-${scaleconfig.yscaletag}`)
         .attr("transform", `translate(${scaleconfig.xpoint},${0})`)
@@ -227,12 +240,14 @@ export class PlotAxis {
     });
   }
 
-  public updateXaxis(currentTransformX: any) {
-    //axisarea.selectAll(`.x-axis`).remove();
-    //console.log("first",this.axisarea)
-    // return
+  public updateXaxis() {
+    
     const plotaxies = false;
     let xscaletagsarray: string[] = [];
+
+    const currentTransformX = this.Xzoomarea.property("__zoom");
+    const currentTransformY = this.Yzoomarea.property("__zoom");
+    console.log(currentTransformX,currentTransformY);
 
     xscaletagsarray = Object.keys(Shared_Xscaleconfig);
 
@@ -246,9 +261,9 @@ export class PlotAxis {
         | d3.ScaleLinear<number, number>
         | d3.ScaleTime<number, number>;
 
-      updateXscaleconfig(scaletag, {
-        currentTransformX: currentTransformX,
-      });
+      // updateXscaleconfig(scaletag, {
+      //   currentTransformX: currentTransformX,
+      // });
 
       const allowrange = [
         Shared_ChartPlotData[scaleconfig.scaledatatag][0],
@@ -299,9 +314,7 @@ export class PlotAxis {
           return;
         }
 
-        // updateYscaleconfig(yscaletag, {
-        //   visrange: () => newVisibleRange as [number, number],
-        // });
+        
 
         let Yscale = d3
           .scaleLinear()
@@ -313,33 +326,28 @@ export class PlotAxis {
             )
           );
 
-          // console.log("datadomain",yscaleconfig.datadomain(
-          //   newVisibleRange[0] as number,
-          //   newVisibleRange[1] as number
-          // ))
-          // console.log("datadomain2",yscaleconfig.datadomain2(
-          //   newVisibleRange[0] as number,
-          //   newVisibleRange[1] as number
-          // ))
+          let currentYscale = currentTransformY.rescaleY(Yscale) as d3.ScaleLinear<number, number>;
 
-        const currentTransformY =
-          Shared_Yscaleconfig[yscaletag].currentTransformY;
-        let currentyscale = currentTransformY.rescaleY(Yscale);
+          // this.axisplotarea.call(this.zoomY.transform, currentTransformY)
 
-          // if (yscaletag=='BR'){
-          //   currentyscale.domain([0, currentyscale.domain()[1]]);
-          // }
+          updateYscaleconfig(yscaletag, {
+            Yscale:Yscale,
+        });
+
+          
         
 
-        this.axisarea.selectAll(`.y-axis-${yscaleconfig.yscaletag}`).call(
-          this.yaxisgenerator(currentyscale as d3.ScaleLinear<number, number>, {
+        this.axisplotarea.selectAll(`.y-axis-${yscaleconfig.yscaletag}`).call(
+          this.yaxisgenerator(currentYscale as d3.ScaleLinear<number, number>, {
             scaleSide: yscaleconfig.scaleSide,
             yscaletag: yscaleconfig.yscaletag,
           }) as any
         );
       });
 
-      this.axisarea.selectAll(`.x-axis-${scaleconfig.xscaleName}`).call(
+
+
+      this.axisplotarea.selectAll(`.x-axis-${scaleconfig.xscaleName}`).call(
         this.xaxisgenerator(
           currentxscale as
             | d3.ScaleLinear<number, number>
@@ -351,21 +359,23 @@ export class PlotAxis {
         ) as any
       );
     });
+
+   
   }
 
   public updateYaxis(
-    currentTransformY: d3.ZoomTransform,
     ymousepoint?: number 
   ) {
-    //axisarea.selectAll(`.x-axis`).remove();
-    //console.log("first",this.axisarea)
-    // return
+    const currentTransformX = this.Xzoomarea.property("__zoom");
+    const currentTransformY = this.Yzoomarea.property("__zoom");
+    // console.log(currentTransformX,currentTransformY);
 
     const { yscaletags } = getUniqueScaleTags();
     yscaletags.map((scaletag) => {
       let scaleconfig = Shared_Yscaleconfig[scaletag];
       //  console.log(scaleconfig);
       //  console.log(scaletag,scaleconfig.yzoomstatus);
+      console.log(ymousepoint,scaleconfig.yaxisrange);
 
       if (ymousepoint!=undefined ) {
         if (scaleconfig.yaxisrange) {
@@ -387,6 +397,9 @@ export class PlotAxis {
         throw new Error(`Scale cannot be null for scaletag: ${scaletag}`);
       }
 
+
+      // console.log("currentTransformY",currentTransformY);
+
       let currentyscale = currentTransformY.rescaleY(
         scaleconfig.Yscale
       ) as d3.ScaleLinear<number, number>;
@@ -399,7 +412,9 @@ export class PlotAxis {
         currentTransformY: currentTransformY,
       });
 
-      this.axisarea.selectAll(`.y-axis-${scaleconfig.yscaletag}`).call(
+
+
+      this.axisplotarea.selectAll(`.y-axis-${scaleconfig.yscaletag}`).call(
         this.yaxisgenerator(currentyscale as d3.ScaleLinear<number, number>, {
           scaleSide: scaleconfig.scaleSide,
           yscaletag: scaleconfig.yscaletag,

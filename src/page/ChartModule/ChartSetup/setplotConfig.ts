@@ -65,7 +65,7 @@ export class PlotConfig {
             plotcolor:"green",
           },
           {
-            plotstatus: true,
+            plotstatus: false,
             plotName: "ClosePlot",
             Ydata: "close",
             Xdata:"xindex",
@@ -78,7 +78,7 @@ export class PlotConfig {
           },
 
           {
-            plotstatus: true,
+            plotstatus: false,
             plotName: "HighPlot",
             Ydata: "high",
             Xdata:"xindex",
@@ -91,7 +91,7 @@ export class PlotConfig {
           },
 
           {
-            plotstatus: true,
+            plotstatus: false,
             plotName: "ScatterPlot",
             Ydata: "low",
             Xdata:"xindex",

@@ -69,35 +69,17 @@ class CandlestickChartTS {
     //   this.mousefunction(event)
     //  })
 
-    this.AxisXGroup = createGroupAdv(this.svg, "X-Area")
-      .translate(0, svgHeight - margin.bottom)
-      .drawBorder(0, 0, svgWidth - margin.right, margin.bottom, "red", 2, "green", 0.2);
+    // this.AxisXGroup = createGroupAdv(this.svg, "X-Area")
+    //   .translate(0, svgHeight - margin.bottom)
+    //   .drawBorder(0, 0, svgWidth - margin.right, margin.bottom, "red", 2, "green", 0.2)
+    
 
     this.AxisYGroup = createGroupAdv(this.svg, "Y-Area")
       .translate(svgWidth - margin.right, 0)
       .drawBorder(0, 0, margin.right, svgHeight - margin.bottom, "red", 2, "green", 0.2)
       .call(this.zoomY as any);
 
-    this.plotaxis = PlotAxis.getInstance(this.BackGroup, this.axisChart);
-
-    // this.getclippath()
-    // createClipPath
-    // console.log("Shared_yaxisrange", Shared_Yaxisrange, Object.entries(Shared_Yaxisrange));
-
-    // for (const [yaxistag, plotGroupData] of Object.entries(Shared_Yaxisrange)) {
-    //   const { range, borderColor, borderWidth, fill, opacity } = plotGroupData;
-    //   createClipPath(this.svg, `clip-${yaxistag}`, margin.left + margin.innerLeft, range[1], width + margin.innerRight, range[0] - range[1]);
-    // }
-
-    // console.log(this.clipPathObj);
-    // for (const [plotGroupName, plotGroupData] of Object.entries(Shared_Yaxisrange)) {
-    //   const { range, borderColor, borderWidth, fill, opacity } = plotGroupData;
-    //   console.log(fill);
-    //   // Create the plot group dynamically
-    //   const plotGroup = createGroupAdv(this.svg, `plotaclass-${plotGroupName}`)
-    //     .translate(0, 0)
-    //     .drawBorder(margin.left+margin.innerLeft, range[1], width+margin.innerRight, range[0] - range[1], borderColor, borderWidth, fill, opacity)
-    // }
+      
 
     this.FrontGroup = createGroupAdv(this.svg, "main-border")
       .drawBorder(margin.left + margin.innerLeft, margin.top + margin.innerTop, width + margin.innerRight, height, "red", 2, "blue", 0)
@@ -105,6 +87,9 @@ class CandlestickChartTS {
       // .onEvent1("mousemove", (event) => {
       //   this.mousefunction(event);
       // });
+
+      this.plotaxis = PlotAxis.getInstance(this.BackGroup,this.FrontGroup,this.AxisYGroup, this.axisChart);
+      
 
     this.ResetButton = createGroupAdv(this.svg, "reset-area")
       .drawBorder(svgWidth - margin.right, svgHeight - margin.bottom, margin.right, margin.bottom, "red", 2, "blue", 0.2)
@@ -123,7 +108,7 @@ class CandlestickChartTS {
 
   zoomX = d3
     .zoom()
-    .scaleExtent([0.5, 10])
+    .scaleExtent([0.5, 30])
     // .translateExtent([
     //   [-Shared_ChartBaseProp.width / 2, (-0 * Shared_ChartBaseProp.height) / 2],
     //   [Shared_ChartBaseProp.width + Shared_ChartBaseProp.width / 2, 0 * Shared_ChartBaseProp.height],
@@ -144,15 +129,17 @@ class CandlestickChartTS {
 
     const currentTransformX: d3.ZoomTransform = event.transform;
     // console.log("currentTransformX",currentTransformX);
+    const currentTransformXb = this.FrontGroup.property("__zoom");
+    // console.log(currentTransformX,currentTransformXb);
 
     // console.log(`Group zoom! at zoomxgroup:${x},y:${y},transform:${currentTransformX} `);
-    this.plotaxis.updateXaxis(currentTransformX);
+    this.plotaxis.updateXaxis();
     this.rendorPlot();
   }
 
   zoomY = d3
     .zoom()
-    .scaleExtent([0.5, 1])
+    .scaleExtent([0.5, 4])
     // .translateExtent([
     //   [-0*Shared_ChartBaseProp.width / 2, -Shared_ChartBaseProp.height / 2],
     //   [Shared_ChartBaseProp.width + Shared_ChartBaseProp.width / 2, Shared_ChartBaseProp.height],
@@ -175,7 +162,7 @@ class CandlestickChartTS {
     //  console.log("old currentTransformY",currentTransformYy);
 
     // console.log(`Group zoom! at zoomxgroup:${xmousepoint},y:${ymousepoint},transform:${currentTransformY} `);
-    this.plotaxis.updateYaxis(currentTransformY, ymousepoint);
+    this.plotaxis.updateYaxis(ymousepoint);
     this.rendorPlot();
   }
 
@@ -274,8 +261,10 @@ class CandlestickChartTS {
     const XDATA = Shared_DataToplot[plotName].xdata();
     const YDATA = Shared_DataToplot[plotName].ydata();
     let plotColor = Shared_DataToplot[plotName].plotcolor;
-    const currentTransformX = Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag].currentTransformX;
+    // const currentTransformX = Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag].currentTransformX;
     const currentTransformY = Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag].currentTransformY;
+    const currentTransformX = this.FrontGroup.property("__zoom");
+    // const currentTransformY = this.AxisYGroup.property("__zoom");
     const xScale = Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag].Xscale as d3.ScaleLinear<number, number>;
     const yScale = Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag].Yscale as d3.ScaleLinear<number, number>;
 
@@ -291,8 +280,10 @@ class CandlestickChartTS {
     const XDATA = Shared_DataToplot[plotName].xdata();
     const YDATA = Shared_DataToplot[plotName].ydata();
     let plotColor = Shared_DataToplot[plotName].plotcolor;
-    const currentTransformX = Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag].currentTransformX;
+    // const currentTransformX = Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag].currentTransformX;
     const currentTransformY = Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag].currentTransformY;
+    const currentTransformX = this.FrontGroup.property("__zoom");
+    // const currentTransformY = this.AxisYGroup.property("__zoom");
     const xScale = Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag].Xscale as d3.ScaleLinear<number, number>;
     const yScale = Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag].Yscale as d3.ScaleLinear<number, number>;
 
@@ -321,13 +312,23 @@ class CandlestickChartTS {
     // }));
 
     let plotColor = Shared_DataToplot[plotName].plotcolor;
-    const currentTransformX = Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag].currentTransformX;
+    // const currentTransformX = Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag].currentTransformX;
     const currentTransformY = Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag].currentTransformY;
+   
+    const currentTransformX = this.FrontGroup.property("__zoom");
+    // const currentTransformY = this.AxisYGroup.property("__zoom");
     const xScale = Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag].Xscale as d3.ScaleLinear<number, number>;
     const yScale = Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag].Yscale as d3.ScaleLinear<number, number>;
 
     let newxScale = currentTransformX.rescaleX(xScale);
     let newyScale = currentTransformY.rescaleY(yScale);
+
+    
+    // console.log(currentTransformX);
+    // console.log(newyScale.domain());
+    // // console.log(newyScale.domain());
+    
+    // console.log(currentTransformY);
 
     // console.log(candlestickData)
     // console.log(newxScale.domain())
@@ -352,8 +353,10 @@ class CandlestickChartTS {
     }));
 
     let plotColor = Shared_DataToplot[plotName].plotcolor;
-    const currentTransformX = Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag].currentTransformX;
+    // const currentTransformX = Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag].currentTransformX;
     const currentTransformY = Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag].currentTransformY;
+    const currentTransformX = this.FrontGroup.property("__zoom");
+    // const currentTransformY = this.AxisYGroup.property("__zoom");
     const xScale = Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag].Xscale as d3.ScaleLinear<number, number>;
     const yScale = Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag].Yscale as d3.ScaleLinear<number, number>;
 

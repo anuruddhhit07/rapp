@@ -17,6 +17,9 @@ import {
 const defaultDatadomain = function(this: any, minvisrange?: number, maxvisrange?: number) {
   // Check if maxscaledata and minscaledata are defined before attempting to call them
   if (this.scaledata_min && this.scaledata_max && this.transform && this.ypadding) {
+    // console.log(minvisrange,maxvisrange);
+    // console.log(this.scaledata_min());
+    // console.log(this.scaledata_max());
     const minData =
       minvisrange === undefined && maxvisrange === undefined
         ? d3.min(this.scaledata_min()) as unknown as number
@@ -25,6 +28,9 @@ const defaultDatadomain = function(this: any, minvisrange?: number, maxvisrange?
       minvisrange === undefined && maxvisrange === undefined
         ? d3.max(this.scaledata_max()) as unknown as number
         : d3.max(this.scaledata_max().slice(minvisrange, (maxvisrange as number) + 1)) as unknown as number;
+
+    //   console.log(minData,maxData);
+    // return [minData, maxData];
     const center = (maxData + minData) / 2;
     const newExtent = (maxData - minData) / this.transform.k / 2;
     const newMax = center + newExtent;
@@ -33,6 +39,7 @@ const defaultDatadomain = function(this: any, minvisrange?: number, maxvisrange?
     const higherlimit = newMax > maxData ? maxData : newMax;
     const padding = (higherlimit - lowerlimit) * this.ypadding;
     return [lowerlimit - padding, higherlimit + padding];
+
   }
   return [0, 0];
 };
@@ -85,7 +92,7 @@ export class AxisChart {
         scaleSide: "Bottom",
         scaleType: "linear",
         scaledatatag: "xindex",
-        scalerange: [margin.left + margin.innerLeft, svgWidth - margin.right - margin.innerRight],
+        scalerange: [margin.left + margin.innerLeft, svgWidth - margin.right - margin.innerRight*0],
         ticlavelmappedwith: "timestamp", // just to display axis tick and reverse map if any dataplot have axis defeind in timestamp
         plotstatus: true,
         zooming: true,
@@ -158,7 +165,7 @@ export class AxisChart {
         x_point: margin.left + margin.innerLeft,
         changeRangeTag: false,
         highestYDataTag: "high",
-        lowestYDataTag: "close",
+        lowestYDataTag: "low",
         yaxistag: "1mainyaxis",
         yaxisratio: null,
         yzoomstatus: true,
@@ -206,6 +213,7 @@ export class AxisChart {
 
     yscaleconfigdata.forEach((item) => {
       const { yscaletag, yaxistag, plotstatus, x_point, scaleSide, changeRangeTag, highestYDataTag, lowestYDataTag, yzoomstatus,datadomain } = item;
+      console.log(yscaletag,highestYDataTag,lowestYDataTag);
       updateYscaleconfig(yscaletag, {
         plotstatus: plotstatus,
         yzoomstatus: yzoomstatus,
