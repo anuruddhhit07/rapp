@@ -1,16 +1,3 @@
-import { Shared_ChartPlotData } from '../SharedObject';
-import { ChartDataObj } from './chartdataTypes';
-
-interface plotData_InputObj {
-  id: string;
-  PlotName: string;
-  XdataTag: keyof ChartDataObj;
-  YdataTag: keyof ChartDataObj;
-  xscaleTage: string;
-  yscaleTage: string;
-  plotstatus: boolean;
-}
-
 interface plotData_itemObject {
   id: string;
   PlotName: string;
@@ -24,63 +11,54 @@ interface plotData_itemObject {
 interface PlotDataObjType {
   data: plotData_itemObject[];
   activeIds: { plotid: string[]; xscaleid: string[]; yscaleid: string[] };
-  setActiveCallback(callback: (activeIds: { plotid: string[]; xscaleid: string[]; yscaleid: string[] }) => void): void;
+  setActiveCallback(
+    callback: (activeIds: any) => void
+  ): void;
   updateActiveIds(): void;
 }
 
-const DefaultinputData: plotData_InputObj[] = [
-  { id: "1", PlotName: "PL1", XdataTag: 'xindex', YdataTag: 'close', xscaleTage: 'BOT', yscaleTage: 'TR', plotstatus: true },
-  { id: "2", PlotName: "PL2", XdataTag: 'xindex', YdataTag: 'high', xscaleTage: 'BOT', yscaleTage: 'TR', plotstatus: true },
-  { id: "3", PlotName: "PL3", XdataTag: 'xindex', YdataTag: 'low', xscaleTage: 'BOT', yscaleTage: 'TR', plotstatus: true }
-];
-
-export function createPlotdataObj(inputData: plotData_InputObj[] = DefaultinputData): PlotDataObjType {
-  let data: plotData_itemObject[] = inputData.map(item => ({
-    id: item.id,
-    PlotName: item.PlotName,
-    plotstatus: item.plotstatus,
-    Xdata: Shared_ChartPlotData[item.XdataTag],
-    Ydata: Shared_ChartPlotData[item.YdataTag],
-    xscaleTage: item.xscaleTage,
-    yscaleTage: item.yscaleTage,
-  }));
-
-  const activeIds = {
-    plotid: Array.from(new Set(data.filter(item => item.plotstatus).map(item => item.id))),
-    xscaleid: Array.from(new Set(data.filter(item => item.plotstatus).map(item => item.xscaleTage))),
-    yscaleid: Array.from(new Set(data.filter(item => item.plotstatus).map(item => item.yscaleTage))),
-  };
-
-  const updateActiveIds = function (): void {
-    activeIds.plotid = Array.from(new Set(data.filter(item => item.plotstatus).map(item => item.id)));
-    activeIds.xscaleid = Array.from(new Set(data.filter(item => item.plotstatus).map(item => item.xscaleTage)));
-    activeIds.yscaleid = Array.from(new Set(data.filter(item => item.plotstatus).map(item => item.yscaleTage)));
-  };
-
-  const proxyData = new Proxy(data, {
+function createProxy(plotDataObj: PlotDataObjType): PlotDataObjType {
+  return new Proxy(plotDataObj, {
     set: function (target, prop, value) {
-      if (prop === 'length') {
-        updateActiveIds();
+      console.log(target, prop, value)
+      if (prop === 'data') {
+        // Trigger the callback when plotstatus changes
+        const oldValue = target[prop];
+        const newValue = value;
+        if (oldValue !== newValue) {
+          const callback = target.setActiveCallback.bind(target);
+          for (let i = 0; i < newValue.length; i++) {
+            if (oldValue[i]?.plotstatus !== newValue[i]?.plotstatus) {
+              const activeIds = {
+                plotid: newValue.map((item: { id: any; }) => item.id) as  string[] ,
+                xscaleid: newValue.map((item: { xscaleTage: any; }) => item.xscaleTage) as  string[],
+                yscaleid: newValue.map((item: { yscaleTage: any; }) => item.yscaleTage) as  string[]
+              };
+              console.log("activeIds",activeIds)
+              // callback(activeIds);
+              break;
+            }
+          }
+        }
       }
       return Reflect.set(target, prop, value);
-    },
-    deleteProperty: function (target, prop) {
-      if (prop === 'length') {
-        updateActiveIds();
-      }
-      return Reflect.deleteProperty(target, prop);
     }
   });
-
-  const setActiveCallback = function (callback: (activeIds: { plotid: string[]; xscaleid: string[]; yscaleid: string[] }) => void): void {
-    // throw new Error('Function not implemented.');
-    console.log("activeIds",activeIds)
-  };
-
-  return {
-    data: proxyData,
-    activeIds,
-    setActiveCallback,
-    updateActiveIds
-  };
 }
+
+// Usage example:
+const plotDataObj: PlotDataObjType = {
+  data: [
+    { id: '1', PlotName: 'Plot 1', plotstatus: true, Xdata: 0, Ydata: 0, xscaleTage: 'x1', yscaleTage: 'y1' },
+    { id: '2', PlotName: 'Plot 2', plotstatus: false, Xdata: 0, Ydata: 0, xscaleTage: 'x2', yscaleTage: 'y2' },
+  ],
+  activeIds: { plotid: [], xscaleid: [], yscaleid: [] },
+  setActiveCallback: (callback) => { console.log(callback); },
+  updateActiveIds: () => { console.log('Updating active IDs...'); }
+};
+
+const proxiedPlotDataObj = createProxy(plotDataObj);
+export {proxiedPlotDataObj}
+
+// Changing plotstatus should trigger the callback
+// proxiedPlotDataObj.data[0].plotstatus = false;

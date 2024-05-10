@@ -6,7 +6,7 @@ import { arrangeData } from "./dataUtility/arrangeData";
 import { CandlestickData, ChartOptions, Margin, ScatterDataType } from "./types/chartSetuptype";
 import { ChartDataIN, ChartDataObj } from "./types/chartdataTypes";
 import * as d3 from "d3";
-import {  createPlotdataObj  } from "./types/PlotDataUtility";
+import {  proxiedPlotDataObj  } from "./types/PlotDataUtility";
 import {
   Shared_ChartPlotData,
   updateChartPlotData,
@@ -35,25 +35,32 @@ import { yaxisrangeType } from "./types/AxisScaleType";
 import { xscaleObj } from "./types/XScaleUtility";
 import SVGClass from "./SVG/SvgClassModel";
 
-const plotDataObj = createPlotdataObj();
-console.log(plotDataObj)
 
+console.log(proxiedPlotDataObj)
+proxiedPlotDataObj.data[0].plotstatus = false;
 //Set the active callback function
-plotDataObj.setActiveCallback((activeIds) => {
-  console.log("Active plot IDs:", activeIds.plotid);
-  console.log("Active xscale IDs:", activeIds.xscaleid);
-  console.log("Active yscale IDs:", activeIds.yscaleid);
-});
+// plotDataObj.setActiveCallback((activeIds) => {
+//   console.log("Active plot IDs:", activeIds.plotid);
+//   console.log("Active xscale IDs:", activeIds.xscaleid);
+//   console.log("Active yscale IDs:", activeIds.yscaleid);
+// });
 
-plotDataObj.data.push({
-  id: "4",
-  PlotName: "PL4",
-  plotstatus: true,
-  Xdata: 123,
-  Ydata: 456,
-  xscaleTage: 'BOT1',
-  yscaleTage: 'TR1'
-});
+// plotDataObj.data.push({
+//   id: "4",
+//   PlotName: "PL4",
+//   plotstatus: true,
+//   Xdata: 123,
+//   Ydata: 456,
+//   xscaleTage: 'BOT4',
+//   yscaleTage: 'TR4'
+// });
+
+// const plotDataObj = createPlotdataObj();
+// console.log(plotDataObj)
+// plotDataObj.data[0].plotstatus=false
+// plotDataObj.updateActiveIds()
+
+// console.log(plotDataObj)
 
 const mapButtontoChart = {
   "top-button-panel_square_0": "ScatterPlot",
@@ -63,7 +70,7 @@ const mapButtontoChart = {
   "top-button-panel_square_4": "HighPlot",
 };
 
-console.log(xscaleObj);
+
 
 class CandlestickChartTS {
   // private axisChart: AxisChart;
@@ -89,7 +96,7 @@ class CandlestickChartTS {
     
     this.SVGClass=SVGClass.getInstance()
     this.svg=this.SVGClass.svg
-    console.log(this.SVGClass);
+    // console.log(this.SVGClass);
     // this.axisChart = AxisChart.getInstance();
     // PlotConfig.getInstance();
     // this.setupSVG();
