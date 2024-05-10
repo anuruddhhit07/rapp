@@ -1,4 +1,15 @@
 import { ChartBaseSetupType } from "./types/chartSetuptype";
+import { ChartDataObj } from "./types/chartdataTypes";
+
+interface plotData_InputObj {
+    id: string;
+    PlotName: string;
+    XdataTag: keyof ChartDataObj;
+    YdataTag: keyof ChartDataObj;
+    xscaleTage: string;
+    yscaleTage: string;
+    plotstatus: boolean;
+  }
 
 export const defaultChartBaseProp: ChartBaseSetupType = {
     svgWidth: 500,
@@ -33,3 +44,34 @@ export const defaultChartBaseProp: ChartBaseSetupType = {
             this.margin.innerBottom;
     }
 };
+
+export const DefaultinputData: plotData_InputObj[] = [
+    {
+      id: "1",
+      PlotName: "PL1",
+      XdataTag: "xindex",
+      YdataTag: "close",
+      xscaleTage: "BOT1",
+      yscaleTage: "TR1",
+      plotstatus: true,
+    },
+    {
+      id: "2",
+      PlotName: "PL2",
+      XdataTag: "xindex",
+      YdataTag: "high",
+      xscaleTage: "BOT2",
+      yscaleTage: "TR2",
+      plotstatus: false,
+    },
+    {
+      id: "3",
+      PlotName: "PL3",
+      XdataTag: "xindex",
+      YdataTag: "low",
+      xscaleTage: "BOT3",
+      yscaleTage: "TR3",
+      plotstatus: true,
+    },
+  ];
+  

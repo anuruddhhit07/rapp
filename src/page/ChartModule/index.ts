@@ -6,7 +6,8 @@ import { arrangeData } from "./dataUtility/arrangeData";
 import { CandlestickData, ChartOptions, Margin, ScatterDataType } from "./types/chartSetuptype";
 import { ChartDataIN, ChartDataObj } from "./types/chartdataTypes";
 import * as d3 from "d3";
-import {  proxiedPlotDataObj  } from "./types/PlotDataUtility";
+import {  createPlotdataObj } from "./types/PlotDataUtility";
+import {ProxyCallback ,buildProxy} from "./types/ProxyBuilder";
 import {
   Shared_ChartPlotData,
   updateChartPlotData,
@@ -34,10 +35,84 @@ import { yaxisrangeType } from "./types/AxisScaleType";
 
 import { xscaleObj } from "./types/XScaleUtility";
 import SVGClass from "./SVG/SvgClassModel";
+import { proxiedParentObj, createChildObject, parentObj } from "./types/AdvanceObj";
+
+// console.log(proxyobj);
+// console.log(proxyobj);
+// console.log(proxyobj.string); // "data"
+// proxyobj.string = "Hello";
+// console.log(proxyobj.string); // "Hello"
+// console.log(proxyobj.object); // { "string": "data", "number": 32434 }
+// proxyobj.object.string = "World";
+// console.log(proxyobj.object.string);
+// console.log(proxyobj2);
+// proxyobj2.data[1].plotstatus=true
+
+// const callfn=(value:any,d:any)=>{
+//   console.log("value",value,d);
+// }
+
+const callback: ProxyCallback = (action, path, target, newValue, previousValue) => {
+  console.log(`Action: ${action}, Path: ${path}, New Value:`, newValue, 'Previous Value:', previousValue);
+};
+
+// // Create your original object
+const trialobj = {
+  name: "David",
+  occupation: "freelancer",
+  children: [{ name: "oliver",status:false }, { name: "ruby",status:true }],
+  trigger:false,
+  childrenNumer: 0,
+  updatechildrenNumer: function () {
+    this.childrenNumer =this.children.filter(item=>item.status).length // Access children directly
+  },
+};
+
+// // Create a proxy using the buildProxy function
+const data = buildProxy(trialobj, callback);
 
 
-console.log(proxiedPlotDataObj)
-proxiedPlotDataObj.data[0].plotstatus = false;
+
+
+
+// observer.observe(data.children as any, { childList: true });
+
+// // console.log(data);
+data.name = "Mike";
+// data.children.push({ name: "baby" });
+// // data.children[0].name = "fred";
+// // console.log(data);
+// console.log(data.updatechildrenNumer());
+console.log(data.childrenNumer);
+console.log(trialobj);
+
+
+
+// const child1 = createChildObject(1, "Alice", true);
+// const child2 = createChildObject(2, "Bob", false);
+  
+//   // Add children to the parent object
+//   parentObj.children.push(child1, child2);
+  
+//   // Example usage: Toggle child1 status and notify the parent
+//   console.log(proxiedParentObj.activeChildren);
+//   proxiedParentObj.children[0].status = false;
+//   console.log(proxiedParentObj.activeChildren);
+  
+//   console.log(child1.status); // Output: false (status toggled)
+//   parentObj.children[0].status=true
+//   console.log(child1.status);
+
+// parentObj.getactivechildren();
+//  console.log(parentObj.activeChildren);
+//  console.log(parentObj.children);
+
+//  parentObj.children[0].status=false
+//  console.log(parentObj.activeChildren);
+//  console.log(parentObj.children);
+
+// console.log(proxiedPlotDataObj)
+// proxiedPlotDataObj.data[0].plotstatus = false;
 //Set the active callback function
 // plotDataObj.setActiveCallback((activeIds) => {
 //   console.log("Active plot IDs:", activeIds.plotid);
@@ -56,9 +131,10 @@ proxiedPlotDataObj.data[0].plotstatus = false;
 // });
 
 // const plotDataObj = createPlotdataObj();
-// console.log(plotDataObj)
+// console.log(plotDataObj);
+// // console.log(plotDataObj)
 // plotDataObj.data[0].plotstatus=false
-// plotDataObj.updateActiveIds()
+// // plotDataObj.updateActiveIds()
 
 // console.log(plotDataObj)
 
