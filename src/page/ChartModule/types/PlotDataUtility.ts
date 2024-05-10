@@ -1,3 +1,10 @@
+type ProxyTarget = Record<string, any>;
+
+interface ProxyHandler<T extends ProxyTarget> {
+  get(target: T, key: string): any;
+  set(target: T, key: string, value: any): boolean;
+}
+
 interface plotData_itemObject {
   id: string;
   PlotName: string;
@@ -62,3 +69,46 @@ export {proxiedPlotDataObj}
 
 // Changing plotstatus should trigger the callback
 // proxiedPlotDataObj.data[0].plotstatus = false;
+
+const handler: ProxyHandler<ProxyTarget> = {
+  get(target, key) {
+    if (key == 'isProxy')
+      return true;
+
+    const prop = target[key];
+
+    const isProxy = Symbol("isProxy")
+
+    // return if property not found
+    if (typeof prop == 'undefined')
+      return;
+
+    // set value as proxy if object
+    if (!prop.isProxy && typeof prop === 'object')
+      target[key] = new Proxy(prop, handler);
+
+    return target[key];
+  },
+  set(target, key, value) {
+    console.log('Setting', target, `.${key} to equal`, value);
+
+    // todo : call callback
+
+    target[key] = value;
+    return true;
+  }
+};
+
+const test = {
+  string: "data",
+  number: 231321,
+  object: {
+    string: "data",
+    number: 32434
+  },
+  array: [
+    1, 2, 3, 4, 5
+  ],
+};
+
+const proxyobj = new Proxy(test, handler);
