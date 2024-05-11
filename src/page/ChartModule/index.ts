@@ -45,6 +45,8 @@ import {
   createChildObject,
   parentObj,
 } from "./types/AdvanceObj";
+import test from "../Chart";
+console.log("test",test)
 
 // console.log(proxyobj);
 // console.log(proxyobj);
@@ -61,53 +63,53 @@ import {
 //   console.log("value",value,d);
 // }
 
-const callback: ProxyCallback = (
-  action,
-  path,
-  target,
-  newValue,
-  previousValue,
-  parentobj
-) => {
-  parentobj.updatechildrenNumer()
-  console.log(
-    `Action: ${action}, Path: ${path}, New Value:`,
-    newValue,
-    "Previous Value:",
-    previousValue,
-    "parentobj:",parentobj
-  );
-  // console.log(parentobj)
-};
+// const callback: ProxyCallback = (
+//   action,
+//   path,
+//   target,
+//   newValue,
+//   previousValue,
+//   parentobj
+// ) => {
+//   parentobj.updatechildrenNumer()
+//   console.log(
+//     `Action: ${action}, Path: ${path}, New Value:`,
+//     newValue,
+//     "Previous Value:",
+//     previousValue,
+//     "parentobj:",parentobj
+//   );
+//   // console.log(parentobj)
+// };
 
-// // Create your original object
-const trialobj = {
-  name: "David",
-  occupation: "freelancer",
-  children: [
-    { name: "oliver", status: false },
-    { name: "ruby", status: true },
-  ],
-  trigger: false,
-  childrenNumer: 0,
-  updatechildrenNumer: function () {
-    this.childrenNumer = this.children.filter((item) => item.status).length; // Access children directly
-  },
-};
+// // // Create your original object
+// const trialobj = {
+//   name: "David",
+//   occupation: "freelancer",
+//   children: [
+//     { name: "oliver", status: false },
+//     { name: "ruby", status: true },
+//   ],
+//   trigger: false,
+//   childrenNumer: 0,
+//   updatechildrenNumer: function () {
+//     this.childrenNumer = this.children.filter((item) => item.status).length; // Access children directly
+//   },
+// };
 
-// // Create a proxy using the buildProxy function
-const data = buildProxy(trialobj, callback, [], trialobj);
+// // // Create a proxy using the buildProxy function
+// const data = buildProxy(trialobj, callback, [], trialobj);
 
-// observer.observe(data.children as any, { childList: true });
+// // observer.observe(data.children as any, { childList: true });
 
-// // console.log(data);
-data.name = "Mike";
-data.children.push({ name: "baby",status:true });
-// // data.children[0].name = "fred";
-// // console.log(data);
-// console.log(data.updatechildrenNumer());
-console.log(data.childrenNumer);
-console.log(trialobj);
+// // // console.log(data);
+// data.name = "Mike";
+// data.children.push({ name: "baby",status:true });
+// // // data.children[0].name = "fred";
+// // // console.log(data);
+// // console.log(data.updatechildrenNumer());
+// console.log(data.childrenNumer);
+// console.log(trialobj);
 
 // const child1 = createChildObject(1, "Alice", true);
 // const child2 = createChildObject(2, "Bob", false);
