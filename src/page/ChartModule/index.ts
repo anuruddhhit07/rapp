@@ -3,11 +3,16 @@ import { PlotAxis } from "./AxisUtility/PlotAxis";
 import SetupChart from "./ChartSetup/setchart";
 import { PlotConfig } from "./ChartSetup/setplotConfig";
 import { arrangeData } from "./dataUtility/arrangeData";
-import { CandlestickData, ChartOptions, Margin, ScatterDataType } from "./types/chartSetuptype";
+import {
+  CandlestickData,
+  ChartOptions,
+  Margin,
+  ScatterDataType,
+} from "./types/chartSetuptype";
 import { ChartDataIN, ChartDataObj } from "./types/chartdataTypes";
 import * as d3 from "d3";
-import {  createPlotdataObj } from "./types/PlotDataUtility";
-import {ProxyCallback ,buildProxy} from "./types/ProxyBuilder";
+import { createPlotdataObj } from "./types/PlotDataUtility";
+import { ProxyCallback, buildProxy } from "./types/ProxyBuilder";
 import {
   Shared_ChartPlotData,
   updateChartPlotData,
@@ -35,7 +40,11 @@ import { yaxisrangeType } from "./types/AxisScaleType";
 
 import { xscaleObj } from "./types/XScaleUtility";
 import SVGClass from "./SVG/SvgClassModel";
-import { proxiedParentObj, createChildObject, parentObj } from "./types/AdvanceObj";
+import {
+  proxiedParentObj,
+  createChildObject,
+  parentObj,
+} from "./types/AdvanceObj";
 
 // console.log(proxyobj);
 // console.log(proxyobj);
@@ -52,53 +61,65 @@ import { proxiedParentObj, createChildObject, parentObj } from "./types/AdvanceO
 //   console.log("value",value,d);
 // }
 
-const callback: ProxyCallback = (action, path, target, newValue, previousValue) => {
-  console.log(`Action: ${action}, Path: ${path}, New Value:`, newValue, 'Previous Value:', previousValue);
+const callback: ProxyCallback = (
+  action,
+  path,
+  target,
+  newValue,
+  previousValue,
+  parentobj
+) => {
+  parentobj.updatechildrenNumer()
+  console.log(
+    `Action: ${action}, Path: ${path}, New Value:`,
+    newValue,
+    "Previous Value:",
+    previousValue,
+    "parentobj:",parentobj
+  );
+  // console.log(parentobj)
 };
 
 // // Create your original object
 const trialobj = {
   name: "David",
   occupation: "freelancer",
-  children: [{ name: "oliver",status:false }, { name: "ruby",status:true }],
-  trigger:false,
+  children: [
+    { name: "oliver", status: false },
+    { name: "ruby", status: true },
+  ],
+  trigger: false,
   childrenNumer: 0,
   updatechildrenNumer: function () {
-    this.childrenNumer =this.children.filter(item=>item.status).length // Access children directly
+    this.childrenNumer = this.children.filter((item) => item.status).length; // Access children directly
   },
 };
 
 // // Create a proxy using the buildProxy function
-const data = buildProxy(trialobj, callback);
-
-
-
-
+const data = buildProxy(trialobj, callback, [], trialobj);
 
 // observer.observe(data.children as any, { childList: true });
 
 // // console.log(data);
 data.name = "Mike";
-// data.children.push({ name: "baby" });
+data.children.push({ name: "baby",status:true });
 // // data.children[0].name = "fred";
 // // console.log(data);
 // console.log(data.updatechildrenNumer());
 console.log(data.childrenNumer);
 console.log(trialobj);
 
-
-
 // const child1 = createChildObject(1, "Alice", true);
 // const child2 = createChildObject(2, "Bob", false);
-  
+
 //   // Add children to the parent object
 //   parentObj.children.push(child1, child2);
-  
+
 //   // Example usage: Toggle child1 status and notify the parent
 //   console.log(proxiedParentObj.activeChildren);
 //   proxiedParentObj.children[0].status = false;
 //   console.log(proxiedParentObj.activeChildren);
-  
+
 //   console.log(child1.status); // Output: false (status toggled)
 //   parentObj.children[0].status=true
 //   console.log(child1.status);
@@ -146,13 +167,11 @@ const mapButtontoChart = {
   "top-button-panel_square_4": "HighPlot",
 };
 
-
-
 class CandlestickChartTS {
   // private axisChart: AxisChart;
   private svg!: d3.Selection<SVGSVGElement, any, HTMLElement, any>;
   private axisarea!: d3.Selection<SVGGElement, any, HTMLElement, any>;
-  private SVGClass:SVGClass
+  private SVGClass: SVGClass;
   axisGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   BackGroup: d3.Selection<SVGGElement, any, HTMLElement, any>;
   AxisXGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
@@ -160,32 +179,39 @@ class CandlestickChartTS {
   PlotGroup1!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   FrontGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   ResetButton!: d3.Selection<SVGGElement, any, HTMLElement, any>;
-  Buttonpanel!: void
+  Buttonpanel!: void;
   // plotaxis: PlotAxis;
   clipPathObj: {
-    [key: keyof yaxisrangeType]: d3.Selection<SVGClipPathElement, any, HTMLElement, any>;
+    [key: keyof yaxisrangeType]: d3.Selection<
+      SVGClipPathElement,
+      any,
+      HTMLElement,
+      any
+    >;
   } = {};
 
   constructor(stockdata: ChartDataIN, targetID: string) {
     SetupChart.getInstance(700, 700, { targetID: targetID });
     updateChartPlotData(arrangeData(stockdata));
-    
-    this.SVGClass=SVGClass.getInstance()
-    this.svg=this.SVGClass.svg
+
+    this.SVGClass = SVGClass.getInstance();
+    this.svg = this.SVGClass.svg;
     // console.log(this.SVGClass);
     // this.axisChart = AxisChart.getInstance();
     // PlotConfig.getInstance();
     // this.setupSVG();
     // const { svgWidth, svgHeight, margin, width, height } = Shared_ChartBaseProp;
 
-    this.BackGroup = this.SVGClass.BackGroup
-    this.AxisYGroup =this.SVGClass.AxisXGroup
-    this.FrontGroup=this.SVGClass.FrontGroup
-    this.ResetButton=this.SVGClass.ResetButton
-    this.Buttonpanel=this.SVGClass.createbuttonpanel(this.buttonClick.bind(this))
+    this.BackGroup = this.SVGClass.BackGroup;
+    this.AxisYGroup = this.SVGClass.AxisXGroup;
+    this.FrontGroup = this.SVGClass.FrontGroup;
+    this.ResetButton = this.SVGClass.ResetButton;
+    this.Buttonpanel = this.SVGClass.createbuttonpanel(
+      this.buttonClick.bind(this)
+    );
     // update_plotDataObj()
-   
-  //  console.log("PlotDataObj",plotDataObj)
+
+    //  console.log("PlotDataObj",plotDataObj)
     // .call(this.zoomX as any)
     // .onEvent1("mousemove", (event) => {
     //   this.mousefunction(event)
@@ -194,24 +220,20 @@ class CandlestickChartTS {
     // this.AxisXGroup = createGroupAdv(this.svg, "X-Area")
     //   .translate(0, svgHeight - margin.bottom)
     //   .drawBorder(0, 0, svgWidth - margin.right, margin.bottom, "red", 2, "green", 0.2)
-    
 
     // this.AxisYGroup = createGroupAdv(this.svg, "Y-Area")
     //   .translate(svgWidth - margin.right, 0)
     //   .drawBorder(0, 0, margin.right, svgHeight - margin.bottom, "red", 2, "green", 0.2)
-      // .call(this.zoomY as any);
-
-      
+    // .call(this.zoomY as any);
 
     // this.FrontGroup = createGroupAdv(this.svg, "main-border")
     //   .drawBorder(margin.left + margin.innerLeft, margin.top + margin.innerTop, width + margin.innerRight, height, "red", 2, "blue", 0)
-      // .call(this.zoomX as any)
-      // .onEvent1("mousemove", (event) => {
-      //   this.mousefunction(event);
-      // });
+    // .call(this.zoomX as any)
+    // .onEvent1("mousemove", (event) => {
+    //   this.mousefunction(event);
+    // });
 
-      // this.plotaxis = PlotAxis.getInstance(this.BackGroup,this.FrontGroup,this.AxisYGroup, this.axisChart);
-      
+    // this.plotaxis = PlotAxis.getInstance(this.BackGroup,this.FrontGroup,this.AxisYGroup, this.axisChart);
 
     // this.ResetButton = createGroupAdv(this.svg, "reset-area")
     //   .drawBorder(svgWidth - margin.right, svgHeight - margin.bottom, margin.right, margin.bottom, "red", 2, "blue", 0.2)
@@ -223,13 +245,13 @@ class CandlestickChartTS {
     //   .translate(100, 30)
     //   // .drawBorder(0,0,100,20,"green",3,"yellow",1)
     //   .createSquaresHorizontally(6, 30, 2, Array(6).fill(true, 0, 5))
-      // .attachClickEvent(this.buttonClick.bind(this));
+    // .attachClickEvent(this.buttonClick.bind(this));
 
     // this.rendorPlot();
   }
 
   buttonClick(id: any, className: any, pressstate: any) {
-console.log(id,className);
+    console.log(id, className);
   }
 
   // zoomX = d3
@@ -440,7 +462,7 @@ console.log(id,className);
   //   let plotColor = Shared_DataToplot[plotName].plotcolor;
   //   // const currentTransformX = Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag].currentTransformX;
   //   const currentTransformY = Shared_Yscaleconfig[Shared_DataToplot[plotName].yscaletag].currentTransformY;
-   
+
   //   const currentTransformX = this.FrontGroup.property("__zoom");
   //   // const currentTransformY = this.AxisYGroup.property("__zoom");
   //   const xScale = Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag].Xscale as d3.ScaleLinear<number, number>;
@@ -449,11 +471,10 @@ console.log(id,className);
   //   let newxScale = currentTransformX.rescaleX(xScale);
   //   let newyScale = currentTransformY.rescaleY(yScale);
 
-    
   //   // console.log(currentTransformX);
   //   // console.log(newyScale.domain());
   //   // // console.log(newyScale.domain());
-    
+
   //   // console.log(currentTransformY);
 
   //   // console.log(candlestickData)

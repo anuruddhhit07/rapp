@@ -4,30 +4,31 @@ interface ProxyHandler<T> {
     deleteProperty?(target: T, prop: string | number | symbol): boolean;
   }
   
-export type ProxyCallback = (action: string, path: string, target: any, newValue?: any, previousValue?: any,data?:any) => void;
-export function buildProxy<T extends Record<string, any>>(
+export type ProxyCallback = (action: string, path: string, target: any, newValue?: any, previousValue?: any,parentobj?:any) => void;
+export function buildProxy<T extends Record<string, any>, ParentObject extends Record<string, any>>(
     obj: T,
     callback: ProxyCallback,
-    tree: (string | number)[] = []
+    tree: (string | number)[] = [],
+    parentobj:ParentObject
   ): T {
     const getPath = (prop: string | number) => tree.concat(String(prop)).join(".");
   
     const handler: ProxyHandler<T> = {
       get(target, prop, receiver) {
-        console.log("get",target,prop,receiver);
+        // console.log("get",target,prop,receiver);
         if (prop === "__getTarget") {
           return () => target;
         }
 
-        if (prop=='childrenNumer'){
-            (target as any).updatechildrenNumer()
-            // Reflect.set(target, prop, value, receiver)
-            return Reflect.get(target, prop, receiver)
-        }
+        // if (prop=='childrenNumer'){
+        //     (target as any).updatechildrenNumer()
+        //     // Reflect.set(target, prop, value, receiver)
+        //     return Reflect.get(target, prop, receiver)
+        // }
   
         const value = Reflect.get(target, prop, receiver);
         if (typeof value === "object" && value !== null) {
-          return buildProxy(value, callback, tree.concat(String(prop)));
+          return buildProxy(value, callback, tree.concat(String(prop)),parentobj);
         }
   
         return value;
@@ -39,7 +40,7 @@ export function buildProxy<T extends Record<string, any>>(
   
         // Trigger the callback only if the value actually changed
         if (value !== oldValue) {
-          callback("set", getPath(prop as string|number), target, value, oldValue);
+          callback("set", getPath(prop as string|number), target, value, oldValue,parentobj);
         }
   
         // Automatically update childrenNumer if children array is modified
