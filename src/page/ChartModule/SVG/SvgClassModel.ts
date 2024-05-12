@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import { Shared_ChartBaseProp } from "../SharedObject";
 import { createGroupAdv, createMultipleSqure } from "./SVGUtility";
+import { PlotStatusByButtonTag } from "../../Chart/BaseSetup/ShareDataType";
 
 class SVGClass {
   private static instance: SVGClass | null = null;
@@ -48,12 +49,32 @@ class SVGClass {
     return SVGClass.instance;
   }
 
-  
-  createbuttonpanel(callback :any){
+ 
+      
+  createbuttonpanel(callback :any,numberofbutton:number,buttonProp:PlotStatusByButtonTag){
+    const arrayLength = Object.keys(buttonProp).length;
+      // Initialize the array with false values
+    const initialPlotStatusArray: boolean[] = new Array(arrayLength).fill(false);
+    const buttonidarray:string[]=[]
+      // Iterate over each key in the interface and set the initial value in the array
+    Object.keys(buttonProp).forEach((key, index) => {
+      initialPlotStatusArray[index] = buttonProp[key].plotStatus;
+      buttonidarray[index]=buttonProp[key].buttonid
+    });
+
+   
+
+    // const replacingArray = Array(numberofbutton).fill(false, 0, numberofbutton-1);
+    // const updatedState = [...initialPlotStatusArray, ...replacingArray.slice(initialPlotStatusArray.length)];
+   
+    const replacingifArray = Array(numberofbutton).fill('no-idset', 0, numberofbutton-1);
+    const updatedIdArray = [...buttonidarray, ...replacingifArray.slice(buttonidarray.length)];
+   
+
     this.Buttonpanel=createMultipleSqure(this.svg, "top-button-panel")
     .translate(100, 30)
     // .drawBorder(0,0,100,20,"green",3,"yellow",1)
-    .createSquaresHorizontally(6, 30, 2, Array(6).fill(true, 0, 5))
+    .createSquaresHorizontally(numberofbutton, 30, 2, initialPlotStatusArray,updatedIdArray)
     .attachClickEvent(callback);
   }
 

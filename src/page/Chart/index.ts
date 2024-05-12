@@ -1,11 +1,22 @@
-import { ProxyCallback, buildProxy } from "./BaseSetup/ProxyBuilder"
-import { Shared_PlotInfo, Shared_XScaleConfig,Shared_YScaleConfig, updateXscaleconfig, updateYscaleconfig, updateplotInfo } from "./BaseSetup/SharedDataUtility"
-import {} from "./BaseSetup/index"
+import { ProxyCallback, buildProxy } from "./BaseSetup/ProxyBuilder";
+import {
+  Shared_ChartBaseData,
+  Shared_PlotInfo,
+  Shared_XScaleConfig,
+  Shared_YScaleConfig,
+  getUniquePlotsWithStatusTrue,
+  updateSharedChartData,
+  updateXscaleconfig,
+  updateYscaleconfig,
+  updateplotInfo,
+} from "./BaseSetup/SharedDataUtility";
+import {} from "./BaseSetup/BaseProp";
+import { ChartBaseData } from "./BaseSetup/ShareDataType";
 
-console.log(Shared_YScaleConfig)
-console.log(Shared_XScaleConfig)
-console.log(Shared_PlotInfo)
-let Shared_ChartData={}
+// console.log(Shared_YScaleConfig);
+// console.log(Shared_XScaleConfig);
+// console.log(Shared_PlotInfo);
+
 
 const callback: ProxyCallback = (
   action,
@@ -15,25 +26,41 @@ const callback: ProxyCallback = (
   previousValue,
   parentobj
 ) => {
-//   parentobj.updatechildrenNumer()
-  console.log(
-    `Action: ${action}, Path: ${path}, New Value:`,
-    newValue,
-    "Previous Value:",
-    previousValue,
-    "parentobj:",parentobj
-  );
-  // console.log(parentobj)
+  //   parentobj.updatechildrenNumer()
+  // console.log(
+  //   `Action: ${action}, Path: ${path}, target: , ${target}, New Value:`,
 
-  console.log(path.split('.')[1])
-  if (path.split('.')[1]=='plotStatus'){
-    
+  //   newValue,
+  //   "Previous Value:",
+  //   previousValue,
+  //   "parentobj:",
+  //   parentobj
+  // );
+  // // console.log(parentobj)
+
+  //console.log(path.split(".")[1]);
+  if (path.split(".")[1] == "plotStatus") {
+    const uniquePlotsData=getUniquePlotsWithStatusTrue(parentobj) as {plotName: Set<string>;
+      xscaleTag: Set<string>;
+      yscaleTag: Set<string>;
+      yaxisTag: Set<string>}
+    updateSharedChartData(uniquePlotsData as any)
+    // Shared_ChartBaseData
+
   }
 };
 
-const proxy_plotinfo=buildProxy(Shared_PlotInfo,callback,[],Shared_PlotInfo)
+const proxy_plotinfo = buildProxy(
+  Shared_PlotInfo,
+  callback,
+  [],
+  Shared_PlotInfo
+);
 
-proxy_plotinfo.ClosePlot.plotStatus=false
-console.log(Shared_PlotInfo)
+// // console.log("before",Shared_PlotInfo.ClosePlot.plotStatus)
+// proxy_plotinfo.ClosePlot.plotStatus = !Shared_PlotInfo.ClosePlot.plotStatus;
+// proxy_plotinfo.OpenPlot.plotStatus = !Shared_PlotInfo.OpenPlot.plotStatus;
+// console.log(Shared_PlotInfo);
+// console.log(Shared_ChartBaseData)
 
-export default Shared_PlotInfo
+export default proxy_plotinfo;

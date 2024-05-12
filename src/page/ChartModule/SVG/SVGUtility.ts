@@ -10,7 +10,7 @@ declare module "d3" {
     importData(data: any[]): this;
     translate(x: number, y: number): this;
     onEvent1(eventName: string, eventHandler: (this: SVGGElement, event: any, d: any) => void): this;
-    createSquaresHorizontally( numSquares: number,squareWidth: number,spacing: number,pressstate:boolean[]):this
+    createSquaresHorizontally( numSquares: number,squareWidth: number,spacing: number,pressstate:boolean[],idarray:string[]):this
     attachClickEvent(callback: (id: string, className: string, pressstate: boolean) => void):this
   }
 }
@@ -146,14 +146,15 @@ export function createMultipleSqure(
     numSquares: number,
     squareWidth: number,
     spacing: number,
-    pressstate: boolean[] | undefined = undefined
+    pressstate: boolean[] | undefined = undefined,
+    idarray:string[] | undefined = undefined
   ) {
 
     squaresData = Array.from({ length: numSquares }, (_, i) => ({
       x: i * (squareWidth + spacing),
       y: 0,
       size: squareWidth,
-      id: `${className}_square_${i}`,
+      id: idarray ? idarray[i] : 'no-idset',
       class: `${className}-square`,
       pressstate: pressstate ? pressstate[i] : undefined 
     }));

@@ -40,6 +40,7 @@ export function buildProxy<T extends Record<string, any>, ParentObject extends R
   
         // Trigger the callback only if the value actually changed
         if (value !== oldValue) {
+         // console.log("result",result)
           callback("set", getPath(prop as string|number), target, value, oldValue,parentobj);
         }
   

@@ -19,6 +19,19 @@ export interface ChartDataType {
   open: number[];
 }
 
+export interface ChartBaseData{
+  plotName: Set<string>, 
+  xscaleTag: Set<keyof xScaleConfigType>,
+  yscaleTag: Set<keyof yScaleConfigType>
+  yaxisTag:Set<string>
+}
+
+// export interface ChartBaseData{
+//   plotName: string[], 
+//   xscaleTag: string[],
+//   yscaleTag: string[]
+// }
+
 export interface XScaleConfigInputType {
   xscaleTag: string;
   ypoint: number;
@@ -41,6 +54,7 @@ export interface xScaleConfigType {
 
 export interface YScaleConfigInputType {
   yscaleTag: string;
+  yaxisTag:string;
   xpoint: number;
   yscaleRange: [number, number];
   yscaleDomainData: number[];
@@ -49,6 +63,7 @@ export interface YScaleConfigInputType {
 }
 export interface YScaleConfigItemType {
   yscaleTag: string;
+  yaxisTag:string;
   xpoint: number;
   yscaleRange: [number, number];
   yscaleDomainData: number[];
@@ -69,6 +84,7 @@ export interface PlotInfoInputType {
   yscaleTag: keyof xScaleConfigType;
   plotType: string;
   plotcolor?: string;
+  buttontag?:string
 }
 
 export interface PlotInfoItem {
@@ -80,7 +96,12 @@ export interface PlotInfoItem {
   yscaleTag: keyof xScaleConfigType;
   plotType: string;
   plotcolor: string;
+  buttontag:string
 }
 export interface PlotInfoType {
   [key: string]: PlotInfoItem;
+}
+
+export interface PlotStatusByButtonTag {
+  [key: string]: { plotStatus: boolean, plotName: string,buttonid:string };
 }
