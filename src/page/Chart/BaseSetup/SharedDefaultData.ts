@@ -1,5 +1,6 @@
 import {
   ChartDataType,
+  ChartDimensionType,
   PlotInfoInputType,
   XScaleConfigInputType,
   YScaleConfigInputType,
@@ -23,7 +24,7 @@ export const plotInfoInput: PlotInfoInputType[] = [
     buttontag:"ClosePlot"
   },
   {
-    plotStatus: false,
+    plotStatus: true,
     plotName: "LowPlot",
     xdataTag: "xindex",
     ydataTag: "close",
@@ -41,6 +42,7 @@ export const plotInfoInput: PlotInfoInputType[] = [
     xscaleTag: "top",
     yscaleTag: "BL",
     plotType: "line",
+    buttontag:"VolumePlot"
   },
 ];
 export const xScaleConfigInput: XScaleConfigInputType[] = [
@@ -85,3 +87,37 @@ export const yScaleConfigInput: YScaleConfigInputType[] = [
     xscaleVisibleRange: [0, 5],
   },
 ];
+
+export const defaultChartDimensionProp: ChartDimensionType = {
+  svgWidth: 500,
+  svgHeight: 200,
+  targetID: "chartContainer",
+  stockid: "StockName:1D",
+  liveupdatefunction: function (): void {
+      throw new Error("Function not implemented.");
+  },
+  margin: {
+      top: 20,
+      right: 50,
+      bottom: 20,
+      left: 10,
+      innerLeft: 20,
+      innerRight: 100,
+      innerBottom: 20,
+      innerTop: 20
+  },
+  get width() {
+      return this.svgWidth -
+          this.margin.left -
+          this.margin.right -
+          this.margin.innerRight -
+          this.margin.innerLeft;
+  },
+  get height() {
+      return this.svgHeight -
+          this.margin.top -
+          this.margin.bottom -
+          this.margin.innerTop -
+          this.margin.innerBottom;
+  }
+};

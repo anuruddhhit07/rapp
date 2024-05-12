@@ -5,8 +5,10 @@ import {
   Shared_XScaleConfig,
   Shared_YScaleConfig,
   getUniquePlotsWithStatusTrue,
+  getYaxisRatio,
   updateSharedChartData,
   updateXscaleconfig,
+  updateYScaleConfigByKey,
   updateYscaleconfig,
   updateplotInfo,
 } from "./BaseSetup/SharedDataUtility";
@@ -45,6 +47,13 @@ const callback: ProxyCallback = (
       yscaleTag: Set<string>;
       yaxisTag: Set<string>}
     updateSharedChartData(uniquePlotsData as any)
+    const yaxisRangeArray= getYaxisRatio(Array.from(uniquePlotsData.yaxisTag))
+    Object.entries(yaxisRangeArray).forEach(([yaxisTag, value]) => {
+      console.log(yaxisTag,value)
+      updateYScaleConfigByKey("yaxisTag", yaxisTag,value)
+    })
+    // updateYScaleConfigByKey()
+    // console.log("range",AA)
     // Shared_ChartBaseData
 
   }

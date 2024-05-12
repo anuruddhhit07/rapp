@@ -57,6 +57,7 @@ export interface YScaleConfigInputType {
   yaxisTag:string;
   xpoint: number;
   yscaleRange: [number, number];
+  yaxisrange?: [number, number];
   yscaleDomainData: number[];
   xscaleVisibleRange: [number, number];
   zoomstatus?: boolean;
@@ -66,6 +67,7 @@ export interface YScaleConfigItemType {
   yaxisTag:string;
   xpoint: number;
   yscaleRange: [number, number];
+  yaxisrange: [number, number]|null;
   yscaleDomainData: number[];
   xscaleVisibleRange: [number, number];
   zoomstatus: boolean;
@@ -105,3 +107,67 @@ export interface PlotInfoType {
 export interface PlotStatusByButtonTag {
   [key: string]: { plotStatus: boolean, plotName: string,buttonid:string };
 }
+
+export interface Margin {
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
+  innerLeft: number;
+  innerRight: number;
+  innerBottom: number;
+  innertop: number;
+}
+
+// export interface ChartOptions extends ChartOptionsIn {
+//   margin: Margin;
+// }
+
+export interface CandlestickData {
+xData: number;
+open: number;
+high: number;
+low: number;
+close: number;
+}
+
+export interface MulitlineLineChartData {
+x1: number;
+x2: number;
+y1: number;
+y2: number;
+label: string;
+color: string;
+}
+
+export interface ScatterDataType {
+xData: number;
+yData: number;
+label: string;
+color: string;
+size: number;
+}
+
+export interface ChartDimensionType {
+svgWidth: number;
+svgHeight: number;
+targetID: string;
+stockid: string;
+liveupdatefunction: () => void;
+margin: {
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
+    innerLeft: number;
+    innerRight: number;
+    innerBottom: number;
+    innerTop: number; // Fixed typo in the property name "innertop" -> "innerTop"
+};
+readonly width: number;
+readonly height: number;
+}
+
+export type PartialChartBaseSetupType = Partial<ChartDimensionType>;
+
+// export type CustomChartOptions = ChartOptionsIn & { [key: string]: never };

@@ -2,8 +2,10 @@ import {
   Shared_PlotInfo,
   getPlotStatusByButtonTag,
   getUniquePlotsWithStatusTrue,
+  getYaxisRatio,
   updateSharedChartData,
   updateXscaleconfig,
+  updateYScaleConfigByKey,
   updateYscaleconfig,
   updateplotInfo,
 
@@ -20,7 +22,14 @@ export function InitializeBaseProp() {
     yaxisTag: Set<string>;
   };
   updateSharedChartData(uniquePlotsData as any);
+  const yaxisRangeArray= getYaxisRatio(Array.from(uniquePlotsData.yaxisTag))
+  Object.entries(yaxisRangeArray).forEach(([yaxisTag, value]) => {
+    console.log(yaxisTag,value)
+    updateYScaleConfigByKey("yaxisTag", yaxisTag,value)
+  })
+
   getPlotStatusByButtonTag()
+
 }
 
 export {};

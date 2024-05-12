@@ -1,11 +1,12 @@
-import { ChartBaseData, PlotInfoItem, PlotInfoType, PlotStatusByButtonTag, XScaleConfigItemType, YScaleConfigItemType, xScaleConfigType, yScaleConfigType } from "./ShareDataType";
-import { chartData, plotInfoInput, xScaleConfigInput, yScaleConfigInput } from "./SharedDefaultData";
+import { ChartBaseData, ChartDimensionType, PlotInfoItem, PlotInfoType, PlotStatusByButtonTag, XScaleConfigItemType, YScaleConfigItemType, xScaleConfigType, yScaleConfigType } from "./ShareDataType";
+import { chartData, defaultChartDimensionProp, plotInfoInput, xScaleConfigInput, yScaleConfigInput } from "./SharedDefaultData";
 
 // import { createNestedProxy } from "./proxyfunction";
 export let Shared_PlotInfo: PlotInfoType = {};
 export let Shared_XScaleConfig: xScaleConfigType = {};
 export let Shared_YScaleConfig: yScaleConfigType = {};
 export let Shared_ButtonProp:PlotStatusByButtonTag={}
+export let Shared_ChartDimension: ChartDimensionType = defaultChartDimensionProp;
 
 export let Shared_ChartBaseData: ChartBaseData = {
   plotName: new Set<string>(),
@@ -82,6 +83,7 @@ export function updateShared_YScaleConfig(
       yaxisTag:'1main',
       xpoint: 100,
       yscaleRange: [0, 100],
+      yaxisrange:null,
       yscaleDomainData: [0, 1, 2, 3, 4],
       xscaleVisibleRange: [0, 10],
       zoomstatus: true,
@@ -109,7 +111,7 @@ export const updateXscaleconfig=(xScaleConfigInputArray=xScaleConfigInput)=>{
 
 export const updateYscaleconfig=(yScaleConfigInputArray=yScaleConfigInput)=>{
   yScaleConfigInputArray.map((yscaleitem) => {
-  const { yscaleTag, yaxisTag,xpoint, yscaleRange, yscaleDomainData, zoomstatus,xscaleVisibleRange } =
+  const { yscaleTag, yaxisTag,xpoint, yscaleRange,yaxisrange, yscaleDomainData, zoomstatus,xscaleVisibleRange } =
   yscaleitem;
 
   const tempyscaleItem: YScaleConfigItemType = {
@@ -117,6 +119,7 @@ export const updateYscaleconfig=(yScaleConfigInputArray=yScaleConfigInput)=>{
     yaxisTag:yaxisTag,
     xpoint: xpoint,
     yscaleRange: yscaleRange,
+    yaxisrange:yaxisrange?yaxisrange:null,
     yscaleDomainData: yscaleDomainData,
     xscaleVisibleRange:xscaleVisibleRange,
     zoomstatus: zoomstatus ? zoomstatus : false,
@@ -210,4 +213,58 @@ export function collectKeysByButtonId(buttonId: string): string[] {
   });
 
   return keys;
+}
+
+export function updateYScaleConfigByKey(keyName: keyof YScaleConfigItemType, value: string, partialData: Partial<YScaleConfigItemType>): void {
+  // Filter YScaleConfigType entries based on the provided key and value
+  const yScaleConfigEntries = Object.entries(Shared_YScaleConfig).filter(([_, config]) => config[keyName] === value);
+
+  // Update specified properties for each group
+  yScaleConfigEntries.forEach(([key, config]) => {
+    Shared_YScaleConfig[key] = { ...config, ...partialData };
+  });
+}
+
+export function getYaxisRatio(yaxistags:string[]): {[key:string]:{yaxisrange:[number, number]}} {
+  // resetYaxisrange()
+  // const { yaxistags } = getUniqueYaxisTags();
+  // console.log("yaxistags",yaxistags)
+
+  const totalHeight = Shared_ChartDimension.height;
+
+  const ratioIncrement = 1 / yaxistags.length;
+  let ratioarray: number[];
+  if (yaxistags.length == 2) {
+    ratioarray = [0.7, 0.3];
+  }
+  if (yaxistags.length == 3) {
+    ratioarray = [0.6, 0.2, 0.2];
+  }
+
+  // const yaxisratioObj: { [key: string]: number } = {};
+  let tempcumulativeRatio = 0;
+  let yaxisProp:{[key:string]:{yaxisrange:[number, number]}}={}
+
+  yaxistags.forEach((yaxistag, index) => {
+    const ratio = ratioarray && ratioarray.length > 0 ? ratioarray[index] : ratioIncrement;
+    // console.log("ratio",ratio)
+    // console.log("yaxistags",yaxistag)
+    // yaxisratioObj[yaxistag] = ratio;
+
+    const startY = Shared_ChartDimension.margin.top + Shared_ChartDimension.margin.innerTop + totalHeight * tempcumulativeRatio;
+    const endY = startY + totalHeight * ratio;
+    // console.log(yaxistag,[endY, startY]);
+    //updateYScaleConfigByKey("yaxistag", yaxistag, { yaxisrange: [endY, startY], yaxisratio: ratio });
+    yaxisProp[yaxistag]={yaxisrange:[endY, startY]}
+
+    // Shared_yaxisrange.push([endY, startY]);
+
+    // updateYaxisProp(yaxistag,{
+    //   range:[endY, startY],
+    //   fill:index==0?"red":"yellow"
+    // })
+    tempcumulativeRatio += ratio;
+  });
+
+  return yaxisProp
 }

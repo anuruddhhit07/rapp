@@ -45,7 +45,7 @@ import {
   createChildObject,
   parentObj,
 } from "./types/AdvanceObj";
-import { Shared_ChartBaseData,Shared_ButtonProp, Shared_PlotInfo, collectKeysByButtonId, getPlotStatusByButtonTag } from "../Chart/BaseSetup/SharedDataUtility";
+import { Shared_ChartBaseData,Shared_ButtonProp, Shared_PlotInfo, collectKeysByButtonId, getPlotStatusByButtonTag, Shared_YScaleConfig } from "../Chart/BaseSetup/SharedDataUtility";
 import proxy_plotinfo from "../Chart";
 import { InitializeBaseProp } from "../Chart/BaseSetup/BaseProp";
 
@@ -81,6 +81,7 @@ class CandlestickChartTS {
     InitializeBaseProp()
     console.log(Shared_ChartBaseData)
     console.log(Shared_ButtonProp)
+    console.log(Shared_YScaleConfig)
 
     this.SVGClass = SVGClass.getInstance();
     this.svg = this.SVGClass.svg;
@@ -103,13 +104,13 @@ const numberofbutton=6
     console.log(id );
 
     const plotarray=collectKeysByButtonId(id) as [keyof typeof Shared_ButtonProp]
-    console.log(plotarray)
-    plotarray.map(toggleplot=>{
+      plotarray.map(toggleplot=>{
       proxy_plotinfo[toggleplot].plotStatus=pressstate
     })
 
 
     console.log(Shared_ChartBaseData)
+    console.log(Shared_YScaleConfig)
 
    
   }
