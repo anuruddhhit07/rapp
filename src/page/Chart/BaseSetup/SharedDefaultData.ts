@@ -1,16 +1,23 @@
 import {
-  ChartDataType,
   ChartDimensionType,
   PlotInfoInputType,
   XScaleConfigInputType,
   YScaleConfigInputType,
 } from "./ShareDataType";
+import { Shared_ChartDimension } from "./SharedDataUtility";
+import { ChartDataType } from "./chartdataTypes";
 
-export const chartData: ChartDataType = {
-  xindex: [0, 1, 2, 5, 6],
-  close: [11, 12, 13, 65, 34],
-  open: [5, 8, 1, 3, 7],
+export const defaultchartData: ChartDataType = {
+  timestamp: [],
+  xindex: [],
+  open: [],
+  high: [],
+  low: [],
+  close: [],
+  volume: [],
 };
+
+
 export const plotInfoInput: PlotInfoInputType[] = [
   {
     plotStatus: true,
@@ -40,51 +47,68 @@ export const plotInfoInput: PlotInfoInputType[] = [
     xdataTag: "xindex",
     ydataTag: "open",
     xscaleTag: "top",
-    yscaleTag: "BL",
+    yscaleTag: "BR",
     plotType: "line",
     buttontag:"VolumePlot"
   },
 ];
+
+
 export const xScaleConfigInput: XScaleConfigInputType[] = [
   {
     xscaleTag: "bot",
-    ypoint: 100,
+    xsaleType:'Linear',
+    scaleSide:'Bottom',
+    ticlavelmappedwith:'timestamp',
+    ypoint: 20,
     xscaleRange: [0, 100],
-    xscaleDomainData: [0, 1, 2, 3, 4],
+    xscaleDataTag:'xindex',
     zoomstatus: true,
   },
   {
     xscaleTag: "top",
-    ypoint: 20,
+    xsaleType:'Linear',
+    scaleSide:'Top',
+    ticlavelmappedwith:'xindex',
+    ypoint: 300,
     xscaleRange: [0, 100],
-    xscaleDomainData: [0, 1, 2, 3, 4],
+    xscaleDataTag:'xindex',
   },
 ];
 
 export const yScaleConfigInput: YScaleConfigInputType[] = [
   {
-    yscaleTag: "TL",
-    yaxisTag:"1main",
-    xpoint: 100,
-    yscaleRange: [0, 100],
-    yscaleDomainData: [0, 1, 2, 3, 4],
-    xscaleVisibleRange: [0, 5],
-  },
-  {
     yscaleTag: "TR",
     yaxisTag:"1main",
+    scaleSide:'Right',
     xpoint: 100,
-    yscaleRange: [0, 100],
-    yscaleDomainData: [0, 1, 2, 3, 4],
-    xscaleVisibleRange: [0, 5],
+    // yscaleRange: [0, 100],
+    yscaleDataTag:'ohlc',
+    xscaleVisibleRange: [0, 0],
+    zoomstatus:true,
+    autozoom:true
   },
   {
-    yscaleTag: "BL",
+    yscaleTag: "TL",
+    yaxisTag:"1main",
+    scaleSide:'Left',
+    xpoint: 100,
+    // yscaleRange: [0, 100],
+    yscaleDataTag:'close',
+    xscaleVisibleRange: [0, 0],
+    zoomstatus:true,
+    autozoom:false
+  },
+  {
+    yscaleTag: "BR",
     yaxisTag:"volumeaxis",
+    scaleSide:'Right',
     xpoint: 20,
-    yscaleRange: [0, 100],
-    yscaleDomainData: [0, 1, 2, 3, 4],
-    xscaleVisibleRange: [0, 5],
+    // yscaleRange: [0, 100],
+    yscaleDataTag:'volume',
+    xscaleVisibleRange: [0, 0],
+    autozoom:false,
+    zoomstatus:true,
   },
 ];
 

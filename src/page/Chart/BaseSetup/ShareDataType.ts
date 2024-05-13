@@ -1,3 +1,5 @@
+import { ChartDataType } from "./chartdataTypes";
+
 type Features = {
   darkMode: () => void;
   newUserProfile: () => void;
@@ -8,16 +10,18 @@ type OptionsFlags<Type> = {
 };
 
 
+
+
 const AA: OptionsFlags<Features> = {
     darkMode: true,
     newUserProfile: true,
   };
 
-export interface ChartDataType {
-  xindex: number[];
-  close: number[];
-  open: number[];
-}
+// export interface ChartDataType {
+//   xindex: number[];
+//   close: number[];
+//   open: number[];
+// }
 
 export interface ChartBaseData{
   plotName: Set<string>, 
@@ -35,17 +39,24 @@ export interface ChartBaseData{
 export interface XScaleConfigInputType {
   xscaleTag: string;
   ypoint: number;
+  xsaleType:'Linear'|'TimeScale'|'Band'
+  scaleSide:'Bottom'|'Top'
+  ticlavelmappedwith:keyof ChartDataType
   xscaleRange: [number, number];
-  xscaleDomainData: number[];
+  xscaleDataTag:keyof ChartDataType;
   zoomstatus?: boolean;
 }
 
 export interface XScaleConfigItemType {
   xscaleTag: string;
+  xsaleType:'Linear'|'TimeScale'|'Band'
+  scaleSide:'Bottom'|'Top'
+  ticlavelmappedwith:keyof ChartDataType
   ypoint: number;
   xscaleRange: [number, number];
-  xscaleDomainData: number[];
+  xscaleDataTag:keyof ChartDataType;
   zoomstatus: boolean;
+  xscale: (this:XScaleConfigItemType) => {domain:any,XSCALE:any};
 }
 
 export interface xScaleConfigType {
@@ -54,23 +65,28 @@ export interface xScaleConfigType {
 
 export interface YScaleConfigInputType {
   yscaleTag: string;
+  scaleSide:'Left'|'Right'
   yaxisTag:string;
   xpoint: number;
-  yscaleRange: [number, number];
+  // yscaleRange: [number, number];
   yaxisrange?: [number, number];
-  yscaleDomainData: number[];
+  yscaleDataTag:'ohlc'|keyof ChartDataType;
   xscaleVisibleRange: [number, number];
   zoomstatus?: boolean;
+  autozoom?:boolean;
 }
 export interface YScaleConfigItemType {
   yscaleTag: string;
+  scaleSide:'Left'|'Right'
   yaxisTag:string;
   xpoint: number;
-  yscaleRange: [number, number];
+  // yscaleRange: [number, number];
   yaxisrange: [number, number]|null;
-  yscaleDomainData: number[];
+  yscaleDataTag:'ohlc'|keyof ChartDataType;
   xscaleVisibleRange: [number, number];
   zoomstatus: boolean;
+  autozoom:boolean;
+  yscale: (this:YScaleConfigItemType) => {domain:any,YSCALE:any};
 }
 
 export interface yScaleConfigType {
@@ -102,6 +118,10 @@ export interface PlotInfoItem {
 }
 export interface PlotInfoType {
   [key: string]: PlotInfoItem;
+}
+
+export interface XscaleYscaleRelation {
+  [key: string]: string[];
 }
 
 export interface PlotStatusByButtonTag {

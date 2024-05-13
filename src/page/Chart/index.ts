@@ -42,6 +42,7 @@ const callback: ProxyCallback = (
 
   //console.log(path.split(".")[1]);
   if (path.split(".")[1] == "plotStatus") {
+    console.log("Enter In PROXY SET FUNTION");
     const uniquePlotsData=getUniquePlotsWithStatusTrue(parentobj) as {plotName: Set<string>;
       xscaleTag: Set<string>;
       yscaleTag: Set<string>;

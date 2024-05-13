@@ -1,7 +1,8 @@
 import * as d3 from "d3";
-import { Shared_ChartBaseProp } from "../SharedObject";
+
 import { createGroupAdv, createMultipleSqure } from "./SVGUtility";
 import { PlotStatusByButtonTag } from "../../Chart/BaseSetup/ShareDataType";
+import { Shared_ChartDimension } from "../../Chart/BaseSetup/SharedDataUtility";
 
 class SVGClass {
   private static instance: SVGClass | null = null;
@@ -15,21 +16,22 @@ class SVGClass {
   ResetButton!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   Buttonpanel!:d3.Selection<SVGGElement, any, HTMLElement, any>;
   constructor() {
-    const { targetID, svgWidth, svgHeight, margin, width, height } = Shared_ChartBaseProp;
+    const { targetID, svgWidth, svgHeight, margin, width, height } = Shared_ChartDimension;
     this.setupSVG();
     this.BackGroup = createGroupAdv(this.svg, "main-border").drawBorder(0, 0, svgWidth, svgHeight, "red", 2, "blue", 0.2);
     this.AxisYGroup = createGroupAdv(this.svg, "Y-Area")
       .translate(svgWidth - margin.right, 0)
       .drawBorder(0, 0, margin.right, svgHeight - margin.bottom, "red", 2, "green", 0.2);
+
     this.FrontGroup = createGroupAdv(this.svg, "main-border").drawBorder(
       margin.left + margin.innerLeft,
       margin.top + margin.innerTop,
       width + margin.innerRight,
       height,
-      "red",
-      2,
-      "blue",
-      0
+      "green",
+      3,
+      "yellow",
+      0.1
     );
 
     this.ResetButton = createGroupAdv(this.svg, "reset-area")
@@ -79,7 +81,7 @@ class SVGClass {
   }
 
   setupSVG(): void {
-    const { targetID, svgWidth, svgHeight, margin, width, height } = Shared_ChartBaseProp;
+    const { targetID, svgWidth, svgHeight, margin, width, height } = Shared_ChartDimension;
     const svgElementExists: boolean = d3.select(`#svg-${targetID}`).empty();
     this.svg = svgElementExists
       ? d3.select(`#${targetID}`).append("svg").attr("id", `svg-${targetID}`).attr("width", svgWidth).attr("height", svgHeight)
