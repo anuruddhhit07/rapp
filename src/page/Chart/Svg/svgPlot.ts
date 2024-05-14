@@ -4,7 +4,7 @@ import { drawLineOnSVG } from "./SVGUtility";
 
 export function plotonsvg(plotAreaonSVG: d3.Selection<SVGGElement, any, HTMLElement, any>,xzoomeventsvg: d3.Selection<SVGGElement, any, HTMLElement, any>,yzoomeventsvg: d3.Selection<SVGGElement, any, HTMLElement, any>){
 console.log("Plot On SVG");
-console.log(Shared_ChartBaseData); 
+// console.log(Shared_ChartBaseData); 
 const plotTag=Array.from(Shared_ChartBaseData.plotName)
 const groupedplotData = groupDataByPlotType()
 
@@ -39,7 +39,9 @@ function drawPlotLineByName(plotName: string, PlotGroupArea: d3.Selection<SVGGEl
     let plotColor = Shared_PlotInfo[plotName].plotcolor;
     // // const currentTransformX = Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag].currentTransformX;
     const currentTransformX = xzoomeventsvg.property("__zoom")
-    const currentTransformY = yzoomeventsvg.property("__zoom");
+    // const currentTransformY = yzoomeventsvg.property("__zoom");
+    const currentTransformY = Shared_YScaleConfig[Shared_PlotInfo[plotName].yscaleTag].yzoomtransform
+    // console.log(currentTransformY);
     // // const currentTransformY = this.AxisYGroup.property("__zoom");
     const xScale =Shared_XScaleConfig[Shared_PlotInfo[plotName].xscaleTag].xscale().XSCALE as d3.ScaleLinear<number, number>;
     const yScale = Shared_YScaleConfig[Shared_PlotInfo[plotName].yscaleTag].yscale().YSCALE as d3.ScaleLinear<number, number>;

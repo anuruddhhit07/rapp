@@ -140,10 +140,18 @@ function XAxisOnSVG(scaleconfig: XScaleConfigItemType, currentTransformXb: any, 
   }
 }
 
-function YAxisOnSVG(scaleconfig: YScaleConfigItemType, currentTransformXb: any, axisAreaonSVG: any) {
+function YAxisOnSVG(scaleconfig: YScaleConfigItemType, axisAreaonSVG: any) {
   if (scaleconfig.yscale != null) {
     const YSL = scaleconfig.yscale().YSCALE as d3.ScaleLinear<number, number>;
-    let currentyscale = currentTransformXb.rescaleY(YSL);
+    // const ydomain=scaleconfig.yscale().domain
+    // console.log("ydomain",ydomain);
+
+    // updateShared_YScaleConfig(scaleconfig.yscaleTag, {
+    //   ydomaindata: ydomain,
+    // });
+
+    // console.log(scaleconfig.yzoomtransform);
+    let currentyscale = scaleconfig.yzoomtransform.rescaleY(YSL);
     axisAreaonSVG.selectAll(`.y-axis-${scaleconfig.yscaleTag}`).remove();
 
     axisAreaonSVG
@@ -170,8 +178,8 @@ export function intialRendorAxis(axisAreaonSVG: d3.Selection<SVGGElement, any, H
   const yscaleTagSet = Array.from(Shared_ChartBaseData.yscaleTag);
   yscaleTagSet.map((scaletag) => {
     const scaleconfig = Shared_YScaleConfig[scaletag];
-    const currentTransformYb=yzoomeventsvg.property("__zoom");
-    YAxisOnSVG(scaleconfig,currentTransformYb,axisAreaonSVG)
+    // const currentTransformYb=yzoomeventsvg.property("__zoom");
+    YAxisOnSVG(scaleconfig,axisAreaonSVG)
   });
 }
 
@@ -215,9 +223,9 @@ export function drawYaxis(
   yzoomeventsvg: d3.Selection<SVGGElement, any, HTMLElement, any>,
   ymousepoint?: number
 ) {
-  // axisAreaonSVG.selectAll(`.y-axis`).remove();
+  
 
-  const currentTransformXb = yzoomeventsvg.property("__zoom");
+  
   const yscaleTagSet = Array.from(Shared_ChartBaseData.yscaleTag);
   axisAreaonSVG.selectAll(".y-axis").each(function () {
     const yScaleTag = d3.select(this).attr("class").split("y-axis-")[1];
@@ -235,7 +243,33 @@ export function drawYaxis(
         insidepoint = ymousepoint > scaleconfig.yaxisrange[1] && ymousepoint < scaleconfig.yaxisrange[0];
       }
       if (scaleconfig.zoomstatus && insidepoint) {
-        YAxisOnSVG(scaleconfig, currentTransformXb, axisAreaonSVG);
+
+        // console.log(scaleconfig.yscaleTag,scaleconfig.yzoomtransform);
+
+        const initialTransform =scaleconfig.yzoomtransform
+        // yzoomeventsvg.call(zoom.transform, d3.zoomIdentity.translate(initialTransform.x, initialTransform.y).scale(initialTransform.k))
+
+        const currentTransformXb = yzoomeventsvg.property("__zoom");
+
+        // const translateX = initialTransform.x - currentTransformXb.x;
+        // const translateY = initialTransform.y - currentTransformXb.y;
+
+        // const newTransform = {
+        //   x: currentTransformXb.x + translateX,
+        //   y: currentTransformXb.y + translateY,
+        //   k: initialTransform.k
+        // };
+
+
+
+        console.log(scaleconfig.yscaleTag,currentTransformXb);
+        updateShared_YScaleConfig(scaleconfig.yscaleTag, {
+          yzoomtransform: currentTransformXb,
+        });
+
+        // console.log(Shared_YScaleConfig);
+
+        YAxisOnSVG(scaleconfig, axisAreaonSVG);
       }
     });
     return;
@@ -243,7 +277,7 @@ export function drawYaxis(
 
   yscaleTagSet.map((scaletag) => {
     const scaleconfig = Shared_YScaleConfig[scaletag];
-    YAxisOnSVG(scaleconfig, currentTransformXb, axisAreaonSVG);
+    YAxisOnSVG(scaleconfig, axisAreaonSVG);
   });
 
 }

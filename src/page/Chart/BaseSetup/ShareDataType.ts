@@ -1,4 +1,5 @@
 import { ChartDataType } from "./chartdataTypes";
+import * as d3 from 'd3'
 
 type Features = {
   darkMode: () => void;
@@ -90,7 +91,10 @@ export interface YScaleConfigItemType {
   xscaleVisibleRange: [number, number];
   zoomstatus: boolean;
   autozoom:boolean;
+  ydomaindata:[number, number];
   yscale: (this:YScaleConfigItemType) => {domain:any,YSCALE:any};
+  yzoomtransform:typeof d3.zoomIdentity
+
 }
 
 export interface yScaleConfigType {

@@ -75,36 +75,56 @@ export function getXscale(this: any): { domain: Iterable<NumberValue>; XSCALE: a
   return { domain: domain, XSCALE: XSCALE };
 }
 
+
+
 export function getYscale(this: YScaleConfigItemType): { domain: Iterable<NumberValue>; YSCALE: any } {
   // console.log("hello", this);
   // console.log(this.yaxisrange);
   // console.log(this.xscaleVisibleRange);
   // console.log(this.yscaleDataTag);
+  // console.log("ydomaindata",this.ydomaindata);
 
   let domain: Iterable<NumberValue> = [];
   let YSCALE: ScaleLinear<number, number> | null=null
 
   let visiblerange=[]
+  // let tempydomain:Iterable<d3.NumberValue>=[]
 // if (this.xscaleVisibleRange[1]==0){
 //   visiblerange= [0,Shared_ChartPlotData[this.yscaleDataTag as keyof ChartDataType].length]
 // }
 
   if (this.yscaleDataTag == "ohlc") {
 
+
     visiblerange=this.xscaleVisibleRange[1]==0?[0,Shared_ChartPlotData["low"].length]:this.xscaleVisibleRange
+
+
+
     domain = [
       d3.min(Shared_ChartPlotData["low"].slice(visiblerange[0], visiblerange[1])) as number,
       d3.max(Shared_ChartPlotData["high"].slice(visiblerange[0], visiblerange[1])) as number,
     ];
+
+    
+
   } else {
     visiblerange=this.xscaleVisibleRange[1]==0?[0,Shared_ChartPlotData[this.yscaleDataTag as keyof ChartDataType].length]:this.xscaleVisibleRange
     domain = d3.extent(
       Shared_ChartPlotData[this.yscaleDataTag as keyof ChartDataType].slice(visiblerange[0], visiblerange[1])
     ) as Iterable<NumberValue>;
+
+
   }
+
+  // if (this.xscaleVisibleRange[1]==0){
+  //   tempydomain=domain
+  // } else {
+  //   tempydomain=this.ydomaindata
+  // }
 
   // const domain = d3.extent(Shared_ChartPlotData[this.yscaleDataTag as keyof ChartDataType]) as Iterable<NumberValue>;
   // console.log("domain1",domain,this.xsaleType);
+  // console.log("tempydomain",tempydomain);
 
   if (this.yaxisrange!=null){
     YSCALE =d3.scaleLinear().range(this.yaxisrange).domain(domain)
@@ -178,7 +198,9 @@ export function updateShared_YScaleConfig(key: string, partialData: Partial<YSca
       xscaleVisibleRange: [0, 10],
       zoomstatus: true,
       autozoom: true,
+      ydomaindata:[0,0],
       yscale: getYscale,
+      yzoomtransform:d3.zoomIdentity,
       ...partialData, // Merge with additional partialData
     };
   }
@@ -218,7 +240,9 @@ export const updateYscaleconfig = (yScaleConfigInputArray = yScaleConfigInput) =
       xscaleVisibleRange: xscaleVisibleRange,
       zoomstatus: zoomstatus ? zoomstatus : false,
       autozoom: autozoom ? autozoom : false,
+      ydomaindata:[0,0],
       yscale: getYscale,
+      yzoomtransform:d3.zoomIdentity,
     };
     updateShared_YScaleConfig(yscaleTag, tempyscaleItem);
   });

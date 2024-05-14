@@ -35,6 +35,7 @@ import {
   Shared_ChartDimension,
   Shared_XYrelation,
   Shared_yaxisProp,
+  updateShared_YScaleConfig,
 } from "../Chart/BaseSetup/SharedDataUtility";
 import proxy_plotinfo from "../Chart";
 import { InitializeBaseProp } from "../Chart/BaseSetup/BaseProp";
@@ -76,9 +77,21 @@ class CandlestickChartTS {
     this.Buttonpanel = this.SVGClass.createbuttonpanel(this.buttonClick.bind(this), numberofbutton, Shared_ButtonProp);
 
     this.FrontGroup.call(this.zoomX as any);
-    this.AxisYGroup.call(this.zoomY as any);
+    // this.AxisYGroup
+    // this.AxisYGroup.call(this.zoomY as any);
+    
 
     intialRendorAxis(this.BackGroup, this.FrontGroup, this.AxisYGroup);
+
+    this.BackGroup.selectAll('.y-axis')
+    // .each(function(this: d3.BaseType) {
+    //     // Inside this function, `this` refers to each individual y-axis element
+    //     // d3.select(this).call((this as any).zoomY);
+    //     console.log(d3.select(this));
+    //     console.log(this);
+    // }.bind(this as any));
+     
+
     this.rendorPlot()
     this.ResetButton.onEvent1("click", (event) => {
       this.resetplot(event);
@@ -95,6 +108,7 @@ class CandlestickChartTS {
 
   zoomedY(event: any) {
     const [xmousepoint, ymousepoint] = d3.pointer(event);
+    console.log("heree");
     drawYaxis(this.BackGroup, this.AxisYGroup, ymousepoint);
     this.rendorPlot()
   }
@@ -126,15 +140,26 @@ class CandlestickChartTS {
   resetplot(event: any) {
     this.FrontGroup.call(this.zoomX.transform as any, d3.zoomIdentity);
     this.AxisYGroup.call(this.zoomY.transform as any, d3.zoomIdentity);
-    // intialRendorAxis(this.BackGroup,this.FrontGroup,this.AxisYGroup)
-    this.rendorAxis();
+
+    const yscaleTagSet = Array.from(Shared_ChartBaseData.yscaleTag);
+
+    yscaleTagSet.map((scaletag) => {
+      const scaleconfig = Shared_YScaleConfig[scaletag];
+      updateShared_YScaleConfig(scaleconfig.yscaleTag, {
+        yzoomtransform: d3.zoomIdentity,
+      })
+
+    })
+
+    this.rendorAxis()
+    this.rendorPlot()
   }
 
   getclippath() {
     this.svg.select("defs").selectAll("*").remove();
     const yaxistags=Array.from(Shared_ChartBaseData.yaxisTag) 
     yaxistags.map(yaxistag=>{
-      console.log(Shared_yaxisProp[yaxistag].range);
+      // console.log(Shared_yaxisProp[yaxistag].range);
       const {range} =Shared_yaxisProp[yaxistag]
         createClipPath(
         this.svg,
