@@ -42,7 +42,7 @@ export const plotInfoInput: PlotInfoInputType[] = [
     buttontag:"LowPlot"
   },
   {
-    plotStatus: true,
+    plotStatus: false,
     plotName: "VolumePlot",
     xdataTag: "xindex",
     ydataTag: "open",
@@ -107,7 +107,7 @@ export const yScaleConfigInput: YScaleConfigInputType[] = [
     // yscaleRange: [0, 100],
     yscaleDataTag:'volume',
     xscaleVisibleRange: [0, 0],
-    autozoom:false,
+    autozoom:true,
     zoomstatus:true,
   },
 ];

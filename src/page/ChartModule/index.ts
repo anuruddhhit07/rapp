@@ -138,12 +138,13 @@ class CandlestickChartTS {
     console.log(Shared_ChartBaseData);
     console.log(Shared_YScaleConfig);
     console.log(Shared_XScaleConfig);
+    console.log(Shared_XYrelation);
     this.rendorAxis()
 
   }
 
   rendorAxis(){
-    this.BackGroup.selectAll(`.axis`).remove();
+    // this.BackGroup.selectAll(`.axis`).remove();
     drawXaxis(this.BackGroup,this.FrontGroup)
     drawYaxis(this.BackGroup,this.AxisYGroup)
   }

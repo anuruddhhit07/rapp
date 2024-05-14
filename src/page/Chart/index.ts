@@ -4,6 +4,7 @@ import {
   Shared_PlotInfo,
   Shared_XScaleConfig,
   Shared_YScaleConfig,
+  generateRelationObject,
   getUniquePlotsWithStatusTrue,
   getYaxisRatio,
   updateSharedChartData,
@@ -49,10 +50,12 @@ const callback: ProxyCallback = (
       yaxisTag: Set<string>}
     updateSharedChartData(uniquePlotsData as any)
     const yaxisRangeArray= getYaxisRatio(Array.from(uniquePlotsData.yaxisTag))
+    // console.log(yaxisRangeArray);
     Object.entries(yaxisRangeArray).forEach(([yaxisTag, value]) => {
       console.log(yaxisTag,value)
       updateYScaleConfigByKey("yaxisTag", yaxisTag,value)
     })
+    generateRelationObject()
     // updateYScaleConfigByKey()
     // console.log("range",AA)
     // Shared_ChartBaseData

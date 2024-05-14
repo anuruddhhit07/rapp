@@ -297,11 +297,13 @@ export function collectKeysByButtonId(buttonId: string): string[] {
 export function updateYScaleConfigByKey(keyName: keyof YScaleConfigItemType, value: string, partialData: Partial<YScaleConfigItemType>): void {
   // Filter YScaleConfigType entries based on the provided key and value
   const yScaleConfigEntries = Object.entries(Shared_YScaleConfig).filter(([_, config]) => config[keyName] === value);
-
+  // console.log("yScaleConfigEntries",yScaleConfigEntries);
   // Update specified properties for each group
   yScaleConfigEntries.forEach(([key, config]) => {
     Shared_YScaleConfig[key] = { ...config, ...partialData };
+    
   });
+  // console.log("Shared_YScaleConfig",Shared_YScaleConfig);
 }
 
 export function getYaxisRatio(yaxistags: string[]): { [key: string]: { yaxisrange: [number, number] } } {
