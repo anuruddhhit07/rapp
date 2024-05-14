@@ -78,14 +78,7 @@ class CandlestickChartTS {
     InitializeBaseProp();
     UpdateXscaleconfig()
     UpdateYscaleconfig()
-    
-    console.log(Shared_ChartPlotData);
-    console.log(Shared_ChartBaseData);
-    // console.log(Shared_ButtonProp);
-    // console.log(Shared_YScaleConfig);
-    console.log(Shared_XYrelation);
-    console.log(Shared_YScaleConfig)
-    console.log(Shared_YScaleConfig['TR'].yscale());
+   
 
     this.SVGClass = SVGClass.getInstance();
     this.svg = this.SVGClass.svg;
@@ -98,7 +91,7 @@ class CandlestickChartTS {
     this.ResetButton = this.SVGClass.ResetButton;
     this.Buttonpanel = this.SVGClass.createbuttonpanel(this.buttonClick.bind(this), numberofbutton, Shared_ButtonProp);
 
-    // this.BackGroup = createGroupAdv(this.svg, "main-border").drawBorder(0, 0, svgWidth, svgHeight, "red", 2, "yellow", 0.2)
+    
 
     this.FrontGroup.call(this.zoomX as any)
     this.AxisYGroup.call(this.zoomY as any)

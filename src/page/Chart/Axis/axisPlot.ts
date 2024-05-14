@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { YScaleConfigItemType, xScaleConfigType, yScaleConfigType } from "../BaseSetup/ShareDataType";
+import { XScaleConfigItemType, YScaleConfigItemType, xScaleConfigType, yScaleConfigType } from "../BaseSetup/ShareDataType";
 import {
   Shared_ChartBaseData,
   Shared_ChartDimension,
@@ -120,37 +120,58 @@ export function UpdateYscaleconfig() {
   });
 }
 
-export function intialRendorAxis(axisAreaonSVG: d3.Selection<SVGGElement, any, HTMLElement, any>) {
-  axisAreaonSVG.selectAll(`.axis`).remove();
-  const xscaleTagSet = Array.from(Shared_ChartBaseData.xscaleTag);
-  xscaleTagSet.map((scaletag) => {
-    const scaleconfig = Shared_XScaleConfig[scaletag];
-    const XSL = scaleconfig.xscale().XSCALE as d3.ScaleLinear<number, number> | d3.ScaleTime<number, number>;
+
+function XAxisOnSVG(scaleconfig: XScaleConfigItemType, currentTransformXb: any, axisAreaonSVG: any) {
+  if (scaleconfig.xscale != null) {
+    const XSL = scaleconfig.xscale().XSCALE as d3.ScaleLinear<number, number>;
+    let currentxscale = currentTransformXb.rescaleY(XSL);
+    axisAreaonSVG.selectAll(`.x-axis-${scaleconfig.xscaleTag}`).remove();
+
     axisAreaonSVG
-      .append("g")
-      .attr("class", `axis x-axis x-axis-${scaleconfig.xscaleTag}`)
-      .attr("transform", `translate(${0},${scaleconfig.ypoint})`)
-      .call(
-        xaxisgenerator(XSL, {
-          scaleSide: scaleconfig.scaleSide,
-          ticlavelmappedwith: scaleconfig.ticlavelmappedwith,
-        })
-      );
-  });
-  const yscaleTagSet = Array.from(Shared_ChartBaseData.yscaleTag);
-  yscaleTagSet.map((scaletag) => {
-    const scaleconfig = Shared_YScaleConfig[scaletag];
-    const YSL = scaleconfig.yscale().YSCALE;
+    .append("g")
+    .attr("class", `axis x-axis x-axis-${scaleconfig.xscaleTag}`)
+    .attr("transform", `translate(${0},${scaleconfig.ypoint})`)
+    .call(
+      xaxisgenerator(currentxscale, {
+        scaleSide: scaleconfig.scaleSide,
+        ticlavelmappedwith: scaleconfig.ticlavelmappedwith,
+      })
+    );
+  }
+}
+
+function YAxisOnSVG(scaleconfig: YScaleConfigItemType, currentTransformXb: any, axisAreaonSVG: any) {
+  if (scaleconfig.yscale != null) {
+    const YSL = scaleconfig.yscale().YSCALE as d3.ScaleLinear<number, number>;
+    let currentyscale = currentTransformXb.rescaleY(YSL);
+    axisAreaonSVG.selectAll(`.y-axis-${scaleconfig.yscaleTag}`).remove();
+
     axisAreaonSVG
       .append("g")
       .attr("class", `axis y-axis y-axis-${scaleconfig.yscaleTag}`)
       .attr("transform", `translate(${scaleconfig.xpoint},${0})`)
       .call(
-        yaxisgenerator(YSL, {
+        yaxisgenerator(currentyscale, {
           scaleSide: scaleconfig.scaleSide,
           yscaleTag: scaleconfig.yscaleTag,
         })
       );
+  }
+}
+
+export function intialRendorAxis(axisAreaonSVG: d3.Selection<SVGGElement, any, HTMLElement, any>) {
+  axisAreaonSVG.selectAll(`.axis`).remove();
+  const xscaleTagSet = Array.from(Shared_ChartBaseData.xscaleTag);
+  xscaleTagSet.map((scaletag) => {
+    const scaleconfig = Shared_XScaleConfig[scaletag];
+    const currentTransformXb=d3.zoomIdentity
+    XAxisOnSVG(scaleconfig,currentTransformXb,axisAreaonSVG)
+  });
+  const yscaleTagSet = Array.from(Shared_ChartBaseData.yscaleTag);
+  yscaleTagSet.map((scaletag) => {
+    const scaleconfig = Shared_YScaleConfig[scaletag];
+    const currentTransformXb=d3.zoomIdentity
+    YAxisOnSVG(scaleconfig,currentTransformXb,axisAreaonSVG)
   });
 }
 
@@ -168,10 +189,6 @@ export function drawXaxis(axisAreaonSVG: d3.Selection<SVGGElement, any, HTMLElem
       const currentTransformXb = xzoomeventsvg.property("__zoom");
 
       let currentxscale = currentTransformXb.rescaleX(XSL);
-      //   console.log(currentxscale.domain(), Shared_XYrelation[scaletag]);
-      //   const yscaleTagSet = Array.from(Shared_ChartBaseData.yscaleTag);
-      //   const fillteredYscale=Shared_XYrelation[scaletag].filter(item => yscaleTagSet.includes(item));
-      console.log("Shared_XYrelation", Shared_XYrelation);
       Shared_XYrelation[scaletag].map((yscaltag) => {
         // console.log("autozoom",Shared_YScaleConfig[yscaltag].autozoom);
         if (Shared_YScaleConfig[yscaltag].autozoom) {
@@ -184,56 +201,24 @@ export function drawXaxis(axisAreaonSVG: d3.Selection<SVGGElement, any, HTMLElem
         }
       });
 
-      axisAreaonSVG
-        .append("g")
-        .attr("class", `axis x-axis x-axis-${scaleconfig.xscaleTag}`)
-        .attr("transform", `translate(${0},${scaleconfig.ypoint})`)
-        .call(
-          xaxisgenerator(currentxscale, {
-            scaleSide: scaleconfig.scaleSide,
-            ticlavelmappedwith: scaleconfig.ticlavelmappedwith,
-          })
-        );
+      XAxisOnSVG(scaleconfig,currentTransformXb,axisAreaonSVG)
+     
     }
   });
 }
 
-function YAxisOnSVG(scaleconfig: YScaleConfigItemType, currentTransformXb: any, axisAreaonSVG: any) {
-  if (scaleconfig.yscale != null) {
-      const YSL = scaleconfig.yscale().YSCALE as d3.ScaleLinear<number, number>
-      // console.log(YSL.domain());
 
-      // console.log(currentTransformXb);
-      let currentyscale = currentTransformXb.rescaleY(YSL);
-      axisAreaonSVG.selectAll(`.y-axis-${scaleconfig.yscaleTag}`).remove();
 
-      axisAreaonSVG
-          .append("g")
-          .attr("class", `axis y-axis y-axis-${scaleconfig.yscaleTag}`)
-          .attr("transform", `translate(${scaleconfig.xpoint},${0})`)
-          .call(
-              yaxisgenerator(currentyscale, {
-                  scaleSide: scaleconfig.scaleSide,
-                  yscaleTag: scaleconfig.yscaleTag,
-              })
-          );
-  }
-}
 
 export function drawYaxis(
   axisAreaonSVG: d3.Selection<SVGGElement, any, HTMLElement, any>,
   yzoomeventsvg: d3.Selection<SVGGElement, any, HTMLElement, any>,
   ymousepoint?: number
 ) {
-
-
   // axisAreaonSVG.selectAll(`.y-axis`).remove();
 
-
   const currentTransformXb = yzoomeventsvg.property("__zoom");
-
   const yscaleTagSet = Array.from(Shared_ChartBaseData.yscaleTag);
-
   axisAreaonSVG.selectAll(".y-axis").each(function () {
     const yScaleTag = d3.select(this).attr("class").split("y-axis-")[1];
     if (!yscaleTagSet.includes(yScaleTag)) {
@@ -249,20 +234,16 @@ export function drawYaxis(
       if (scaleconfig.yaxisrange) {
         insidepoint = ymousepoint > scaleconfig.yaxisrange[1] && ymousepoint < scaleconfig.yaxisrange[0];
       }
-
-      if (scaleconfig.zoomstatus && insidepoint){
-        // console.log("currentTransformXb",currentTransformXb);
-        YAxisOnSVG(scaleconfig,currentTransformXb,axisAreaonSVG)
+      if (scaleconfig.zoomstatus && insidepoint) {
+        YAxisOnSVG(scaleconfig, currentTransformXb, axisAreaonSVG);
       }
     });
-    return
+    return;
   }
-
-  
 
   yscaleTagSet.map((scaletag) => {
     const scaleconfig = Shared_YScaleConfig[scaletag];
-    YAxisOnSVG(scaleconfig,currentTransformXb,axisAreaonSVG)
-    
+    YAxisOnSVG(scaleconfig, currentTransformXb, axisAreaonSVG);
   });
+  
 }
