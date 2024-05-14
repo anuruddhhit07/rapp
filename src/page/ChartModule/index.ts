@@ -21,7 +21,11 @@ import { yaxisrangeType } from "./types/AxisScaleType";
 
 import { xscaleObj } from "./types/XScaleUtility";
 import SVGClass from "./SVG/SvgClassModel";
-import { proxiedParentObj, createChildObject, parentObj } from "./types/AdvanceObj";
+import {
+  proxiedParentObj,
+  createChildObject,
+  parentObj,
+} from "./types/AdvanceObj";
 import {
   Shared_ChartBaseData,
   Shared_ButtonProp,
@@ -39,7 +43,13 @@ import {
 } from "../Chart/BaseSetup/SharedDataUtility";
 import proxy_plotinfo from "../Chart";
 import { InitializeBaseProp } from "../Chart/BaseSetup/BaseProp";
-import { UpdateXscaleconfig, UpdateYscaleconfig, drawXaxis, drawYaxis, intialRendorAxis } from "../Chart/Axis/axisPlot";
+import {
+  UpdateXscaleconfig,
+  UpdateYscaleconfig,
+  drawXaxis,
+  drawYaxis,
+  intialRendorAxis,
+} from "../Chart/Axis/axisPlot";
 import { plotonsvg } from "../Chart/Svg/svgPlot";
 
 class CandlestickChartTS {
@@ -57,11 +67,16 @@ class CandlestickChartTS {
   Buttonpanel!: void;
   // plotaxis: PlotAxis;
   clipPathObj: {
-    [key: keyof yaxisrangeType]: d3.Selection<SVGClipPathElement, any, HTMLElement, any>;
+    [key: keyof yaxisrangeType]: d3.Selection<
+      SVGClipPathElement,
+      any,
+      HTMLElement,
+      any
+    >;
   } = {};
 
   constructor(stockdata: ChartDataIN, targetID: string) {
-    SetupChart.getInstance(700, 700, { targetID: targetID });
+    SetupChart.getInstance(500, 500, { targetID: targetID });
     updateChartPlotData(arrangeData(stockdata));
     InitializeBaseProp();
     UpdateXscaleconfig();
@@ -69,43 +84,46 @@ class CandlestickChartTS {
 
     this.SVGClass = SVGClass.getInstance();
     this.svg = this.SVGClass.svg;
+    console.log(Shared_yaxisProp)
+    this.SVGClass.createYaxiseventArea(this.zoomY)
     const numberofbutton = 6;
     this.BackGroup = this.SVGClass.BackGroup;
     this.AxisYGroup = this.SVGClass.AxisYGroup;
     this.FrontGroup = this.SVGClass.FrontGroup;
     this.ResetButton = this.SVGClass.ResetButton;
-    this.Buttonpanel = this.SVGClass.createbuttonpanel(this.buttonClick.bind(this), numberofbutton, Shared_ButtonProp);
+    this.Buttonpanel = this.SVGClass.createbuttonpanel(
+      this.buttonClick.bind(this),
+      numberofbutton,
+      Shared_ButtonProp
+    );
 
     this.FrontGroup.call(this.zoomX as any);
     // this.AxisYGroup
     this.AxisYGroup.call(this.zoomY as any);
-    
 
     intialRendorAxis(this.BackGroup, this.FrontGroup, this.AxisYGroup);
 
-  //   const yaxissvg= this.BackGroup.selectAll('.y-axis')
-  //   yaxissvg.each(item=>{
-  //     console.log(item);
-  //   })
+    //   const yaxissvg= this.BackGroup.selectAll('.y-axis')
+    //   yaxissvg.each(item=>{
+    //     console.log(item);
+    //   })
 
-  //   yaxissvg.nodes().forEach((yAxis) => {
-  //     // Your code here, `yAxis` refers to the current DOM element
-  //     // For example:
-  //     console.log(this);
-  //     d3.select(yAxis).call(this.zoomY as any)
-  //     d3.select(yAxis).style("fill", "red");
-  // });
+    //   yaxissvg.nodes().forEach((yAxis) => {
+    //     // Your code here, `yAxis` refers to the current DOM element
+    //     // For example:
+    //     console.log(this);
+    //     d3.select(yAxis).call(this.zoomY as any)
+    //     d3.select(yAxis).style("fill", "red");
+    // });
 
-   
     // .each(function(this: d3.BaseType) {
     //     // Inside this function, `this` refers to each individual y-axis element
     //     // d3.select(this).call((this as any).zoomY);
     //     console.log(d3.select(this));
     //     console.log(this);
     // }.bind(this as any));
-     
 
-    this.rendorPlot()
+    this.rendorPlot();
     this.ResetButton.onEvent1("click", (event) => {
       this.resetplot(event);
     });
@@ -114,7 +132,7 @@ class CandlestickChartTS {
 
   zoomedX(event: any) {
     this.rendorAxis();
-    this.rendorPlot()
+    this.rendorPlot();
   }
 
   zoomY = d3.zoom().scaleExtent([0.5, 4]).on("zoom", this.zoomedY.bind(this));
@@ -123,19 +141,29 @@ class CandlestickChartTS {
   zoomedY(event: any) {
     const [xmousepoint, ymousepoint] = d3.pointer(event);
     console.log("heree");
-    drawYaxis(this.BackGroup, this.AxisYGroup, ymousepoint);
-    this.rendorPlot()
+    const main1=this.svg.select('.yzoom-1main').property("__zoom")
+    if (!this.svg.select('.yzoom-volumeaxis').empty()){
+      const volumeaxis =this.svg.select('.yzoom-volumeaxis').property("__zoom")
+      console.log("volumeaxis",volumeaxis)
+    }
+    
+
+    console.log("main1",main1)
+    drawYaxis(this.BackGroup, this.svg, ymousepoint);
+    this.rendorPlot();
   }
 
   // keyof typeof mapButtontoChart
   buttonClick(id: any, className: any, pressstate: any) {
     console.log(id);
 
-    const plotarray = collectKeysByButtonId(id) as [keyof typeof Shared_ButtonProp];
+    const plotarray = collectKeysByButtonId(id) as [
+      keyof typeof Shared_ButtonProp
+    ];
     plotarray.map((toggleplot) => {
       proxy_plotinfo[toggleplot].plotStatus = pressstate;
     });
-
+    this.SVGClass.createYaxiseventArea(this.zoomY)
     this.rendorAxis();
     this.rendorPlot();
   }
@@ -143,11 +171,11 @@ class CandlestickChartTS {
   rendorAxis() {
     // this.BackGroup.selectAll(`.axis`).remove();
     drawXaxis(this.BackGroup, this.FrontGroup);
-    drawYaxis(this.BackGroup, this.AxisYGroup);
+    drawYaxis(this.BackGroup, this.svg);
   }
 
   rendorPlot() {
-    this.getclippath()
+    this.getclippath();
     plotonsvg(this.BackGroup, this.FrontGroup, this.AxisYGroup);
   }
 
@@ -161,33 +189,30 @@ class CandlestickChartTS {
       const scaleconfig = Shared_YScaleConfig[scaletag];
       updateShared_YScaleConfig(scaleconfig.yscaleTag, {
         yzoomtransform: d3.zoomIdentity,
-      })
+      });
+    });
 
-    })
-
-    this.rendorAxis()
-    this.rendorPlot()
+    this.rendorAxis();
+    this.rendorPlot();
   }
 
   getclippath() {
     this.svg.select("defs").selectAll("*").remove();
-    const yaxistags=Array.from(Shared_ChartBaseData.yaxisTag) 
-    yaxistags.map(yaxistag=>{
+    const yaxistags = Array.from(Shared_ChartBaseData.yaxisTag);
+    yaxistags.map((yaxistag) => {
       // console.log(Shared_yaxisProp[yaxistag].range);
-      const {range} =Shared_yaxisProp[yaxistag]
-        createClipPath(
+      const { range } = Shared_yaxisProp[yaxistag];
+      createClipPath(
         this.svg,
         `clip-${yaxistag}`,
-        Shared_ChartDimension.margin.left + Shared_ChartDimension.margin.innerLeft,
+        Shared_ChartDimension.margin.left +
+          Shared_ChartDimension.margin.innerLeft,
         range[1],
         Shared_ChartDimension.width + Shared_ChartDimension.margin.innerRight,
         range[0] - range[1]
       );
-    })
-
+    });
   }
-
-  
 }
 
 export default CandlestickChartTS;

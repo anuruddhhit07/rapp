@@ -220,7 +220,7 @@ export function drawXaxis(axisAreaonSVG: d3.Selection<SVGGElement, any, HTMLElem
 
 export function drawYaxis(
   axisAreaonSVG: d3.Selection<SVGGElement, any, HTMLElement, any>,
-  yzoomeventsvg: d3.Selection<SVGGElement, any, HTMLElement, any>,
+  svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,
   ymousepoint?: number
 ) {
   
@@ -249,7 +249,7 @@ export function drawYaxis(
         const initialTransform =scaleconfig.yzoomtransform
         // yzoomeventsvg.call(zoom.transform, d3.zoomIdentity.translate(initialTransform.x, initialTransform.y).scale(initialTransform.k))
 
-        const currentTransformXb = yzoomeventsvg.property("__zoom");
+        const currentTransformXb = svg.select(`.yzoom-${scaleconfig.yaxisTag}`).property("__zoom");
 
         // const translateX = initialTransform.x - currentTransformXb.x;
         // const translateY = initialTransform.y - currentTransformXb.y;
