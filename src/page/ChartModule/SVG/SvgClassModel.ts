@@ -36,9 +36,9 @@ class SVGClass {
 
     this.ResetButton = createGroupAdv(this.svg, "reset-area")
       .drawBorder(svgWidth - margin.right, svgHeight - margin.bottom, margin.right, margin.bottom, "red", 2, "blue", 0.2)
-      .onEvent1("click", (event) => {
-        // this.resetplot(event);
-      });
+      // .onEvent1("click", (event) => {
+      //   // this.resetplot(event);
+      // });
 
       
   }
@@ -79,6 +79,8 @@ class SVGClass {
     .createSquaresHorizontally(numberofbutton, 30, 2, initialPlotStatusArray,updatedIdArray)
     .attachClickEvent(callback);
   }
+
+ 
 
   setupSVG(): void {
     const { targetID, svgWidth, svgHeight, margin, width, height } = Shared_ChartDimension;

@@ -10,6 +10,7 @@ import {
   updateSharedChartData,
   updateXscaleconfig,
   updateYScaleConfigByKey,
+  updateYaxis,
   updateYscaleconfig,
   updateplotInfo,
 } from "./BaseSetup/SharedDataUtility";
@@ -54,6 +55,7 @@ const callback: ProxyCallback = (
     Object.entries(yaxisRangeArray).forEach(([yaxisTag, value]) => {
       console.log(yaxisTag,value)
       updateYScaleConfigByKey("yaxisTag", yaxisTag,value)
+      updateYaxis(yaxisTag,value.yaxisrange)
     })
     generateRelationObject()
     // updateYScaleConfigByKey()

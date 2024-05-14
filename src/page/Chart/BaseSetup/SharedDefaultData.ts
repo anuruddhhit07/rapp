@@ -38,7 +38,7 @@ export const plotInfoInput: PlotInfoInputType[] = [
     xscaleTag: "bot",
     yscaleTag: "TR",
     plotType: "line",
-    plotcolor: "red",
+    plotcolor: "black",
     buttontag:"LowPlot"
   },
   {

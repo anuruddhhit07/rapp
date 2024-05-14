@@ -7,6 +7,7 @@ import {
   updateSharedChartData,
   updateXscaleconfig,
   updateYScaleConfigByKey,
+  updateYaxis,
   updateYscaleconfig,
   updateplotInfo,
 
@@ -27,6 +28,7 @@ export function InitializeBaseProp() {
   Object.entries(yaxisRangeArray).forEach(([yaxisTag, value]) => {
     // console.log(yaxisTag,value)
     updateYScaleConfigByKey("yaxisTag", yaxisTag,value)
+    updateYaxis(yaxisTag,value.yaxisrange)
   })
 
   getPlotStatusByButtonTag()

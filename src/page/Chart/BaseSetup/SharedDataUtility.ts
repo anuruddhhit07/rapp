@@ -10,6 +10,7 @@ import {
   YScaleConfigItemType,
   xScaleConfigType,
   yScaleConfigType,
+  yaxisType,
 } from "./ShareDataType";
 import { defaultChartDimensionProp, defaultchartData, plotInfoInput, xScaleConfigInput, yScaleConfigInput } from "./SharedDefaultData";
 import { ChartDataType } from "./chartdataTypes";
@@ -33,6 +34,8 @@ export let Shared_ChartBaseData: ChartBaseData = {
   yaxisTag: new Set<string>(),
 };
 
+export let Shared_yaxisProp:yaxisType={}
+
 export function updateChartPlotData(data: ChartDataType) {
   Shared_ChartPlotData = data;
 }
@@ -41,11 +44,16 @@ export function updateChartBaseProp(partialData: Partial<ChartDimensionType>): v
   Object.assign(Shared_ChartDimension, partialData);
 }
 
-// export let Shared_ChartBaseData: ChartBaseData = {
-//   plotName: [],
-//   xscaleTag: [],
-//   yscaleTag: []
-// };
+export function updateYaxis(key: string, range: [number, number]): void {
+  // If the key already exists, update its range
+  if (Shared_yaxisProp.hasOwnProperty(key)) {
+    Shared_yaxisProp[key].range = range;
+  } else {
+      // Otherwise, add a new key-value pair
+      Shared_yaxisProp[key] = { range };
+  }
+
+}
 
 export function getXscale(this: any): { domain: Iterable<NumberValue>; XSCALE: any } {
   // console.log("hello", this);
@@ -372,4 +380,23 @@ export function generateRelationObject(): void {
       }
     }
   });
+}
+
+export function groupDataByPlotType(): { [key: string]: string[] } {
+  const groupedData: { [key: string]: string[] } = {};
+
+  // Loop through each data object
+  Object.keys(Shared_PlotInfo).forEach(key => {
+    const plotType = Shared_PlotInfo[key].plotType;
+
+    // Check if the plotType exists in groupedData, if not, create an empty array for it
+    if (!groupedData[plotType]) {
+      groupedData[plotType] = [];
+    }
+
+    // Push the key into the corresponding plotType array
+    groupedData[plotType].push(key);
+  });
+
+  return groupedData;
 }

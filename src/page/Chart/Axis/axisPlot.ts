@@ -159,19 +159,19 @@ function YAxisOnSVG(scaleconfig: YScaleConfigItemType, currentTransformXb: any, 
   }
 }
 
-export function intialRendorAxis(axisAreaonSVG: d3.Selection<SVGGElement, any, HTMLElement, any>) {
+export function intialRendorAxis(axisAreaonSVG: d3.Selection<SVGGElement, any, HTMLElement, any>,xzoomeventsvg: d3.Selection<SVGGElement, any, HTMLElement, any>,yzoomeventsvg: d3.Selection<SVGGElement, any, HTMLElement, any>) {
   axisAreaonSVG.selectAll(`.axis`).remove();
   const xscaleTagSet = Array.from(Shared_ChartBaseData.xscaleTag);
   xscaleTagSet.map((scaletag) => {
     const scaleconfig = Shared_XScaleConfig[scaletag];
-    const currentTransformXb=d3.zoomIdentity
+    const currentTransformXb=xzoomeventsvg.property("__zoom");
     XAxisOnSVG(scaleconfig,currentTransformXb,axisAreaonSVG)
   });
   const yscaleTagSet = Array.from(Shared_ChartBaseData.yscaleTag);
   yscaleTagSet.map((scaletag) => {
     const scaleconfig = Shared_YScaleConfig[scaletag];
-    const currentTransformXb=d3.zoomIdentity
-    YAxisOnSVG(scaleconfig,currentTransformXb,axisAreaonSVG)
+    const currentTransformYb=yzoomeventsvg.property("__zoom");
+    YAxisOnSVG(scaleconfig,currentTransformYb,axisAreaonSVG)
   });
 }
 
@@ -245,5 +245,5 @@ export function drawYaxis(
     const scaleconfig = Shared_YScaleConfig[scaletag];
     YAxisOnSVG(scaleconfig, currentTransformXb, axisAreaonSVG);
   });
-  
+
 }

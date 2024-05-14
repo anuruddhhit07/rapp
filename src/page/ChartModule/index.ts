@@ -3,24 +3,10 @@ import { PlotAxis } from "./AxisUtility/PlotAxis";
 import SetupChart from "./ChartSetup/setchart";
 import { PlotConfig } from "./ChartSetup/setplotConfig";
 import { arrangeData } from "./dataUtility/arrangeData";
-import { CandlestickData, ChartOptions, Margin, ScatterDataType } from "./types/chartSetuptype";
-import { ChartDataIN, ChartDataObj } from "./types/chartdataTypes";
+
+import { ChartDataIN } from "./types/chartdataTypes";
 import * as d3 from "d3";
-import { createPlotdataObj } from "./types/PlotDataUtility";
-import { ProxyCallback, buildProxy } from "./types/ProxyBuilder";
-import {
-  // Shared_ChartPlotData,
-  // updateChartPlotData,
-  Shared_ChartBaseProp,
-  Shared_Xscaleconfig,
-  Shared_Yscaleconfig,
-  Shared_DataToplot,
-  setYaxisRatio,
-  Shared_Yaxisrange,
-  getKeysFromDataToplotKeyValue,
-  groupDataByPlotType,
-  updateSharedDataToplot,
-} from "./SharedObject";
+
 import {
   createClipPath,
   createGroupAdv,
@@ -48,10 +34,12 @@ import {
   Shared_ChartPlotData,
   Shared_ChartDimension,
   Shared_XYrelation,
+  Shared_yaxisProp,
 } from "../Chart/BaseSetup/SharedDataUtility";
 import proxy_plotinfo from "../Chart";
 import { InitializeBaseProp } from "../Chart/BaseSetup/BaseProp";
 import { UpdateXscaleconfig, UpdateYscaleconfig, drawXaxis, drawYaxis, intialRendorAxis } from "../Chart/Axis/axisPlot";
+import { plotonsvg } from "../Chart/Svg/svgPlot";
 
 class CandlestickChartTS {
   // private axisChart: AxisChart;
@@ -73,17 +61,13 @@ class CandlestickChartTS {
 
   constructor(stockdata: ChartDataIN, targetID: string) {
     SetupChart.getInstance(700, 700, { targetID: targetID });
-    console.log(Shared_ChartDimension);
-    updateChartPlotData(arrangeData(stockdata))
+    updateChartPlotData(arrangeData(stockdata));
     InitializeBaseProp();
-    UpdateXscaleconfig()
-    UpdateYscaleconfig()
-   
+    UpdateXscaleconfig();
+    UpdateYscaleconfig();
 
     this.SVGClass = SVGClass.getInstance();
     this.svg = this.SVGClass.svg;
-    const { svgWidth, svgHeight, margin, width, height } = Shared_ChartDimension;
-
     const numberofbutton = 6;
     this.BackGroup = this.SVGClass.BackGroup;
     this.AxisYGroup = this.SVGClass.AxisYGroup;
@@ -91,34 +75,30 @@ class CandlestickChartTS {
     this.ResetButton = this.SVGClass.ResetButton;
     this.Buttonpanel = this.SVGClass.createbuttonpanel(this.buttonClick.bind(this), numberofbutton, Shared_ButtonProp);
 
-    
+    this.FrontGroup.call(this.zoomX as any);
+    this.AxisYGroup.call(this.zoomY as any);
 
-    this.FrontGroup.call(this.zoomX as any)
-    this.AxisYGroup.call(this.zoomY as any)
-
-    intialRendorAxis(this.BackGroup)
-
-    
+    intialRendorAxis(this.BackGroup, this.FrontGroup, this.AxisYGroup);
+    this.rendorPlot()
+    this.ResetButton.onEvent1("click", (event) => {
+      this.resetplot(event);
+    });
   }
-  zoomX = d3
-    .zoom()
-    .scaleExtent([0.5, 30])
-    .on("zoom", this.zoomedX.bind(this));
+  zoomX = d3.zoom().scaleExtent([0.5, 30]).on("zoom", this.zoomedX.bind(this));
 
-    zoomedX(event: any) {
-      this.rendorAxis()
-    }
+  zoomedX(event: any) {
+    this.rendorAxis();
+    this.rendorPlot()
+  }
 
-    zoomY = d3
-    .zoom()
-    .scaleExtent([0.5, 4])
-    .on("zoom", this.zoomedY.bind(this));
+  zoomY = d3.zoom().scaleExtent([0.5, 4]).on("zoom", this.zoomedY.bind(this));
 
-    zoomedY(event: any) {
-      const [xmousepoint, ymousepoint] = d3.pointer(event)
-      drawYaxis(this.BackGroup,this.AxisYGroup,ymousepoint)
-    }
-  
+  zoomedY(event: any) {
+    const [xmousepoint, ymousepoint] = d3.pointer(event);
+    drawYaxis(this.BackGroup, this.AxisYGroup, ymousepoint);
+    this.rendorPlot()
+  }
+
   // keyof typeof mapButtontoChart
   buttonClick(id: any, className: any, pressstate: any) {
     console.log(id);
@@ -128,20 +108,47 @@ class CandlestickChartTS {
       proxy_plotinfo[toggleplot].plotStatus = pressstate;
     });
 
-    console.log(Shared_ChartBaseData);
-    console.log(Shared_YScaleConfig);
-    console.log(Shared_XScaleConfig);
-    console.log(Shared_XYrelation);
-    this.rendorAxis()
-
+    this.rendorAxis();
+    this.rendorPlot();
   }
 
-  rendorAxis(){
+  rendorAxis() {
     // this.BackGroup.selectAll(`.axis`).remove();
-    drawXaxis(this.BackGroup,this.FrontGroup)
-    drawYaxis(this.BackGroup,this.AxisYGroup)
+    drawXaxis(this.BackGroup, this.FrontGroup);
+    drawYaxis(this.BackGroup, this.AxisYGroup);
   }
 
+  rendorPlot() {
+    this.getclippath()
+    plotonsvg(this.BackGroup, this.FrontGroup, this.AxisYGroup);
+  }
+
+  resetplot(event: any) {
+    this.FrontGroup.call(this.zoomX.transform as any, d3.zoomIdentity);
+    this.AxisYGroup.call(this.zoomY.transform as any, d3.zoomIdentity);
+    // intialRendorAxis(this.BackGroup,this.FrontGroup,this.AxisYGroup)
+    this.rendorAxis();
+  }
+
+  getclippath() {
+    this.svg.select("defs").selectAll("*").remove();
+    const yaxistags=Array.from(Shared_ChartBaseData.yaxisTag) 
+    yaxistags.map(yaxistag=>{
+      console.log(Shared_yaxisProp[yaxistag].range);
+      const {range} =Shared_yaxisProp[yaxistag]
+        createClipPath(
+        this.svg,
+        `clip-${yaxistag}`,
+        Shared_ChartDimension.margin.left + Shared_ChartDimension.margin.innerLeft,
+        range[1],
+        Shared_ChartDimension.width + Shared_ChartDimension.margin.innerRight,
+        range[0] - range[1]
+      );
+    })
+
+  }
+
+  
 }
 
 export default CandlestickChartTS;
