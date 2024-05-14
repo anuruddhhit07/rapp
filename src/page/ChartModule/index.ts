@@ -78,12 +78,25 @@ class CandlestickChartTS {
 
     this.FrontGroup.call(this.zoomX as any);
     // this.AxisYGroup
-    // this.AxisYGroup.call(this.zoomY as any);
+    this.AxisYGroup.call(this.zoomY as any);
     
 
     intialRendorAxis(this.BackGroup, this.FrontGroup, this.AxisYGroup);
 
-    this.BackGroup.selectAll('.y-axis')
+  //   const yaxissvg= this.BackGroup.selectAll('.y-axis')
+  //   yaxissvg.each(item=>{
+  //     console.log(item);
+  //   })
+
+  //   yaxissvg.nodes().forEach((yAxis) => {
+  //     // Your code here, `yAxis` refers to the current DOM element
+  //     // For example:
+  //     console.log(this);
+  //     d3.select(yAxis).call(this.zoomY as any)
+  //     d3.select(yAxis).style("fill", "red");
+  // });
+
+   
     // .each(function(this: d3.BaseType) {
     //     // Inside this function, `this` refers to each individual y-axis element
     //     // d3.select(this).call((this as any).zoomY);
@@ -105,6 +118,7 @@ class CandlestickChartTS {
   }
 
   zoomY = d3.zoom().scaleExtent([0.5, 4]).on("zoom", this.zoomedY.bind(this));
+  //zoomY = d3.zoom().scaleExtent([0.5, 4]).on("zoom", ()=>console.log("object"));
 
   zoomedY(event: any) {
     const [xmousepoint, ymousepoint] = d3.pointer(event);
