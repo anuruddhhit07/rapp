@@ -123,7 +123,8 @@ export interface PlotInfoItem {
   yscaleTag: keyof xScaleConfigType;
   plotType: string;
   plotcolor: string;
-  buttontag:string
+  buttontag:string;
+  getTooltipHTML?: (index: number,tooltiparea:d3.Selection<SVGGElement, any, HTMLElement, any>) => void
 }
 export interface PlotInfoType {
   [key: string]: PlotInfoItem;

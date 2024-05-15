@@ -8,7 +8,6 @@ import {
   Shared_yaxisProp,
 } from "../BaseSetup/SharedDataUtility";
 
-
 class SVGClass {
   private static instance: SVGClass | null = null;
   svg!: d3.Selection<SVGSVGElement, any, HTMLElement, any>;
@@ -20,6 +19,7 @@ class SVGClass {
   FrontGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   ResetButton!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   Buttonpanel!: d3.Selection<SVGGElement, any, HTMLElement, any>;
+  ToolTipArea!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   constructor() {
     const { targetID, svgWidth, svgHeight, margin, width, height } =
       Shared_ChartDimension;
@@ -34,7 +34,7 @@ class SVGClass {
       "blue",
       0.2
     );
-   
+
     this.FrontGroup = createGroupAdv(this.svg, "main-border").drawBorder(
       margin.left + margin.innerLeft,
       margin.top + margin.innerTop,
@@ -83,7 +83,7 @@ class SVGClass {
       // console.log(this);
       if (!uniqueyaxisTag.includes(yaxisTag)) {
         // Corrected variable name
-        console.log(uniqueyaxisTag,"removed-",yaxisTag)
+        console.log(uniqueyaxisTag, "removed-", yaxisTag);
         svg.select(`.yzoom-${yaxisTag}`).remove(); // Access svg outside the loop
       }
     });
@@ -92,9 +92,9 @@ class SVGClass {
     // const uniqueyaxisTga = Array.from(Shared_ChartBaseData.yaxisTag);
     const { targetID, svgWidth, svgHeight, margin, width, height } =
       Shared_ChartDimension;
-      uniqueyaxisTag.forEach((yaxistag, index) => {
+    uniqueyaxisTag.forEach((yaxistag, index) => {
       const yrange = Shared_yaxisProp[yaxistag].range;
-      
+
       createGroupAdv(this.svg, `yzoom yzoom-${yaxistag}`)
         // .translate(svgWidth - margin.right, 0)
         .drawBorder(
@@ -145,7 +145,11 @@ class SVGClass {
     ];
 
     this.Buttonpanel = createMultipleSqure(this.svg, "top-button-panel")
-      .translate(Shared_ChartDimension.margin.left+Shared_ChartDimension.margin.innerLeft, 0)
+      .translate(
+        Shared_ChartDimension.margin.left +
+          Shared_ChartDimension.margin.innerLeft,
+        0
+      )
       // .drawBorder(0,0,100,20,"green",3,"yellow",1)
       .createSquaresHorizontally(
         numberofbutton,
@@ -155,6 +159,26 @@ class SVGClass {
         updatedIdArray
       )
       .attachClickEvent(callback);
+  }
+
+  createTooltipArea() {
+    this.ToolTipArea = createGroupAdv(this.svg, "tooltip-area")
+      .translate(
+        Shared_ChartDimension.margin.innerLeft +
+          Shared_ChartDimension.margin.left +
+          50,
+        Shared_ChartDimension.margin.innerTop + 50
+      )
+      .drawBorder(
+        0,
+        0,
+        Shared_ChartDimension.svgWidth,
+        Shared_ChartDimension.margin.innerTop,
+        "red",
+        2,
+        "blue",
+        0.3
+      );
   }
 
   setupSVG(): void {

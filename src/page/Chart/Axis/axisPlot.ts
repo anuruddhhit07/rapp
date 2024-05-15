@@ -4,9 +4,11 @@ import {
   Shared_ChartBaseData,
   Shared_ChartDimension,
   Shared_ChartPlotData,
+  Shared_PlotInfo,
   Shared_XScaleConfig,
   Shared_XYrelation,
   Shared_YScaleConfig,
+  updateShared_PlotInfo,
   updateShared_XScaleConfig,
   updateShared_YScaleConfig,
   updateYScaleConfigByKey,
@@ -125,6 +127,23 @@ export function UpdateYscaleconfig() {
   });
 }
 
+export function UpdatePlotInfo(){
+  updateShared_PlotInfo('OHLCPlot',{
+    getTooltipHTML: (index: number,tooltiparea:d3.Selection<SVGGElement, any, HTMLElement, any>) => {
+      const plotInfo = Shared_PlotInfo['OHLCPlot']; // Access the plot info for 'TR'
+      tooltiparea.selectAll('.tooliptext').remove()
+      tooltiparea.append("text")
+        .attr("class", "tooliptext")
+        .attr("x", 10)
+        .attr("y", 0)
+        .attr("font-size", "12px")
+        .append("tspan")
+        .text(`${index}`)
+        .attr("fill", "blue")
+      
+    }
+  })
+}
 
 function XAxisOnSVG(scaleconfig: XScaleConfigItemType, currentTransformXb: any, axisAreaonSVG: any) {
   if (scaleconfig.xscale != null) {

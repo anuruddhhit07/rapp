@@ -17,10 +17,14 @@ import {
   Shared_ChartDimension,
   Shared_yaxisProp,
   updateShared_YScaleConfig,
+  Shared_XScaleConfig,
+  Shared_ChartPlotData,
+  Shared_PlotInfo,
 } from "../Chart/BaseSetup/SharedDataUtility";
 import proxy_plotinfo from "../Chart";
 import { InitializeBaseProp } from "../Chart/BaseSetup/BaseProp";
 import {
+  UpdatePlotInfo,
   UpdateXscaleconfig,
   UpdateYscaleconfig,
   drawXaxis,
@@ -41,6 +45,7 @@ class CandlestickChartTS {
   PlotGroup1!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   FrontGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   ResetButton!: d3.Selection<SVGGElement, any, HTMLElement, any>;
+  ToolTipArea!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   Buttonpanel!: void;
 
   constructor(stockdata: ChartDataIN, targetID: string) {
@@ -49,6 +54,7 @@ class CandlestickChartTS {
     InitializeBaseProp();
     UpdateXscaleconfig();
     UpdateYscaleconfig();
+    UpdatePlotInfo()
     //console.log(Shared_YScaleConfig)
 
     this.SVGClass = SVGClass.getInstance();
@@ -57,7 +63,7 @@ class CandlestickChartTS {
     this.SVGClass.createYaxiseventArea(this.zoomY);
     const numberofbutton = 6;
     this.BackGroup = this.SVGClass.BackGroup;
-    // this.AxisYGroup = this.SVGClass.AxisYGroup;
+   
     this.FrontGroup = this.SVGClass.FrontGroup;
     this.ResetButton = this.SVGClass.ResetButton;
     this.Buttonpanel = this.SVGClass.createbuttonpanel(
@@ -65,8 +71,14 @@ class CandlestickChartTS {
       numberofbutton,
       Shared_ButtonProp
     );
+    this.SVGClass.createTooltipArea()
+    this.ToolTipArea = this.SVGClass.ToolTipArea;
 
     this.FrontGroup.call(this.zoomX as any);
+    this.FrontGroup.onEvent1("mousemove", (event:MouseEvent) => {
+      // console.log(event)
+      this.mousemovevent(event);
+    });
 
     intialRendorAxis(this.BackGroup, this.FrontGroup);
     this.rendorPlot();
@@ -82,7 +94,7 @@ class CandlestickChartTS {
   }
 
   zoomY = d3.zoom().scaleExtent([0.5, 4]).on("zoom", this.zoomedY.bind(this));
-  
+
   zoomedY(event: any) {
     const [xmousepoint, ymousepoint] = d3.pointer(event);
     //console.log("main1",main1)
@@ -111,6 +123,49 @@ class CandlestickChartTS {
     drawYaxis(this.BackGroup, this.svg);
   }
 
+  mousemovevent(event: MouseEvent) {
+   
+    const [x, y] = d3.pointer(event);
+    // console.log(`Group mousemove! at mousefunction:${x},y:${y} `);
+    const currentTransform= this.FrontGroup.property("__zoom")
+
+    const zoomXscaleAxis='bot'
+    const currentXscale=currentTransform.rescaleX(Shared_XScaleConfig[zoomXscaleAxis].xscale().XSCALE)
+    const xValue = currentXscale.invert(x)
+    // console.log(xValue,Shared_ChartPlotData[Shared_XScaleConfig[zoomXscaleAxis].xscaleDataTag])
+    let index =
+    Math.round(xValue) < 0
+      ? 0
+      : Math.round(xValue) > Shared_ChartPlotData[Shared_XScaleConfig[zoomXscaleAxis].xscaleDataTag].length - 1
+        ? Shared_ChartPlotData[Shared_XScaleConfig[zoomXscaleAxis].xscaleDataTag].length - 1
+        : Math.round(xValue);
+
+        console.log("index",index)
+        // ToolTipArea
+      //  console.log(Shared_PlotInfo['ClosePlot'])
+       let tooltipHTML=''
+        if (Shared_PlotInfo['OHLCPlot'].getTooltipHTML){
+          // console.log(Shared_PlotInfo['ClosePlot'].getTooltipHTML(index))
+          // Shared_PlotInfo['OHLCPlot'].getTooltipHTML(index,this.ToolTipArea)
+
+        }
+        // console.log(tooltipHTML)
+        // d3.selectAll(`.tooltip-area`).html(tooltipHTML)
+        // .style("display", "block")
+        // this.ToolTipArea.insertHTML("<div>Hello, world!</div>")
+
+        // this.ToolTipArea.append("text")
+        // .attr("class", "tooliptext")
+        // .attr("x", 10)
+        // .attr("y", 0)
+        // .attr("font-size", "12px")
+        // .append("tspan")
+        // .text(`${'hello'}`)
+        // .attr("fill", "blue")
+
+        // this.ToolTipArea.html('content')
+
+  }
   rendorPlot() {
     this.getclippath();
     plotonsvg(this.BackGroup, this.FrontGroup, this.AxisYGroup);

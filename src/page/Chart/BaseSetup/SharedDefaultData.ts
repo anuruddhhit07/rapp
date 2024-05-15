@@ -21,14 +21,14 @@ export const defaultchartData: ChartDataType = {
 export const plotInfoInput: PlotInfoInputType[] = [
   {
     plotStatus: true,
-    plotName: "ClosePlot",
+    plotName: "OHLCPlot",
     xdataTag: "xindex",
     ydataTag: "ohlc",
     xscaleTag: "bot",
     yscaleTag: "TR",
     plotType: "ohlc",
     plotcolor: "red",
-    buttontag:"ClosePlot"
+    buttontag:"OHLCPlot"
   },
   {
     plotStatus: false,

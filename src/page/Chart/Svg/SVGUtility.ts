@@ -9,6 +9,7 @@ declare module "d3" {
     drawBorder(x: number, y: number, width: number, height: number, borderColor: string, borderWidth: number, fill: string, opacity: number): this;
     importData(data: any[]): this;
     translate(x: number, y: number): this;
+    insertHTML(html: string):this;
     onEvent1(eventName: string, eventHandler: (this: SVGGElement, event: any, d: any) => void): this;
     createSquaresHorizontally( numSquares: number,squareWidth: number,spacing: number,pressstate:boolean[],idarray:string[]):this
     attachClickEvent(callback: (id: string, className: string, pressstate: boolean) => void):this
@@ -59,6 +60,14 @@ export function createGroupAdv(
   group.translate = function (x: number, y: number) {
     this.attr("transform", `translate(${x},${y})`);
     return this; // Return the group selection for chaining
+  };
+
+  group.insertHTML = function (html: string) {
+    this.selectAll(`.${className}-html`).remove();
+    const htmlGroup = this.append("g").attr("class", `${className}-html`);
+    htmlGroup.html(html); // Set the HTML content of the new group
+    return this; // Return the group selection for chaining
+    
   };
 
   group.onEvent1 = function (
