@@ -129,17 +129,33 @@ export function UpdateYscaleconfig() {
 
 export function UpdatePlotInfo(){
   updateShared_PlotInfo('OHLCPlot',{
-    getTooltipHTML: (index: number,tooltiparea:d3.Selection<SVGGElement, any, HTMLElement, any>) => {
+    getTooltipHTML: (yaxistag:string,index: number,tooltiparea:d3.Selection<SVGGElement, any, HTMLElement, any>) => {
       const plotInfo = Shared_PlotInfo['OHLCPlot']; // Access the plot info for 'TR'
-      tooltiparea.selectAll('.tooliptext').remove()
+      tooltiparea.selectAll(`.tooliptext-${yaxistag}`).remove()
       tooltiparea.append("text")
-        .attr("class", "tooliptext")
+        .attr("class", `tooliptext-${yaxistag}`)
         .attr("x", 10)
         .attr("y", 0)
         .attr("font-size", "12px")
         .append("tspan")
         .text(`${index}`)
         .attr("fill", "blue")
+      
+    }
+  })
+
+  updateShared_PlotInfo('HighPlot',{
+    getTooltipHTML: (yaxistag:string,index: number,tooltiparea:d3.Selection<SVGGElement, any, HTMLElement, any>) => {
+      const plotInfo = Shared_PlotInfo['HighPlot']; // Access the plot info for 'TR'
+      tooltiparea.selectAll(`.tooliptext-${yaxistag}`).remove()
+      tooltiparea.append("text")
+        .attr("class", `tooliptext-${yaxistag}`)
+        .attr("x", 10)
+        .attr("y", 10)
+        .attr("font-size", "12px")
+        .append("tspan")
+        .text(`${index}`)
+        .attr("fill", "red")
       
     }
   })

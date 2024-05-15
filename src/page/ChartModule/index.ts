@@ -32,6 +32,7 @@ import {
   intialRendorAxis,
 } from "../Chart/Axis/axisPlot";
 import { plotonsvg } from "../Chart/Svg/svgPlot";
+import { PlotInfoType } from "../Chart/BaseSetup/ShareDataType";
 
 
 class CandlestickChartTS {
@@ -113,6 +114,7 @@ class CandlestickChartTS {
       proxy_plotinfo[toggleplot].plotStatus = pressstate;
     });
     this.SVGClass.createYaxiseventArea(this.zoomY);
+    this.SVGClass.createTooltipArea()
     this.rendorAxis();
     this.rendorPlot();
   }
@@ -140,15 +142,33 @@ class CandlestickChartTS {
         ? Shared_ChartPlotData[Shared_XScaleConfig[zoomXscaleAxis].xscaleDataTag].length - 1
         : Math.round(xValue);
 
-        console.log("index",index)
+        // console.log("index",index)
         // ToolTipArea
       //  console.log(Shared_PlotInfo['ClosePlot'])
-       let tooltipHTML=''
-        if (Shared_PlotInfo['OHLCPlot'].getTooltipHTML){
-          // console.log(Shared_PlotInfo['ClosePlot'].getTooltipHTML(index))
-          // Shared_PlotInfo['OHLCPlot'].getTooltipHTML(index,this.ToolTipArea)
-
+      //console.log(Shared_ChartBaseData)
+      const uniquePLot=Array.from(Shared_ChartBaseData.plotName)
+      uniquePLot.forEach((plotname: keyof PlotInfoType) => {
+        const plotInfo = Shared_PlotInfo[plotname];
+        if (plotInfo) {
+          const yscaleTag = plotInfo.yscaleTag;
+          const yaxistag = Shared_YScaleConfig[yscaleTag].yaxisTag;
+          const tooltipSelection = this.svg.select(`.tooltip-area-${yaxistag}`) as d3.Selection<SVGGElement, any, HTMLElement, any>; // Correct the selector
+          // console.log(yaxistag,tooltipSelection)
+          // Check if getTooltipHTML method exists in plotInfo
+          if (plotInfo.getTooltipHTML) {
+            // Call getTooltipHTML method if it exists
+            console.log(plotInfo,yaxistag,tooltipSelection)
+            plotInfo.getTooltipHTML(yaxistag,index, tooltipSelection);
+          }
         }
+      });
+
+      //  let tooltipHTML=''
+      //   if (Shared_PlotInfo['OHLCPlot'].getTooltipHTML){
+      //     // console.log(Shared_PlotInfo['ClosePlot'].getTooltipHTML(index))
+      //     // Shared_PlotInfo['OHLCPlot'].getTooltipHTML(index,this.ToolTipArea)
+
+      //   }
         // console.log(tooltipHTML)
         // d3.selectAll(`.tooltip-area`).html(tooltipHTML)
         // .style("display", "block")

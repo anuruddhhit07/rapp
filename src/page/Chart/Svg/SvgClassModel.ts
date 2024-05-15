@@ -162,14 +162,22 @@ class SVGClass {
   }
 
   createTooltipArea() {
-    this.ToolTipArea = createGroupAdv(this.svg, "tooltip-area")
-      .translate(
+    const uniqueyaxisTag = Array.from(Shared_ChartBaseData.yaxisTag);
+    const uniquePlotplotName = Array.from(Shared_ChartBaseData.plotName);
+    console.log(Shared_ChartBaseData)
+    console.log(uniqueyaxisTag)
+    this.svg.selectAll(`.tooltip`).remove()
+    uniqueyaxisTag.map(yaxistag=>{
+      
+
+
+      createGroupAdv(this.svg, `tooltip tooltip-area-${yaxistag}`)
+        .translate(
         Shared_ChartDimension.margin.innerLeft +
-          Shared_ChartDimension.margin.left +
-          50,
-        Shared_ChartDimension.margin.innerTop + 50
+          Shared_ChartDimension.margin.left ,
+        Shared_yaxisProp[yaxistag].range[1]
       )
-      .drawBorder(
+         .drawBorder(
         0,
         0,
         Shared_ChartDimension.svgWidth,
@@ -179,6 +187,25 @@ class SVGClass {
         "blue",
         0.3
       );
+    })
+
+    // this.ToolTipArea = createGroupAdv(this.svg, "tooltip-area")
+    //   .translate(
+    //     Shared_ChartDimension.margin.innerLeft +
+    //       Shared_ChartDimension.margin.left +
+    //       50,
+    //     Shared_ChartDimension.margin.innerTop + 50
+    //   )
+    //   .drawBorder(
+    //     0,
+    //     0,
+    //     Shared_ChartDimension.svgWidth,
+    //     Shared_ChartDimension.margin.innerTop,
+    //     "red",
+    //     2,
+    //     "blue",
+    //     0.3
+    //   );
   }
 
   setupSVG(): void {
