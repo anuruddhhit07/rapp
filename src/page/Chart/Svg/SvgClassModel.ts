@@ -7,7 +7,7 @@ import {
   Shared_ChartDimension,
   Shared_yaxisProp,
 } from "../BaseSetup/SharedDataUtility";
-import { Shared_ChartBaseProp, Shared_ChartPlotData } from "../../ChartModule/SharedObject";
+
 
 class SVGClass {
   private static instance: SVGClass | null = null;
@@ -145,11 +145,11 @@ class SVGClass {
     ];
 
     this.Buttonpanel = createMultipleSqure(this.svg, "top-button-panel")
-      .translate(100, 30)
+      .translate(Shared_ChartDimension.margin.left+Shared_ChartDimension.margin.innerLeft, 0)
       // .drawBorder(0,0,100,20,"green",3,"yellow",1)
       .createSquaresHorizontally(
         numberofbutton,
-        30,
+        Shared_ChartDimension.margin.top,
         2,
         initialPlotStatusArray,
         updatedIdArray
