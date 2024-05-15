@@ -46,10 +46,20 @@ export const plotInfoInput: PlotInfoInputType[] = [
     plotName: "VolumePlot",
     xdataTag: "xindex",
     ydataTag: "volume",
-    xscaleTag: "top",
+    xscaleTag: "bot",
     yscaleTag: "BR",
     plotType: "bar",
     buttontag:"VolumePlot"
+  },
+  {
+    plotStatus: true,
+    plotName: "HighPlot",
+    xdataTag: "xindex",
+    ydataTag: "high",
+    xscaleTag: "bot",
+    yscaleTag: "LR",
+    plotType: "scatter",
+    buttontag:"HighPlot"
   },
 ];
 
@@ -106,6 +116,17 @@ export const yScaleConfigInput: YScaleConfigInputType[] = [
     xpoint: 20,
     // yscaleRange: [0, 100],
     yscaleDataTag:'volume',
+    xscaleVisibleRange: [0, 0],
+    autozoom:true,
+    zoomstatus:true,
+  },
+  {
+    yscaleTag: "LR",
+    yaxisTag:"scatterAxis",
+    scaleSide:'Right',
+    xpoint: 20,
+    // yscaleRange: [0, 100],
+    yscaleDataTag:'high',
     xscaleVisibleRange: [0, 0],
     autozoom:true,
     zoomstatus:true,

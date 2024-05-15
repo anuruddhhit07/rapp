@@ -118,6 +118,11 @@ export function UpdateYscaleconfig() {
     xpoint: Shared_ChartDimension.svgWidth - Shared_ChartDimension.margin.right,
     // xpoint:200
   });
+
+  updateShared_YScaleConfig("LR", {
+    xpoint: Shared_ChartDimension.svgWidth - Shared_ChartDimension.margin.right,
+    // xpoint:200
+  });
 }
 
 
