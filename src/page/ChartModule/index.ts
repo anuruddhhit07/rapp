@@ -7,20 +7,11 @@ import { arrangeData } from "./dataUtility/arrangeData";
 import { ChartDataIN } from "./types/chartdataTypes";
 import * as d3 from "d3";
 
-import {
-  createClipPath,
-  createGroupAdv,
-  createMultipleSqure,
-  createRect,
-  drawBarChartOnSVG,
-  drawCandlestickOnSVG,
-  drawLineOnSVG,
-  drawScatterPlotOnSVG,
-} from "./SVG/SVGUtility";
+import { createClipPath } from "../Chart/Svg/SVGUtility";
 import { yaxisrangeType } from "./types/AxisScaleType";
 
 import { xscaleObj } from "./types/XScaleUtility";
-import SVGClass from "./SVG/SvgClassModel";
+import SVGClass from "../Chart/Svg/SvgClassModel";
 import {
   proxiedParentObj,
   createChildObject,
@@ -88,7 +79,7 @@ class CandlestickChartTS {
     this.SVGClass.createYaxiseventArea(this.zoomY)
     const numberofbutton = 6;
     this.BackGroup = this.SVGClass.BackGroup;
-    this.AxisYGroup = this.SVGClass.AxisYGroup;
+    // this.AxisYGroup = this.SVGClass.AxisYGroup;
     this.FrontGroup = this.SVGClass.FrontGroup;
     this.ResetButton = this.SVGClass.ResetButton;
     this.Buttonpanel = this.SVGClass.createbuttonpanel(
@@ -99,9 +90,9 @@ class CandlestickChartTS {
 
     this.FrontGroup.call(this.zoomX as any);
     // this.AxisYGroup
-    this.AxisYGroup.call(this.zoomY as any);
+    // this.AxisYGroup.call(this.zoomY as any);
 
-    intialRendorAxis(this.BackGroup, this.FrontGroup, this.AxisYGroup);
+    intialRendorAxis(this.BackGroup, this.FrontGroup);
 
     //   const yaxissvg= this.BackGroup.selectAll('.y-axis')
     //   yaxissvg.each(item=>{
@@ -181,12 +172,10 @@ class CandlestickChartTS {
 
   resetplot(event: any) {
     this.FrontGroup.call(this.zoomX.transform as any, d3.zoomIdentity);
-    this.AxisYGroup.call(this.zoomY.transform as any, d3.zoomIdentity);
-
     const yscaleTagSet = Array.from(Shared_ChartBaseData.yscaleTag);
-
     yscaleTagSet.map((scaletag) => {
       const scaleconfig = Shared_YScaleConfig[scaletag];
+      this.svg.select(`.yzoom-${scaleconfig.yaxisTag}`).call(this.zoomY.transform as any, d3.zoomIdentity)
       updateShared_YScaleConfig(scaleconfig.yscaleTag, {
         yzoomtransform: d3.zoomIdentity,
       });

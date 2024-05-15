@@ -1,13 +1,13 @@
 import * as d3 from "d3";
 
 import { createGroupAdv, createMultipleSqure } from "./SVGUtility";
-import { PlotStatusByButtonTag } from "../../Chart/BaseSetup/ShareDataType";
+import { PlotStatusByButtonTag } from "../BaseSetup/ShareDataType";
 import {
   Shared_ChartBaseData,
   Shared_ChartDimension,
   Shared_yaxisProp,
-} from "../../Chart/BaseSetup/SharedDataUtility";
-import { Shared_ChartBaseProp, Shared_ChartPlotData } from "../SharedObject";
+} from "../BaseSetup/SharedDataUtility";
+import { Shared_ChartBaseProp, Shared_ChartPlotData } from "../../ChartModule/SharedObject";
 
 class SVGClass {
   private static instance: SVGClass | null = null;
@@ -24,7 +24,7 @@ class SVGClass {
     const { targetID, svgWidth, svgHeight, margin, width, height } =
       Shared_ChartDimension;
     this.setupSVG();
-    this.BackGroup = createGroupAdv(this.svg, "main-border").drawBorder(
+    this.BackGroup = createGroupAdv(this.svg, "back-area").drawBorder(
       0,
       0,
       svgWidth,
@@ -34,19 +34,7 @@ class SVGClass {
       "blue",
       0.2
     );
-    this.AxisYGroup = createGroupAdv(this.svg, "Y-Area")
-      .translate(svgWidth - margin.right, 0)
-      .drawBorder(
-        0,
-        0,
-        margin.right,
-        svgHeight - margin.bottom,
-        "red",
-        2,
-        "green",
-        0.2
-      );
-
+   
     this.FrontGroup = createGroupAdv(this.svg, "main-border").drawBorder(
       margin.left + margin.innerLeft,
       margin.top + margin.innerTop,
@@ -83,26 +71,45 @@ class SVGClass {
   createYaxiseventArea(callback: any) {
     // const yaxistag=Shared_yaxisProp
     // console.log(numberofeventArea)
-    this.svg.selectAll(`.yzoom`).remove()
-    const uniqueyaxisTga = Array.from(Shared_ChartBaseData.yaxisTag);
-    const { targetID, svgWidth, svgHeight, margin, width, height } = Shared_ChartDimension;
-    uniqueyaxisTga.forEach((yaxistag,index) => {
+    const uniqueyaxisTag = Array.from(Shared_ChartBaseData.yaxisTag);
+    const svg = this.svg; // Store a reference to this.svg
+    console.log(uniqueyaxisTag)
+    console.log(svg.selectAll(".rect.yzoom"))
+    svg.selectAll(".rect.yzoom").each(function () {
+      // console.log(console.log(d3.select(this).attr("class")))
+      // console.log(d3.select(this).attr("class").split("yzoom-"))
+      const yaxisTag = d3.select(this).attr("class").split("yzoom-")[1];
+      // console.log(uniqueyaxisTag, yaxisTag); // Corrected variable name
+      // console.log(this);
+      if (!uniqueyaxisTag.includes(yaxisTag)) {
+        // Corrected variable name
+        console.log(uniqueyaxisTag,"removed-",yaxisTag)
+        svg.select(`.yzoom-${yaxisTag}`).remove(); // Access svg outside the loop
+      }
+    });
+
+    this.svg.selectAll(`.yzoom`).remove();
+    // const uniqueyaxisTga = Array.from(Shared_ChartBaseData.yaxisTag);
+    const { targetID, svgWidth, svgHeight, margin, width, height } =
+      Shared_ChartDimension;
+      uniqueyaxisTag.forEach((yaxistag, index) => {
       const yrange = Shared_yaxisProp[yaxistag].range;
-      console.log("yrange",yrange)
+      
       createGroupAdv(this.svg, `yzoom yzoom-${yaxistag}`)
-      // .translate(svgWidth - margin.right, 0)
-      .drawBorder(
-        svgWidth - margin.right,
-        yrange[1],
-        margin.right,
-        yrange[0]-yrange[1],
-        "red",
-        5,
-        "green",
-        .5/(index+1)
-      ).call(callback)
-    })
-    // 
+        // .translate(svgWidth - margin.right, 0)
+        .drawBorder(
+          svgWidth - margin.right,
+          yrange[1],
+          margin.right,
+          yrange[0] - yrange[1],
+          "red",
+          5,
+          "green",
+          0.5 / (index + 1)
+        )
+        .call(callback);
+    });
+    //
     // createGroupAdv(this.svg, `yzoom-${}`)
     //     .drawBorder(svgWidth - margin.right, svgHeight - margin.bottom, margin.right, margin.bottom, "red", 2, "blue", 0.2)
   }

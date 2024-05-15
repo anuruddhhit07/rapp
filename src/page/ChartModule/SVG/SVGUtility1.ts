@@ -27,7 +27,7 @@ export function createGroupAdv(
   // Add a method to draw a border around the group
   group.drawBorder = function (x: number, y: number, width: number, height: number, borderColor: string, borderWidth: number, fill: string, opacity: number) {
     this.append("rect")
-      .attr("class", `${className}-border`) // Add class attribute
+      .attr("class", `${className}`) // Add class attribute
       .attr("x", x)
       .attr("y", y)
       .attr("width", width)

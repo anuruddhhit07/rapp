@@ -3,7 +3,7 @@ import { ChartDataType } from "../BaseSetup/chartdataTypes";
 import { drawLineOnSVG } from "./SVGUtility";
 
 export function plotonsvg(plotAreaonSVG: d3.Selection<SVGGElement, any, HTMLElement, any>,xzoomeventsvg: d3.Selection<SVGGElement, any, HTMLElement, any>,yzoomeventsvg: d3.Selection<SVGGElement, any, HTMLElement, any>){
-console.log("Plot On SVG");
+//console.log("Plot On SVG");
 // console.log(Shared_ChartBaseData); 
 const plotTag=Array.from(Shared_ChartBaseData.plotName)
 const groupedplotData = groupDataByPlotType()

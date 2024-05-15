@@ -167,7 +167,7 @@ function YAxisOnSVG(scaleconfig: YScaleConfigItemType, axisAreaonSVG: any) {
   }
 }
 
-export function intialRendorAxis(axisAreaonSVG: d3.Selection<SVGGElement, any, HTMLElement, any>,xzoomeventsvg: d3.Selection<SVGGElement, any, HTMLElement, any>,yzoomeventsvg: d3.Selection<SVGGElement, any, HTMLElement, any>) {
+export function intialRendorAxis(axisAreaonSVG: d3.Selection<SVGGElement, any, HTMLElement, any>,xzoomeventsvg: d3.Selection<SVGGElement, any, HTMLElement, any>) {
   axisAreaonSVG.selectAll(`.axis`).remove();
   const xscaleTagSet = Array.from(Shared_ChartBaseData.xscaleTag);
   xscaleTagSet.map((scaletag) => {
@@ -244,32 +244,12 @@ export function drawYaxis(
       }
       if (scaleconfig.zoomstatus && insidepoint) {
 
-        // console.log(scaleconfig.yscaleTag,scaleconfig.yzoomtransform);
-
-        const initialTransform =scaleconfig.yzoomtransform
-        // yzoomeventsvg.call(zoom.transform, d3.zoomIdentity.translate(initialTransform.x, initialTransform.y).scale(initialTransform.k))
-
-        const currentTransformXb = svg.select(`.yzoom-${scaleconfig.yaxisTag}`).property("__zoom");
-
-        // const translateX = initialTransform.x - currentTransformXb.x;
-        // const translateY = initialTransform.y - currentTransformXb.y;
-
-        // const newTransform = {
-        //   x: currentTransformXb.x + translateX,
-        //   y: currentTransformXb.y + translateY,
-        //   k: initialTransform.k
-        // };
-
-
-
-        console.log(scaleconfig.yscaleTag,currentTransformXb);
+          const currentTransformXb = svg.select(`.yzoom-${scaleconfig.yaxisTag}`).property("__zoom");
         updateShared_YScaleConfig(scaleconfig.yscaleTag, {
           yzoomtransform: currentTransformXb,
         });
 
-        // console.log(Shared_YScaleConfig);
-
-        YAxisOnSVG(scaleconfig, axisAreaonSVG);
+           YAxisOnSVG(scaleconfig, axisAreaonSVG);
       }
     });
     return;
