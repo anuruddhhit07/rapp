@@ -126,6 +126,10 @@ const paddedDomain: [d3.NumberValue, d3.NumberValue] = [
   domainArray[1] + domainPadding
 ];
 
+if (this.yscaleTag=='BR'){
+  paddedDomain[0]=0
+}
+
   if (this.yaxisrange!=null){
     YSCALE =d3.scaleLinear().range(this.yaxisrange).domain(paddedDomain)
   }

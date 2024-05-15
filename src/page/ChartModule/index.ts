@@ -72,11 +72,11 @@ class CandlestickChartTS {
     InitializeBaseProp();
     UpdateXscaleconfig();
     UpdateYscaleconfig();
-    console.log(Shared_YScaleConfig)
+    //console.log(Shared_YScaleConfig)
 
     this.SVGClass = SVGClass.getInstance();
     this.svg = this.SVGClass.svg;
-    console.log(Shared_yaxisProp)
+   // console.log(Shared_yaxisProp)
     this.SVGClass.createYaxiseventArea(this.zoomY)
     const numberofbutton = 6;
     this.BackGroup = this.SVGClass.BackGroup;
