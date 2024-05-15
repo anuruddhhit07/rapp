@@ -105,9 +105,9 @@ export interface PlotInfoInputType {
   plotStatus: boolean;
   plotName: string;
   xdataTag: keyof ChartDataType;
-  ydataTag: keyof ChartDataType;
+  ydataTag: 'ohlc'|keyof ChartDataType;
   xscaleTag: keyof xScaleConfigType;
-  yscaleTag: keyof xScaleConfigType;
+  yscaleTag: keyof yScaleConfigType;
   plotType: string;
   plotcolor?: string;
   buttontag?:string

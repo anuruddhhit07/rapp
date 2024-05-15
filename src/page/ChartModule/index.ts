@@ -72,6 +72,7 @@ class CandlestickChartTS {
     InitializeBaseProp();
     UpdateXscaleconfig();
     UpdateYscaleconfig();
+    console.log(Shared_YScaleConfig)
 
     this.SVGClass = SVGClass.getInstance();
     this.svg = this.SVGClass.svg;
@@ -127,7 +128,7 @@ class CandlestickChartTS {
 
   // keyof typeof mapButtontoChart
   buttonClick(id: any, className: any, pressstate: any) {
-    console.log(id);
+    //console.log(id);
 
     const plotarray = collectKeysByButtonId(id) as [
       keyof typeof Shared_ButtonProp

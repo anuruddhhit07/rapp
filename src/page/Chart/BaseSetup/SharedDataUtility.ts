@@ -116,18 +116,18 @@ export function getYscale(this: YScaleConfigItemType): { domain: Iterable<Number
 
   }
 
-  // if (this.xscaleVisibleRange[1]==0){
-  //   tempydomain=domain
-  // } else {
-  //   tempydomain=this.ydomaindata
-  // }
+  const padding=0.1
+  const domainArray = Array.from(domain) as [number,number];
+  const domainPadding = (domainArray[1] - domainArray[0]) * padding;
 
-  // const domain = d3.extent(Shared_ChartPlotData[this.yscaleDataTag as keyof ChartDataType]) as Iterable<NumberValue>;
-  // console.log("domain1",domain,this.xsaleType);
-  // console.log("tempydomain",tempydomain);
+// Adjust the domain with padding
+const paddedDomain: [d3.NumberValue, d3.NumberValue] = [
+  domainArray[0] - domainPadding,
+  domainArray[1] + domainPadding
+];
 
   if (this.yaxisrange!=null){
-    YSCALE =d3.scaleLinear().range(this.yaxisrange).domain(domain)
+    YSCALE =d3.scaleLinear().range(this.yaxisrange).domain(paddedDomain)
   }
   
   // console.log(YSCALE?.domain());
@@ -255,7 +255,7 @@ export const updateplotInfo = (plotInfoInputArray = plotInfoInput) => {
       plotStatus: plotStatus,
       plotName: plotName,
       xdata: Shared_ChartPlotData[xdataTag],
-      ydata: Shared_ChartPlotData[ydataTag],
+      ydata: ydataTag=='ohlc'?[]:Shared_ChartPlotData[ydataTag],
       xscaleTag: xscaleTag,
       yscaleTag: yscaleTag,
       plotType: plotType,

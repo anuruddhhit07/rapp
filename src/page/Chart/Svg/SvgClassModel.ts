@@ -73,8 +73,8 @@ class SVGClass {
     // console.log(numberofeventArea)
     const uniqueyaxisTag = Array.from(Shared_ChartBaseData.yaxisTag);
     const svg = this.svg; // Store a reference to this.svg
-    console.log(uniqueyaxisTag)
-    console.log(svg.selectAll(".rect.yzoom"))
+    //console.log(uniqueyaxisTag)
+    //console.log(svg.selectAll(".rect.yzoom"))
     svg.selectAll(".rect.yzoom").each(function () {
       // console.log(console.log(d3.select(this).attr("class")))
       // console.log(d3.select(this).attr("class").split("yzoom-"))

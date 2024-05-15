@@ -281,7 +281,7 @@ export function drawBarChartOnSVG(
     .attr("x", (d, i) => xScale(xData[i]) - barWidth / 4) // Adjust x position to center the bar
     .attr("y", (d) => yScale(d)) // Set y position based on the data value
     .attr("width", barWidth / 2) // Set the width of the bar
-    .attr("height", (d) => Math.max((yaxisRange[0] - yScale(d)),0)) // Calculate the height of the bar
+    .attr("height", (d) => (yaxisRange[0] - yScale(d))) // Calculate the height of the bar
     .attr("fill", barColor); // Set color for the bar
 }
 
@@ -311,9 +311,9 @@ export function drawCandlestickOnSVG(
     .attr("class", `all ohlcplot wickplot wickplot-${classNameTag}`)
     .attr("clip-path", `url(#clip-${yaxistag})`)
     .merge(wick as any)
-    .attr("x1", (d, i) => xScale(i))
+    .attr("x1", (d, i) => xScale(xdata[i]))
     .attr("y1", (d, i) => yScale(high[i]))
-    .attr("x2", (d, i) => xScale(i))
+    .attr("x2", (d, i) => xScale(xdata[i]))
     .attr("y2", (d, i) => yScale(low[i]))
     .attr("stroke", "black")
     .attr("stroke-width", 1);
