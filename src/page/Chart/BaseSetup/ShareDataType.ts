@@ -1,3 +1,4 @@
+import { NumberValue, ScaleLinear } from "d3";
 import { ChartDataType } from "./chartdataTypes";
 import * as d3 from 'd3'
 
@@ -92,7 +93,7 @@ export interface YScaleConfigItemType {
   zoomstatus: boolean;
   autozoom:boolean;
   ydomaindata:[number, number];
-  yscale: (this:YScaleConfigItemType) => {domain:any,YSCALE:any};
+  yscale: (this:YScaleConfigItemType) => {domain: Iterable<NumberValue>; YSCALE: ScaleLinear<number, number>|null,TranSFormedYscale:ScaleLinear<number, number>|null};
   yzoomtransform:typeof d3.zoomIdentity
 
 }

@@ -143,6 +143,7 @@ function XAxisOnSVG(scaleconfig: XScaleConfigItemType, currentTransformXb: any, 
 function YAxisOnSVG(scaleconfig: YScaleConfigItemType, axisAreaonSVG: any) {
   if (scaleconfig.yscale != null) {
     const YSL = scaleconfig.yscale().YSCALE as d3.ScaleLinear<number, number>;
+    const TransYSL = scaleconfig.yscale().TranSFormedYscale as d3.ScaleLinear<number, number>;
     // const ydomain=scaleconfig.yscale().domain
     // console.log("ydomain",ydomain);
 
@@ -151,7 +152,9 @@ function YAxisOnSVG(scaleconfig: YScaleConfigItemType, axisAreaonSVG: any) {
     // });
 
     // console.log(scaleconfig.yzoomtransform);
-    let currentyscale = scaleconfig.yzoomtransform.rescaleY(YSL);
+   // let currentyscale = scaleconfig.yzoomtransform.rescaleY(YSL);
+
+    // let currentyscale =
     axisAreaonSVG.selectAll(`.y-axis-${scaleconfig.yscaleTag}`).remove();
 
     axisAreaonSVG
@@ -159,7 +162,7 @@ function YAxisOnSVG(scaleconfig: YScaleConfigItemType, axisAreaonSVG: any) {
       .attr("class", `axis y-axis y-axis-${scaleconfig.yscaleTag}`)
       .attr("transform", `translate(${scaleconfig.xpoint},${0})`)
       .call(
-        yaxisgenerator(currentyscale, {
+        yaxisgenerator(TransYSL, {
           scaleSide: scaleconfig.scaleSide,
           yscaleTag: scaleconfig.yscaleTag,
         })

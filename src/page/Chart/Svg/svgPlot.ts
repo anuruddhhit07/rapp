@@ -97,10 +97,10 @@ function drawPlotLineByName(
   ].xscale().XSCALE as d3.ScaleLinear<number, number>;
   const yScale = Shared_YScaleConfig[
     Shared_PlotInfo[plotName].yscaleTag
-  ].yscale().YSCALE as d3.ScaleLinear<number, number>;
+  ].yscale().TranSFormedYscale as d3.ScaleLinear<number, number>;
 
   let newxScale = currentTransformX.rescaleX(xScale);
-  let newyScale = currentTransformY.rescaleY(yScale);
+  let newyScale = yScale;
 
   const yaxistag =
     Shared_YScaleConfig[Shared_PlotInfo[plotName].yscaleTag].yaxisTag;
@@ -153,10 +153,10 @@ function drawPlotBarByName(
   ].xscale().XSCALE as d3.ScaleLinear<number, number>;
   const yScale = Shared_YScaleConfig[
     Shared_PlotInfo[plotName].yscaleTag
-  ].yscale().YSCALE as d3.ScaleLinear<number, number>;
+  ].yscale().TranSFormedYscale as d3.ScaleLinear<number, number>;
 
   let newxScale = currentTransformX.rescaleX(xScale);
-  let newyScale = currentTransformY.rescaleY(yScale);
+  let newyScale = yScale;
 
   const yaxistag =
     Shared_YScaleConfig[Shared_PlotInfo[plotName].yscaleTag].yaxisTag;
@@ -218,10 +218,10 @@ function drawPlotOHLCByName(
     ].xscale().XSCALE as d3.ScaleLinear<number, number>;
     const yScale = Shared_YScaleConfig[
       Shared_PlotInfo[plotName].yscaleTag
-    ].yscale().YSCALE as d3.ScaleLinear<number, number>;
+    ].yscale().TranSFormedYscale as d3.ScaleLinear<number, number>;
   
     let newxScale = currentTransformX.rescaleX(xScale);
-    let newyScale = currentTransformY.rescaleY(yScale);
+    let newyScale =yScale;
   
     const yaxistag =
       Shared_YScaleConfig[Shared_PlotInfo[plotName].yscaleTag].yaxisTag;

@@ -77,7 +77,7 @@ export function getXscale(this: any): { domain: Iterable<NumberValue>; XSCALE: a
 
 
 
-export function getYscale(this: YScaleConfigItemType): { domain: Iterable<NumberValue>; YSCALE: any } {
+export function getYscale(this: YScaleConfigItemType): { domain: Iterable<NumberValue>; YSCALE: ScaleLinear<number, number>|null,TranSFormedYscale:ScaleLinear<number, number>|null } {
   // console.log("hello", this);
   // console.log(this.yaxisrange);
   // console.log(this.xscaleVisibleRange);
@@ -86,6 +86,7 @@ export function getYscale(this: YScaleConfigItemType): { domain: Iterable<Number
 
   let domain: Iterable<NumberValue> = [];
   let YSCALE: ScaleLinear<number, number> | null=null
+  let TranSFormedYscale:ScaleLinear<number, number>|null=null
 
   let visiblerange=[]
   // let tempydomain:Iterable<d3.NumberValue>=[]
@@ -126,18 +127,27 @@ const paddedDomain: [d3.NumberValue, d3.NumberValue] = [
   domainArray[1] + domainPadding
 ];
 
-if (this.yscaleTag=='BR'){
-  paddedDomain[0]=0
-}
+
 
   if (this.yaxisrange!=null){
     YSCALE =d3.scaleLinear().range(this.yaxisrange).domain(paddedDomain)
+    TranSFormedYscale=this.yzoomtransform.rescaleY(YSCALE)
+
   }
   
-  // console.log(YSCALE?.domain());
- 
+  if (this.yscaleTag=='BR' && TranSFormedYscale!=null){
+    let transformedDomain = TranSFormedYscale.domain();
+    let adjustedDomain = [0, transformedDomain[1]];
+    TranSFormedYscale.domain(adjustedDomain);
 
-  return { domain: domain, YSCALE: YSCALE };
+    // TranSFormedYscale.domain()[0]=0
+    // console.log(TranSFormedYscale.domain())
+  }
+
+  // console.log(YSCALE?.domain());
+
+
+  return { domain: domain, YSCALE: YSCALE,TranSFormedYscale:TranSFormedYscale };
 }
 
 export function updateShared_PlotInfo(key: string, partialData: Partial<PlotInfoItem>): void {

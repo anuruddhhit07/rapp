@@ -281,7 +281,7 @@ export function drawBarChartOnSVG(
     .attr("x", (d, i) => xScale(xData[i]) - barWidth / 4) // Adjust x position to center the bar
     .attr("y", (d) => yScale(d)) // Set y position based on the data value
     .attr("width", barWidth / 2) // Set the width of the bar
-    .attr("height", (d) => (yaxisRange[0] - yScale(d))>0?(yaxisRange[0] - yScale(d)):0) // Calculate the height of the bar
+    .attr("height", (d) => yaxisRange[0] - yScale(d)) // Calculate the height of the bar
     .attr("fill", barColor); // Set color for the bar
 }
 
