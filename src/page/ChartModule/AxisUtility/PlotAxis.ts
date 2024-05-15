@@ -6,7 +6,7 @@ import {
   YScaleConfigType,
 } from "../types/AxisScaleType";
 import { AxisChart } from "./AxisScale";
-import { formatVolume, multiFormat } from "../dataUtility/dateFormat";
+import { formatVolume, multiFormat } from "../DataUtility/dateFormat";
 import { ChartDataObj } from "../types/chartdataTypes";
 import { error } from "console";
 import {

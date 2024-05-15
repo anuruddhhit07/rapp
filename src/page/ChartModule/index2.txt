@@ -1,10 +1,9 @@
 import * as d3 from "d3";
 import SetupChart from "./ChartSetup/SetupChart";
-import { arrangeData } from "./DataUtility/ArrangeData";
-
-import { ChartDataIN } from "./Types/ChartDataTypes";
+import { arrangeData } from "./DataUtility/arrangeData";
+import { ChartDataIN } from "../Chart/BaseSetup/chartdataTypes";
 import { createClipPath } from "../Chart/Svg/SVGUtility";
-import { YAxisRangeType } from "./Types/AxisScaleType";
+
 import SVGClass from "../Chart/Svg/SvgClassModel";
 import {
   SharedChartBaseData,
