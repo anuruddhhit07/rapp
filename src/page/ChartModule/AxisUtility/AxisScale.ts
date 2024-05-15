@@ -1,4 +1,4 @@
-import SetupChart from "../ChartSetup/setchart";
+import SetupChart from "../ChartSetup/SetupChart";
 import { XScaleConfigType, YScaleConfigType, xAxisItemType, yAxisItemType, yaxisrangeType } from "../types/AxisScaleType";
 import { ChartOptions, Margin } from "../types/chartSetuptype";
 import { ChartDataObj } from "../types/chartdataTypes";

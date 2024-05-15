@@ -1,35 +1,22 @@
-import { AxisChart } from "./AxisUtility/AxisScale";
-import { PlotAxis } from "./AxisUtility/PlotAxis";
-import SetupChart from "./ChartSetup/setchart";
-import { PlotConfig } from "./ChartSetup/setplotConfig";
+
+import SetupChart from "./ChartSetup/SetupChart";
 import { arrangeData } from "./dataUtility/arrangeData";
 
-import { ChartDataIN } from "./types/chartdataTypes";
+import { ChartDataIN } from "../Chart/BaseSetup/chartdataTypes";
 import * as d3 from "d3";
 
 import { createClipPath } from "../Chart/Svg/SVGUtility";
-import { yaxisrangeType } from "./types/AxisScaleType";
 
-import { xscaleObj } from "./types/XScaleUtility";
 import SVGClass from "../Chart/Svg/SvgClassModel";
-import {
-  proxiedParentObj,
-  createChildObject,
-  parentObj,
-} from "./types/AdvanceObj";
+
 import {
   Shared_ChartBaseData,
   Shared_ButtonProp,
-  Shared_PlotInfo,
   collectKeysByButtonId,
-  getPlotStatusByButtonTag,
-  Shared_YScaleConfig,
-  Shared_XScaleConfig,
+   Shared_YScaleConfig,
   updateChartPlotData,
-  Shared_ChartPlotData,
   Shared_ChartDimension,
-  Shared_XYrelation,
-  Shared_yaxisProp,
+   Shared_yaxisProp,
   updateShared_YScaleConfig,
 } from "../Chart/BaseSetup/SharedDataUtility";
 import proxy_plotinfo from "../Chart";
@@ -42,12 +29,12 @@ import {
   intialRendorAxis,
 } from "../Chart/Axis/axisPlot";
 import { plotonsvg } from "../Chart/Svg/svgPlot";
+import { yaxisType } from "../Chart/BaseSetup/ShareDataType";
 
 class CandlestickChartTS {
   // private axisChart: AxisChart;
   private svg!: d3.Selection<SVGSVGElement, any, HTMLElement, any>;
-  private axisarea!: d3.Selection<SVGGElement, any, HTMLElement, any>;
-  private SVGClass: SVGClass;
+   private SVGClass: SVGClass;
   axisGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   BackGroup: d3.Selection<SVGGElement, any, HTMLElement, any>;
   AxisXGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
@@ -58,7 +45,7 @@ class CandlestickChartTS {
   Buttonpanel!: void;
   // plotaxis: PlotAxis;
   clipPathObj: {
-    [key: keyof yaxisrangeType]: d3.Selection<
+    [key: keyof yaxisType]: d3.Selection<
       SVGClipPathElement,
       any,
       HTMLElement,
@@ -93,9 +80,6 @@ class CandlestickChartTS {
     
 
     intialRendorAxis(this.BackGroup, this.FrontGroup);
-
-    
-
     this.rendorPlot();
     this.ResetButton.onEvent1("click", (event) => {
       this.resetplot(event);
@@ -113,14 +97,6 @@ class CandlestickChartTS {
 
   zoomedY(event: any) {
     const [xmousepoint, ymousepoint] = d3.pointer(event);
-    //console.log("heree");
-    const main1=this.svg.select('.yzoom-1main').property("__zoom")
-    if (!this.svg.select('.yzoom-volumeaxis').empty()){
-      const volumeaxis =this.svg.select('.yzoom-volumeaxis').property("__zoom")
-     // console.log("volumeaxis",volumeaxis)
-    }
-    
-
     //console.log("main1",main1)
     drawYaxis(this.BackGroup, this.svg, ymousepoint);
     this.rendorPlot();

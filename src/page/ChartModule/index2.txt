@@ -1,0 +1,130 @@
+import * as d3 from "d3";
+import SetupChart from "./ChartSetup/SetupChart";
+import { arrangeData } from "./DataUtility/ArrangeData";
+
+import { ChartDataIN } from "./Types/ChartDataTypes";
+import { createClipPath } from "../Chart/Svg/SVGUtility";
+import { YAxisRangeType } from "./Types/AxisScaleType";
+import SVGClass from "../Chart/Svg/SvgClassModel";
+import {
+  SharedChartBaseData,
+  SharedButtonProp,
+  collectKeysByButtonId,
+  SharedYScaleConfig,
+  updateChartPlotData,
+  SharedChartDimension,
+  SharedYAxisProp,
+  updateSharedYScaleConfig,
+} from "../Chart/BaseSetup/SharedDataUtility";
+import {
+  updateXScaleConfig,
+  updateYScaleConfig,
+  drawXAxis,
+  drawYAxis,
+  initialRenderAxis,
+} from "../Chart/Axis/AxisPlot";
+import { plotOnSvg } from "../Chart/Svg/SvgPlot";
+
+class CandlestickChartTS {
+  private svg!: d3.Selection<SVGSVGElement, any, HTMLElement, any>;
+  private svgClass: SVGClass;
+  private backGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
+  private frontGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
+  private resetButton!: d3.Selection<SVGGElement, any, HTMLElement, any>;
+
+  constructor(stockData: ChartDataIN, targetID: string) {
+    SetupChart.getInstance(500, 500, { targetID: targetID });
+    updateChartPlotData(arrangeData(stockData));
+    updateXScaleConfig();
+    updateYScaleConfig();
+
+    this.svgClass = SVGClass.getInstance();
+    this.svg = this.svgClass.svg;
+    this.svgClass.createYAxisEventArea(this.zoomY);
+
+    const numberOfButtons = 6;
+    this.backGroup = this.svgClass.backGroup;
+    this.frontGroup = this.svgClass.frontGroup;
+    this.resetButton = this.svgClass.resetButton;
+    this.svgClass.createButtonPanel(
+      this.buttonClick.bind(this),
+      numberOfButtons,
+      SharedButtonProp
+    );
+
+    this.frontGroup.call(this.zoomX as any);
+    initialRenderAxis(this.backGroup, this.frontGroup);
+    this.renderPlot();
+    this.resetButton.on("click", (event) => {
+      this.resetPlot(event);
+    });
+  }
+
+  zoomX = d3.zoom().scaleExtent([0.5, 30]).on("zoom", this.zoomedX.bind(this));
+
+  zoomedX(event: any) {
+    this.renderAxis();
+    this.renderPlot();
+  }
+
+  zoomY = d3.zoom().scaleExtent([0.5, 4]).on("zoom", this.zoomedY.bind(this));
+
+  zoomedY(event: any) {
+    const [, yMousePoint] = d3.pointer(event);
+    drawYAxis(this.backGroup, this.svg, yMousePoint);
+    this.renderPlot();
+  }
+
+  buttonClick(id: any, className: any, pressState: any) {
+    const plotArray = collectKeysByButtonId(id) as [keyof typeof SharedButtonProp];
+    plotArray.map((togglePlot) => {
+      SharedButtonProp[togglePlot].plotStatus = pressState;
+    });
+    this.svgClass.createYAxisEventArea(this.zoomY);
+    this.renderAxis();
+    this.renderPlot();
+  }
+
+  renderAxis() {
+    drawXAxis(this.backGroup, this.frontGroup);
+    drawYAxis(this.backGroup, this.svg);
+  }
+
+  renderPlot() {
+    this.getClipPath();
+    plotOnSvg(this.backGroup, this.frontGroup);
+  }
+
+  resetPlot(event: any) {
+    this.frontGroup.call(this.zoomX.transform as any, d3.zoomIdentity);
+    const yScaleTagSet = Array.from(SharedChartBaseData.yScaleTag);
+    yScaleTagSet.map((scaleTag) => {
+      const scaleConfig = SharedYScaleConfig[scaleTag];
+      this.svg.select(`.yzoom-${scaleConfig.yAxisTag}`).call(this.zoomY.transform as any, d3.zoomIdentity);
+      updateSharedYScaleConfig(scaleConfig.yScaleTag, {
+        yZoomTransform: d3.zoomIdentity,
+      });
+    });
+
+    this.renderAxis();
+    this.renderPlot();
+  }
+
+  getClipPath() {
+    this.svg.select("defs").selectAll("*").remove();
+    const yAxisTags = Array.from(SharedChartBaseData.yAxisTag);
+    yAxisTags.map((yAxisTag) => {
+      const { range } = SharedYAxisProp[yAxisTag];
+      createClipPath(
+        this.svg,
+        `clip-${yAxisTag}`,
+        SharedChartDimension.margin.left + SharedChartDimension.margin.innerLeft,
+        range[1],
+        SharedChartDimension.width + SharedChartDimension.margin.innerRight,
+        range[0] - range[1]
+      );
+    });
+  }
+}
+
+export default CandlestickChartTS;
