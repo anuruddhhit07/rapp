@@ -45,10 +45,10 @@ export const plotInfoInput: PlotInfoInputType[] = [
     plotStatus: false,
     plotName: "VolumePlot",
     xdataTag: "xindex",
-    ydataTag: "open",
+    ydataTag: "volume",
     xscaleTag: "top",
     yscaleTag: "BR",
-    plotType: "line",
+    plotType: "bar",
     buttontag:"VolumePlot"
   },
 ];

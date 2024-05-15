@@ -89,30 +89,11 @@ class CandlestickChartTS {
     );
 
     this.FrontGroup.call(this.zoomX as any);
-    // this.AxisYGroup
-    // this.AxisYGroup.call(this.zoomY as any);
+    
 
     intialRendorAxis(this.BackGroup, this.FrontGroup);
 
-    //   const yaxissvg= this.BackGroup.selectAll('.y-axis')
-    //   yaxissvg.each(item=>{
-    //     console.log(item);
-    //   })
-
-    //   yaxissvg.nodes().forEach((yAxis) => {
-    //     // Your code here, `yAxis` refers to the current DOM element
-    //     // For example:
-    //     console.log(this);
-    //     d3.select(yAxis).call(this.zoomY as any)
-    //     d3.select(yAxis).style("fill", "red");
-    // });
-
-    // .each(function(this: d3.BaseType) {
-    //     // Inside this function, `this` refers to each individual y-axis element
-    //     // d3.select(this).call((this as any).zoomY);
-    //     console.log(d3.select(this));
-    //     console.log(this);
-    // }.bind(this as any));
+    
 
     this.rendorPlot();
     this.ResetButton.onEvent1("click", (event) => {
@@ -131,15 +112,15 @@ class CandlestickChartTS {
 
   zoomedY(event: any) {
     const [xmousepoint, ymousepoint] = d3.pointer(event);
-    console.log("heree");
+    //console.log("heree");
     const main1=this.svg.select('.yzoom-1main').property("__zoom")
     if (!this.svg.select('.yzoom-volumeaxis').empty()){
       const volumeaxis =this.svg.select('.yzoom-volumeaxis').property("__zoom")
-      console.log("volumeaxis",volumeaxis)
+     // console.log("volumeaxis",volumeaxis)
     }
     
 
-    console.log("main1",main1)
+    //console.log("main1",main1)
     drawYaxis(this.BackGroup, this.svg, ymousepoint);
     this.rendorPlot();
   }

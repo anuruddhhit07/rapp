@@ -248,7 +248,7 @@ export function drawLineOnSVG(
   svgGroup
     .append("path")
     .datum(yData) // Set data for the line
-    .attr("class", `all lineplot linePlot-${classNameTag}`)
+    .attr("class", `all allplot lineplot linePlot-${classNameTag}`)
     .attr("clip-path", `url(#clip-${yaxistag})`)
     .attr("fill", "none")
     .attr("stroke", plotColor) // Set color for the line
@@ -276,12 +276,12 @@ export function drawBarChartOnSVG(
     .data(yData)
     .enter()
     .append("rect")
-    .attr("class", `all barplot barplot-${classNameTag}`)
+    .attr("class", `all allplot barplot barplot-${classNameTag}`)
     .attr("clip-path", `url(#clip-${yaxistag})`)
     .attr("x", (d, i) => xScale(xData[i]) - barWidth / 4) // Adjust x position to center the bar
     .attr("y", (d) => yScale(d)) // Set y position based on the data value
     .attr("width", barWidth / 2) // Set the width of the bar
-    .attr("height", (d) => yaxisRange[0] - yScale(d)) // Calculate the height of the bar
+    .attr("height", (d) => Math.max((yaxisRange[0] - yScale(d)),0)) // Calculate the height of the bar
     .attr("fill", barColor); // Set color for the bar
 }
 
