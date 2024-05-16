@@ -143,7 +143,7 @@ export function UpdatePlotInfo(){
         C: number;
     }
       const data:TooltipData={index:index,O:Shared_ChartPlotData.open[index],H:Shared_ChartPlotData.high[index],L:Shared_ChartPlotData.low[index],C:Shared_ChartPlotData.close[index]}
-    var indexcount=0
+    let indexcount=0
 for (const key in data) {
         if (data.hasOwnProperty(key)) {
           tooltiparea.append("text")
@@ -153,7 +153,7 @@ for (const key in data) {
                 .append("tspan")
                 .text(`${key.charAt(0).toUpperCase() + key.slice(1)}: ${data[key as keyof TooltipData].toFixed(2)}`);
              // Increment y position for the next line
-             indexcount=indexcount+1
+             indexcount++;
         }
     }
 
