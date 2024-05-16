@@ -22,7 +22,6 @@ export let Shared_ChartDimension: ChartDimensionType = defaultChartDimensionProp
 export let Shared_XScaleConfig: xScaleConfigType = {};
 export let Shared_YScaleConfig: yScaleConfigType = {};
 
-
 // import { createNestedProxy } from "./proxyfunction";
 export let Shared_PlotInfo: PlotInfoType = {};
 
@@ -37,7 +36,7 @@ export let Shared_ChartBaseData: ChartBaseData = {
   yaxisTag: new Set<string>(),
 };
 
-export let Shared_yaxisProp:yaxisType={}
+export let Shared_yaxisProp: yaxisType = {};
 
 export function updateChartPlotData(data: ChartDataType) {
   Shared_ChartPlotData = data;
@@ -47,46 +46,47 @@ export function updateChartBaseProp(partialData: Partial<ChartDimensionType>): v
   Object.assign(Shared_ChartDimension, partialData);
 }
 
-export function updateYaxis(key: string,partialData: Partial<yaxisItemType>): void {
+export function updateYaxis(key: string, partialData: Partial<yaxisItemType>): void {
   if (Shared_yaxisProp.hasOwnProperty(key)) {
     // Merge the partial data with the existing DataToplotObjType object
     Shared_yaxisProp[key] = { ...Shared_yaxisProp[key], ...partialData };
   } else {
     // If the key does not exist, create a new DataToplotObjType object with the provided data
     Shared_yaxisProp[key] = {
-      range:[0,0],
-      plotname:[],
-      yscaleTag:[],
+      range: [0, 0],
+      plotname: [],
+      yscaleTag: [],
       ...partialData, // Merge with additional partialData
     };
   }
-
 }
 
-export function getPlotNamesAndYScaleTagsByYAxisTag(): { [key: keyof yaxisType]: { plotName: (keyof PlotInfoType)[], yscaleTag: (keyof yScaleConfigType)[] } } {
-  const result: { [key: keyof yaxisType]: { plotName: (keyof PlotInfoType)[], yscaleTag: (keyof yScaleConfigType)[] } } = {};
+export function getPlotNamesAndYScaleTagsByYAxisTag(): { [key: keyof yaxisType]: { plotName: (keyof PlotInfoType)[]; yscaleTag: (keyof yScaleConfigType)[] } } {
+  const result: { [key: keyof yaxisType]: { plotName: (keyof PlotInfoType)[]; yscaleTag: (keyof yScaleConfigType)[] } } = {};
 
   // Iterate over each plot in plotInfo
   for (const plotKey in Shared_PlotInfo) {
     if (Shared_PlotInfo.hasOwnProperty(plotKey)) {
       const plot = Shared_PlotInfo[plotKey];
-      const yscaleTag = plot.yscaleTag;
+      if (plot.plotStatus) {
+        const yscaleTag = plot.yscaleTag;
 
-      // Find the corresponding yaxisTag from yScaleConfig
-      if (yscaleTag in Shared_YScaleConfig) {
-        const yaxisTag = Shared_YScaleConfig[yscaleTag].yaxisTag;
+        // Find the corresponding yaxisTag from yScaleConfig
+        if (yscaleTag in Shared_YScaleConfig) {
+          const yaxisTag = Shared_YScaleConfig[yscaleTag].yaxisTag;
 
-        // Initialize the object if the key does not exist
-        if (!result[yaxisTag]) {
-          result[yaxisTag] = { plotName: [], yscaleTag: [] };
-        }
+          // Initialize the object if the key does not exist
+          if (!result[yaxisTag]) {
+            result[yaxisTag] = { plotName: [], yscaleTag: [] };
+          }
 
-        // Add the plotName to the array
-        result[yaxisTag].plotName.push(plot.plotName as keyof PlotInfoType);
-        
-        // Add the yscaleTag to the array if it is not already present
-        if (!result[yaxisTag].yscaleTag.includes(yscaleTag as keyof yScaleConfigType)) {
-          result[yaxisTag].yscaleTag.push(yscaleTag as keyof yScaleConfigType);
+          // Add the plotName to the array
+          result[yaxisTag].plotName.push(plot.plotName as keyof PlotInfoType);
+
+          // Add the yscaleTag to the array if it is not already present
+          if (!result[yaxisTag].yscaleTag.includes(yscaleTag as keyof yScaleConfigType)) {
+            result[yaxisTag].yscaleTag.push(yscaleTag as keyof yScaleConfigType);
+          }
         }
       }
     }
@@ -115,9 +115,11 @@ export function getXscale(this: any): { domain: Iterable<NumberValue>; XSCALE: a
   return { domain: domain, XSCALE: XSCALE };
 }
 
-
-
-export function getYscale(this: YScaleConfigItemType): { domain: Iterable<NumberValue>; YSCALE: ScaleLinear<number, number>|null,TranSFormedYscale:ScaleLinear<number, number>|null } {
+export function getYscale(this: YScaleConfigItemType): {
+  domain: Iterable<NumberValue>;
+  YSCALE: ScaleLinear<number, number> | null;
+  TranSFormedYscale: ScaleLinear<number, number> | null;
+} {
   // console.log("hello", this);
   // console.log(this.yaxisrange);
   // console.log(this.xscaleVisibleRange);
@@ -125,57 +127,40 @@ export function getYscale(this: YScaleConfigItemType): { domain: Iterable<Number
   // console.log("ydomaindata",this.ydomaindata);
 
   let domain: Iterable<NumberValue> = [];
-  let YSCALE: ScaleLinear<number, number> | null=null
-  let TranSFormedYscale:ScaleLinear<number, number>|null=null
+  let YSCALE: ScaleLinear<number, number> | null = null;
+  let TranSFormedYscale: ScaleLinear<number, number> | null = null;
 
-  let visiblerange=[]
+  let visiblerange = [];
   // let tempydomain:Iterable<d3.NumberValue>=[]
-// if (this.xscaleVisibleRange[1]==0){
-//   visiblerange= [0,Shared_ChartPlotData[this.yscaleDataTag as keyof ChartDataType].length]
-// }
+  // if (this.xscaleVisibleRange[1]==0){
+  //   visiblerange= [0,Shared_ChartPlotData[this.yscaleDataTag as keyof ChartDataType].length]
+  // }
 
   if (this.yscaleDataTag == "ohlc") {
-
-
-    visiblerange=this.xscaleVisibleRange[1]==0?[0,Shared_ChartPlotData["low"].length]:this.xscaleVisibleRange
-
-
+    visiblerange = this.xscaleVisibleRange[1] == 0 ? [0, Shared_ChartPlotData["low"].length] : this.xscaleVisibleRange;
 
     domain = [
       d3.min(Shared_ChartPlotData["low"].slice(visiblerange[0], visiblerange[1])) as number,
       d3.max(Shared_ChartPlotData["high"].slice(visiblerange[0], visiblerange[1])) as number,
     ];
-
-    
-
   } else {
-    visiblerange=this.xscaleVisibleRange[1]==0?[0,Shared_ChartPlotData[this.yscaleDataTag as keyof ChartDataType].length]:this.xscaleVisibleRange
-    domain = d3.extent(
-      Shared_ChartPlotData[this.yscaleDataTag as keyof ChartDataType].slice(visiblerange[0], visiblerange[1])
-    ) as Iterable<NumberValue>;
-
-
+    visiblerange = this.xscaleVisibleRange[1] == 0 ? [0, Shared_ChartPlotData[this.yscaleDataTag as keyof ChartDataType].length] : this.xscaleVisibleRange;
+    domain = d3.extent(Shared_ChartPlotData[this.yscaleDataTag as keyof ChartDataType].slice(visiblerange[0], visiblerange[1])) as Iterable<NumberValue>;
   }
 
-  const padding=0.1
-  const domainArray = Array.from(domain) as [number,number];
+  const padding = 0.1;
+  const domainArray = Array.from(domain) as [number, number];
   const domainPadding = (domainArray[1] - domainArray[0]) * padding;
 
-// Adjust the domain with padding
-const paddedDomain: [d3.NumberValue, d3.NumberValue] = [
-  domainArray[0] - domainPadding,
-  domainArray[1] + domainPadding
-];
+  // Adjust the domain with padding
+  const paddedDomain: [d3.NumberValue, d3.NumberValue] = [domainArray[0] - domainPadding, domainArray[1] + domainPadding];
 
-
-
-  if (this.yaxisrange!=null){
-    YSCALE =d3.scaleLinear().range(this.yaxisrange).domain(paddedDomain)
-    TranSFormedYscale=this.yzoomtransform.rescaleY(YSCALE)
-
+  if (this.yaxisrange != null) {
+    YSCALE = d3.scaleLinear().range(this.yaxisrange).domain(paddedDomain);
+    TranSFormedYscale = this.yzoomtransform.rescaleY(YSCALE);
   }
-  
-  if (this.yscaleTag=='BR' && TranSFormedYscale!=null){
+
+  if (this.yscaleTag == "BR" && TranSFormedYscale != null) {
     let transformedDomain = TranSFormedYscale.domain();
     let adjustedDomain = [0, transformedDomain[1]];
     TranSFormedYscale.domain(adjustedDomain);
@@ -186,8 +171,7 @@ const paddedDomain: [d3.NumberValue, d3.NumberValue] = [
 
   // console.log(YSCALE?.domain());
 
-
-  return { domain: domain, YSCALE: YSCALE,TranSFormedYscale:TranSFormedYscale };
+  return { domain: domain, YSCALE: YSCALE, TranSFormedYscale: TranSFormedYscale };
 }
 
 export function updateShared_PlotInfo(key: string, partialData: Partial<PlotInfoItem>): void {
@@ -252,9 +236,9 @@ export function updateShared_YScaleConfig(key: string, partialData: Partial<YSca
       xscaleVisibleRange: [0, 10],
       zoomstatus: true,
       autozoom: true,
-      ydomaindata:[0,0],
+      ydomaindata: [0, 0],
       yscale: getYscale,
-      yzoomtransform:d3.zoomIdentity,
+      yzoomtransform: d3.zoomIdentity,
       ...partialData, // Merge with additional partialData
     };
   }
@@ -294,9 +278,9 @@ export const updateYscaleconfig = (yScaleConfigInputArray = yScaleConfigInput) =
       xscaleVisibleRange: xscaleVisibleRange,
       zoomstatus: zoomstatus ? zoomstatus : false,
       autozoom: autozoom ? autozoom : false,
-      ydomaindata:[0,0],
+      ydomaindata: [0, 0],
       yscale: getYscale,
-      yzoomtransform:d3.zoomIdentity,
+      yzoomtransform: d3.zoomIdentity,
     };
     updateShared_YScaleConfig(yscaleTag, tempyscaleItem);
   });
@@ -309,7 +293,7 @@ export const updateplotInfo = (plotInfoInputArray = plotInfoInput) => {
       plotStatus: plotStatus,
       plotName: plotName,
       xdata: Shared_ChartPlotData[xdataTag],
-      ydata: ydataTag=='ohlc'?[]:Shared_ChartPlotData[ydataTag],
+      ydata: ydataTag == "ohlc" ? [] : Shared_ChartPlotData[ydataTag],
       xscaleTag: xscaleTag,
       yscaleTag: yscaleTag,
       plotType: plotType,
@@ -387,7 +371,6 @@ export function updateYScaleConfigByKey(keyName: keyof YScaleConfigItemType, val
   // Update specified properties for each group
   yScaleConfigEntries.forEach(([key, config]) => {
     Shared_YScaleConfig[key] = { ...config, ...partialData };
-    
   });
   // console.log("Shared_YScaleConfig",Shared_YScaleConfig);
 }
@@ -460,13 +443,11 @@ export function generateRelationObject(): void {
   });
 }
 
-
-
 export function groupDataByPlotType(): { [key: string]: string[] } {
   const groupedData: { [key: string]: string[] } = {};
 
   // Loop through each data object
-  Object.keys(Shared_PlotInfo).forEach(key => {
+  Object.keys(Shared_PlotInfo).forEach((key) => {
     const plotType = Shared_PlotInfo[key].plotType;
 
     // Check if the plotType exists in groupedData, if not, create an empty array for it

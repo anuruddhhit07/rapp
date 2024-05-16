@@ -26,11 +26,14 @@ export function InitializeBaseProp() {
   };
   updateSharedChartData(uniquePlotsData as any);
   const axisrelation=getPlotNamesAndYScaleTagsByYAxisTag()
+  console.log(axisrelation);
   const yaxisRangeArray= getYaxisRatio(Array.from(uniquePlotsData.yaxisTag))
   Object.entries(yaxisRangeArray).forEach(([yaxisTag, value]) => {
     // console.log(yaxisTag,value)
     updateYScaleConfigByKey("yaxisTag", yaxisTag,value)
-    updateYaxis(yaxisTag,{range:value.yaxisrange})
+    const otherparamter=axisrelation[yaxisTag]
+    //console.log(otherparamter);
+    updateYaxis(yaxisTag,{range:value.yaxisrange,plotname:otherparamter.plotName as string[],yscaleTag:otherparamter.yscaleTag as string[]})
   })
 
   getPlotStatusByButtonTag()
