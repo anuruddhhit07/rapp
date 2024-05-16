@@ -169,13 +169,14 @@ class SVGClass {
     this.svg.selectAll(`.tooltip`).remove()
     uniqueyaxisTag.map(yaxistag=>{
       
+      const plotnameArray=Shared_yaxisProp[yaxistag].plotname
+      plotnameArray.map((pltname,index)=>{
 
-
-      createGroupAdv(this.svg, `tooltip tooltip-area-${yaxistag}`)
+        createGroupAdv(this.svg, `tooltip tooltip-${yaxistag}-${pltname}`)
         .translate(
         Shared_ChartDimension.margin.innerLeft +
           Shared_ChartDimension.margin.left ,
-        Shared_yaxisProp[yaxistag].range[1]
+        (Shared_yaxisProp[yaxistag].range[1]+Shared_ChartDimension.margin.innerTop*index)
       )
          .drawBorder(
         0,
@@ -187,6 +188,9 @@ class SVGClass {
         "blue",
         0.3
       );
+
+      })
+   
     })
 
     // this.ToolTipArea = createGroupAdv(this.svg, "tooltip-area")

@@ -131,7 +131,7 @@ export interface PlotInfoItem {
   plotType: string;
   plotcolor: string;
   buttontag:string;
-  getTooltipHTML?: (yaxistag:string,index: number,tooltiparea:d3.Selection<SVGGElement, any, HTMLElement, any>) => void
+  getTooltipHTML?: (this:PlotInfoItem,yaxistag:string,index: number,tooltiparea:d3.Selection<SVGGElement, any, HTMLElement, any>) => void
 }
 export interface PlotInfoType {
   [key: string]: PlotInfoItem;

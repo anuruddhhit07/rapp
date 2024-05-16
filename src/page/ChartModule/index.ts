@@ -1,5 +1,5 @@
 import SetupChart from "./ChartSetup/SetupChart";
-import { arrangeData } from "./dataUtility/arrangeData";
+import { arrangeData } from "./DataUtility/arrangeData";
 
 import { ChartDataIN } from "../Chart/BaseSetup/chartdataTypes";
 import * as d3 from "d3";
@@ -152,16 +152,17 @@ class CandlestickChartTS {
       const uniquePLot=Array.from(Shared_ChartBaseData.plotName)
       uniquePLot.forEach((plotname: keyof PlotInfoType) => {
         const plotInfo = Shared_PlotInfo[plotname];
+        // console.log(plotname)
         if (plotInfo) {
           const yscaleTag = plotInfo.yscaleTag;
           const yaxistag = Shared_YScaleConfig[yscaleTag].yaxisTag;
-          const tooltipSelection = this.svg.select(`.tooltip-area-${yaxistag}`) as d3.Selection<SVGGElement, any, HTMLElement, any>; // Correct the selector
-          // console.log(yaxistag,tooltipSelection)
+          const tooltipSelection = this.svg.select(`.tooltip-${yaxistag}-${plotname}`) as d3.Selection<SVGGElement, any, HTMLElement, any>; // Correct the selector
+          console.log(plotname,yaxistag,tooltipSelection)
           // Check if getTooltipHTML method exists in plotInfo
           if (plotInfo.getTooltipHTML) {
             // Call getTooltipHTML method if it exists
-            // console.log(plotInfo,yaxistag,tooltipSelection)
-            // plotInfo.getTooltipHTML(yaxistag,index, tooltipSelection);
+            console.log(plotInfo,yaxistag,tooltipSelection)
+            plotInfo.getTooltipHTML(yaxistag,index, tooltipSelection);
           }
         }
       });
