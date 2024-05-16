@@ -55,7 +55,7 @@ const callback: ProxyCallback = (
     Object.entries(yaxisRangeArray).forEach(([yaxisTag, value]) => {
      // console.log(yaxisTag,value)
       updateYScaleConfigByKey("yaxisTag", yaxisTag,value)
-      updateYaxis(yaxisTag,value.yaxisrange)
+      updateYaxis(yaxisTag,{range:value.yaxisrange})
     })
     generateRelationObject()
     // updateYScaleConfigByKey()

@@ -10,6 +10,7 @@ import {
   YScaleConfigItemType,
   xScaleConfigType,
   yScaleConfigType,
+  yaxisItemType,
   yaxisType,
 } from "./ShareDataType";
 import { defaultChartDimensionProp, defaultchartData, plotInfoInput, xScaleConfigInput, yScaleConfigInput } from "./SharedDefaultData";
@@ -21,11 +22,13 @@ export let Shared_ChartDimension: ChartDimensionType = defaultChartDimensionProp
 export let Shared_XScaleConfig: xScaleConfigType = {};
 export let Shared_YScaleConfig: yScaleConfigType = {};
 
+
 // import { createNestedProxy } from "./proxyfunction";
 export let Shared_PlotInfo: PlotInfoType = {};
 
 export let Shared_ButtonProp: PlotStatusByButtonTag = {};
 export let Shared_XYrelation: XscaleYscaleRelation = {};
+// export let Shared_yaxistag: XscaleYscaleRelation = {};
 
 export let Shared_ChartBaseData: ChartBaseData = {
   plotName: new Set<string>(),
@@ -44,15 +47,52 @@ export function updateChartBaseProp(partialData: Partial<ChartDimensionType>): v
   Object.assign(Shared_ChartDimension, partialData);
 }
 
-export function updateYaxis(key: string, range: [number, number]): void {
-  // If the key already exists, update its range
+export function updateYaxis(key: string,partialData: Partial<yaxisItemType>): void {
   if (Shared_yaxisProp.hasOwnProperty(key)) {
-    Shared_yaxisProp[key].range = range;
+    // Merge the partial data with the existing DataToplotObjType object
+    Shared_yaxisProp[key] = { ...Shared_yaxisProp[key], ...partialData };
   } else {
-      // Otherwise, add a new key-value pair
-      Shared_yaxisProp[key] = { range };
+    // If the key does not exist, create a new DataToplotObjType object with the provided data
+    Shared_yaxisProp[key] = {
+      range:[0,0],
+      plotname:[],
+      yscaleTag:[],
+      ...partialData, // Merge with additional partialData
+    };
   }
 
+}
+
+export function getPlotNamesAndYScaleTagsByYAxisTag(): { [key: keyof yaxisType]: { plotName: (keyof PlotInfoType)[], yscaleTag: (keyof yScaleConfigType)[] } } {
+  const result: { [key: keyof yaxisType]: { plotName: (keyof PlotInfoType)[], yscaleTag: (keyof yScaleConfigType)[] } } = {};
+
+  // Iterate over each plot in plotInfo
+  for (const plotKey in Shared_PlotInfo) {
+    if (Shared_PlotInfo.hasOwnProperty(plotKey)) {
+      const plot = Shared_PlotInfo[plotKey];
+      const yscaleTag = plot.yscaleTag;
+
+      // Find the corresponding yaxisTag from yScaleConfig
+      if (yscaleTag in Shared_YScaleConfig) {
+        const yaxisTag = Shared_YScaleConfig[yscaleTag].yaxisTag;
+
+        // Initialize the object if the key does not exist
+        if (!result[yaxisTag]) {
+          result[yaxisTag] = { plotName: [], yscaleTag: [] };
+        }
+
+        // Add the plotName to the array
+        result[yaxisTag].plotName.push(plot.plotName as keyof PlotInfoType);
+        
+        // Add the yscaleTag to the array if it is not already present
+        if (!result[yaxisTag].yscaleTag.includes(yscaleTag as keyof yScaleConfigType)) {
+          result[yaxisTag].yscaleTag.push(yscaleTag as keyof yScaleConfigType);
+        }
+      }
+    }
+  }
+
+  return result;
 }
 
 export function getXscale(this: any): { domain: Iterable<NumberValue>; XSCALE: any } {
@@ -419,6 +459,8 @@ export function generateRelationObject(): void {
     }
   });
 }
+
+
 
 export function groupDataByPlotType(): { [key: string]: string[] } {
   const groupedData: { [key: string]: string[] } = {};

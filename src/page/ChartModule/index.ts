@@ -1,5 +1,5 @@
 import SetupChart from "./ChartSetup/SetupChart";
-import { arrangeData } from "./DataUtility/arrangeData";
+import { arrangeData } from "./dataUtility/arrangeData";
 
 import { ChartDataIN } from "../Chart/BaseSetup/chartdataTypes";
 import * as d3 from "d3";
@@ -20,6 +20,7 @@ import {
   Shared_XScaleConfig,
   Shared_ChartPlotData,
   Shared_PlotInfo,
+  Shared_XYrelation,
 } from "../Chart/BaseSetup/SharedDataUtility";
 import proxy_plotinfo from "../Chart";
 import { InitializeBaseProp } from "../Chart/BaseSetup/BaseProp";
@@ -50,7 +51,7 @@ class CandlestickChartTS {
   Buttonpanel!: void;
 
   constructor(stockdata: ChartDataIN, targetID: string) {
-    SetupChart.getInstance(500, 500, { targetID: targetID });
+    SetupChart.getInstance(700, 700, { targetID: targetID });
     updateChartPlotData(arrangeData(stockdata));
     InitializeBaseProp();
     UpdateXscaleconfig();
@@ -117,6 +118,8 @@ class CandlestickChartTS {
     this.SVGClass.createTooltipArea()
     this.rendorAxis();
     this.rendorPlot();
+
+    console.log(Shared_XYrelation);
   }
 
   rendorAxis() {
@@ -157,8 +160,8 @@ class CandlestickChartTS {
           // Check if getTooltipHTML method exists in plotInfo
           if (plotInfo.getTooltipHTML) {
             // Call getTooltipHTML method if it exists
-            console.log(plotInfo,yaxistag,tooltipSelection)
-            plotInfo.getTooltipHTML(yaxistag,index, tooltipSelection);
+            // console.log(plotInfo,yaxistag,tooltipSelection)
+            // plotInfo.getTooltipHTML(yaxistag,index, tooltipSelection);
           }
         }
       });

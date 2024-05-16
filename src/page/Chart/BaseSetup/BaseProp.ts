@@ -1,6 +1,7 @@
 import {
   Shared_PlotInfo,
   generateRelationObject,
+  getPlotNamesAndYScaleTagsByYAxisTag,
   getPlotStatusByButtonTag,
   getUniquePlotsWithStatusTrue,
   getYaxisRatio,
@@ -24,11 +25,12 @@ export function InitializeBaseProp() {
     yaxisTag: Set<string>;
   };
   updateSharedChartData(uniquePlotsData as any);
+  const axisrelation=getPlotNamesAndYScaleTagsByYAxisTag()
   const yaxisRangeArray= getYaxisRatio(Array.from(uniquePlotsData.yaxisTag))
   Object.entries(yaxisRangeArray).forEach(([yaxisTag, value]) => {
     // console.log(yaxisTag,value)
     updateYScaleConfigByKey("yaxisTag", yaxisTag,value)
-    updateYaxis(yaxisTag,value.yaxisrange)
+    updateYaxis(yaxisTag,{range:value.yaxisrange})
   })
 
   getPlotStatusByButtonTag()

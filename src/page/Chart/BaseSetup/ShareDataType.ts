@@ -32,8 +32,15 @@ export interface ChartBaseData{
   yaxisTag:Set<string>
 }
 
+export interface yaxisItemType{
+  range:[number,number];
+  plotname: string[];
+   yscaleTag: string[]
+  }
+
+
 export interface yaxisType{
-   [key:string] :{range:[number,number]}
+   [key:string] :yaxisItemType
 }
 
 // export interface ChartBaseData{
