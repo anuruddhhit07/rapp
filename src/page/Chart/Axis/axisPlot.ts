@@ -16,6 +16,7 @@ import {
 import { ChartDataType } from "../BaseSetup/chartdataTypes";
 import { formatVolume, multiFormat } from "./dateFormat";
 import { Shared_DataToplot } from "../../ChartModule/SharedObject";
+import { getTooltipHTMLLine, getTooltipHTMLOHLC, getTooltipHTMLVolume } from "../Svg/ToolTipUtility";
 
 function custumticformat(i: d3.NumberValue, stockid: string, datatotag: keyof ChartDataType): string | null {
   return multiFormat(i, "temp:1D", Shared_ChartPlotData[datatotag]);
@@ -130,78 +131,49 @@ export function UpdateYscaleconfig() {
 
 export function UpdatePlotInfo(){
   updateShared_PlotInfo('OHLCPlot',{
-    getTooltipHTML(this:PlotInfoItem,yaxistag:string,index: number,tooltiparea:d3.Selection<SVGGElement, any, HTMLElement, any>) {
-      // const plotInfo = Shared_PlotInfo['OHLCPlot']; // Access the plot info for 'TR'
-      tooltiparea.selectAll(`.tooliptext-${yaxistag}-${this.plotName}`).remove()
-
-      let xPos = [0,100,100,100,100];
-      interface TooltipData {
-        index: number;
-        O: number;
-        H: number;
-        L: number;
-        C: number;
-    }
-      const data:TooltipData={index:index,O:Shared_ChartPlotData.open[index],H:Shared_ChartPlotData.high[index],L:Shared_ChartPlotData.low[index],C:Shared_ChartPlotData.close[index]}
-    let indexcount=0
-for (const key in data) {
-        if (data.hasOwnProperty(key)) {
-          tooltiparea.append("text")
-          .attr("class", `tooliptext-${yaxistag}-${this.plotName}`)
-                .attr("x", xPos[indexcount])
-                .attr("y", 10)
-                .append("tspan")
-                .text(`${key.charAt(0).toUpperCase() + key.slice(1)}: ${data[key as keyof TooltipData].toFixed(2)}`);
-             // Increment y position for the next line
-             indexcount++;
-        }
-    }
-
-      // tooltiparea.append("text")
-      //   .attr("class", `tooliptext-${yaxistag}-${this.plotName}`)
-      //   .attr("x", 10)
-      //   .attr("y", Shared_ChartDimension.margin.innerTop/2)
-      //   .attr("font-size", "12px")
-      //   .append("tspan")
-      //   .text(`${index}`)
-      //   .attr("fill", "blue")
-      // console.log(this)
-      
-    }
+    getTooltipHTML:getTooltipHTMLOHLC
   })
-
+  updateShared_PlotInfo('VolumePlot',{
+    getTooltipHTML:getTooltipHTMLVolume
+  })
   updateShared_PlotInfo('LowPlot',{
-    getTooltipHTML(this:PlotInfoItem,yaxistag:string,index: number,tooltiparea:d3.Selection<SVGGElement, any, HTMLElement, any>) {
-      // const plotInfo = Shared_PlotInfo['OHLCPlot']; // Access the plot info for 'TR'
-      console.log("first","LowPlot")
-      tooltiparea.selectAll(`.tooliptext-${yaxistag}-${this.plotName}`).remove()
-      tooltiparea.append("text")
-        .attr("class", `tooliptext-${yaxistag}-${this.plotName}`)
-        .attr("x", 10)
-        .attr("y", Shared_ChartDimension.margin.innerTop/2)
-        .attr("font-size", "12px")
-        .append("tspan")
-        .text(`${index}`)
-        .attr("fill", "blue")
-      // console.log(this)
-      
-    }
+    getTooltipHTML:getTooltipHTMLLine
   })
-  updateShared_PlotInfo('HighPlot',{
-    getTooltipHTML(this:PlotInfoItem,yaxistag:string,index: number,tooltiparea:d3.Selection<SVGGElement, any, HTMLElement, any>) {
-      const plotInfo = Shared_PlotInfo['HighPlot']; // Access the plot info for 'TR'
-      tooltiparea.selectAll(`.tooliptext-${yaxistag}-${this.plotName}`).remove()
-      tooltiparea.append("text")
-      .attr("class", `tooliptext-${yaxistag}-${this.plotName}`)
-        .attr("x", 10)
-        .attr("y", Shared_ChartDimension.margin.innerTop/2)
-        .attr("font-size", "12px")
-        .append("tspan")
-        .text(`${index}`)
-        .attr("fill", "red")
+
+  
+
+  // updateShared_PlotInfo('LowPlot',{
+  //   getTooltipHTML(this:PlotInfoItem,yaxistag:string,index: number,tooltiparea:d3.Selection<SVGGElement, any, HTMLElement, any>) {
+  //     // const plotInfo = Shared_PlotInfo['OHLCPlot']; // Access the plot info for 'TR'
+  //     console.log("first","LowPlot")
+  //     tooltiparea.selectAll(`.tooliptext-${yaxistag}-${this.plotName}`).remove()
+  //     tooltiparea.append("text")
+  //       .attr("class", `tooliptext-${yaxistag}-${this.plotName}`)
+  //       .attr("x", 10)
+  //       .attr("y", Shared_ChartDimension.margin.innerTop/2)
+  //       .attr("font-size", "12px")
+  //       .append("tspan")
+  //       .text(`${index}`)
+  //       .attr("fill", "blue")
+  //     // console.log(this)
       
-    }
-  })
+  //   }
+  // })
+  // updateShared_PlotInfo('HighPlot',{
+  //   getTooltipHTML(this:PlotInfoItem,yaxistag:string,index: number,tooltiparea:d3.Selection<SVGGElement, any, HTMLElement, any>) {
+  //     const plotInfo = Shared_PlotInfo['HighPlot']; // Access the plot info for 'TR'
+  //     tooltiparea.selectAll(`.tooliptext-${yaxistag}-${this.plotName}`).remove()
+  //     tooltiparea.append("text")
+  //     .attr("class", `tooliptext-${yaxistag}-${this.plotName}`)
+  //       .attr("x", 10)
+  //       .attr("y", Shared_ChartDimension.margin.innerTop/2)
+  //       .attr("font-size", "12px")
+  //       .append("tspan")
+  //       .text(`${index}`)
+  //       .attr("fill", "red")
+      
+  //   }
+  // })
 }
 
 function XAxisOnSVG(scaleconfig: XScaleConfigItemType, currentTransformXb: any, axisAreaonSVG: any) {

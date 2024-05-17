@@ -5,6 +5,7 @@ import { PlotStatusByButtonTag } from "../BaseSetup/ShareDataType";
 import {
   Shared_ChartBaseData,
   Shared_ChartDimension,
+  Shared_PlotInfo,
   Shared_yaxisProp,
 } from "../BaseSetup/SharedDataUtility";
 
@@ -170,8 +171,10 @@ class SVGClass {
     uniqueyaxisTag.map(yaxistag=>{
       
       const plotnameArray=Shared_yaxisProp[yaxistag].plotname
-      plotnameArray.map((pltname,index)=>{
+      let index=0
+      plotnameArray.forEach((pltname)=>{
 
+        if (Shared_PlotInfo[pltname].tooltip && Shared_PlotInfo[pltname].getTooltipHTML){
         createGroupAdv(this.svg, `tooltip tooltip-${yaxistag}-${pltname}`)
         .translate(
         Shared_ChartDimension.margin.innerLeft +
@@ -186,9 +189,11 @@ class SVGClass {
         "red",
         2,
         "blue",
-        0.3
+        0
       );
 
+    }
+    index++
       })
    
     })

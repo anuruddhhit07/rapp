@@ -153,17 +153,17 @@ class CandlestickChartTS {
       uniquePLot.forEach((plotname: keyof PlotInfoType) => {
         const plotInfo = Shared_PlotInfo[plotname];
         // console.log(plotname)
-        if (plotInfo) {
+        if (plotInfo && plotInfo.tooltip && plotInfo.getTooltipHTML) {
           const yscaleTag = plotInfo.yscaleTag;
           const yaxistag = Shared_YScaleConfig[yscaleTag].yaxisTag;
           const tooltipSelection = this.svg.select(`.tooltip-${yaxistag}-${plotname}`) as d3.Selection<SVGGElement, any, HTMLElement, any>; // Correct the selector
-          console.log(plotname,yaxistag,tooltipSelection)
+          // console.log(plotname,yaxistag,tooltipSelection)
           // Check if getTooltipHTML method exists in plotInfo
-          if (plotInfo.getTooltipHTML) {
+          // if (plotInfo.getTooltipHTML ) {
             // Call getTooltipHTML method if it exists
-            console.log(plotInfo,yaxistag,tooltipSelection)
+            // console.log(plotInfo,yaxistag,tooltipSelection)
             plotInfo.getTooltipHTML(yaxistag,index, tooltipSelection);
-          }
+          // }
         }
       });
 

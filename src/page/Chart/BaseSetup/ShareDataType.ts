@@ -119,6 +119,7 @@ export interface PlotInfoInputType {
   plotType: string;
   plotcolor?: string;
   buttontag?:string
+  tooltip?:boolean
 }
 
 export interface PlotInfoItem {
@@ -131,6 +132,7 @@ export interface PlotInfoItem {
   plotType: string;
   plotcolor: string;
   buttontag:string;
+  tooltip:boolean;
   getTooltipHTML?: (this:PlotInfoItem,yaxistag:string,index: number,tooltiparea:d3.Selection<SVGGElement, any, HTMLElement, any>) => void
 }
 export interface PlotInfoType {

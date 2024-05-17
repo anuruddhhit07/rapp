@@ -28,18 +28,20 @@ export const plotInfoInput: PlotInfoInputType[] = [
     yscaleTag: "TR",
     plotType: "ohlc",
     plotcolor: "red",
-    buttontag:"OHLCPlot"
+    buttontag:"OHLCPlot",
+    tooltip:true
   },
   {
     plotStatus: false,
     plotName: "LowPlot",
     xdataTag: "xindex",
-    ydataTag: "close",
+    ydataTag: "low",
     xscaleTag: "bot",
     yscaleTag: "TR",
     plotType: "line",
     plotcolor: "black",
-    buttontag:"LowPlot"
+    buttontag:"LowPlot",
+    tooltip:true
   },
   {
     plotStatus: false,
@@ -49,7 +51,8 @@ export const plotInfoInput: PlotInfoInputType[] = [
     xscaleTag: "bot",
     yscaleTag: "BR",
     plotType: "bar",
-    buttontag:"VolumePlot"
+    buttontag:"VolumePlot",
+    tooltip:true
   },
   {
     plotStatus: true,

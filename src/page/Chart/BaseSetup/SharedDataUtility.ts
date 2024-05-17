@@ -191,6 +191,7 @@ export function updateShared_PlotInfo(key: string, partialData: Partial<PlotInfo
       plotType: "line",
       plotcolor: "red",
       buttontag: "no-button",
+      tooltip:false,
       ...partialData, // Merge with additional partialData
     };
   }
@@ -288,7 +289,7 @@ export const updateYscaleconfig = (yScaleConfigInputArray = yScaleConfigInput) =
 
 export const updateplotInfo = (plotInfoInputArray = plotInfoInput) => {
   plotInfoInputArray.map((plotinfoitem) => {
-    const { plotStatus, plotName, xdataTag, ydataTag, xscaleTag, yscaleTag, plotType, plotcolor, buttontag } = plotinfoitem;
+    const { plotStatus, plotName, xdataTag, ydataTag, xscaleTag, yscaleTag, plotType, plotcolor, buttontag ,tooltip} = plotinfoitem;
     const tempplotinforItem: PlotInfoItem = {
       plotStatus: plotStatus,
       plotName: plotName,
@@ -299,6 +300,7 @@ export const updateplotInfo = (plotInfoInputArray = plotInfoInput) => {
       plotType: plotType,
       plotcolor: plotcolor ? plotcolor : "black",
       buttontag: buttontag ? buttontag : "no-button",
+      tooltip:tooltip?tooltip:false
     };
 
     updateShared_PlotInfo(plotName, tempplotinforItem);
