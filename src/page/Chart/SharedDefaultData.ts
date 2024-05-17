@@ -3,9 +3,9 @@ import {
   PlotInfoInputType,
   XScaleConfigInputType,
   YScaleConfigInputType,
-} from "../types";
-import { Shared_ChartDimension } from "./SharedDataUtility";
-import { ChartDataType } from "./chartdataTypes";
+} from "./types";
+import { Shared_ChartDimension } from "./BaseSetup/SharedDataUtility";
+import { ChartDataType } from "./BaseSetup/chartdataTypes";
 
 export const defaultchartData: ChartDataType = {
   timestamp: [],
