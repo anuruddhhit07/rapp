@@ -29,6 +29,7 @@ import { UpdatePlotInfo, UpdateXscaleconfig, UpdateYscaleconfig, drawXaxis, draw
 import { plotonsvg } from "../Chart/Svg/svgPlot";
 import { PlotInfoType } from "../Chart/BaseSetup/ShareDataType";
 import { updateTooltips } from "../Chart/Svg/ToolTipUtility";
+import { drawCrosshair } from "./Svg/CrosshairUtility";
 
 class CandlestickChartTS {
   // private axisChart: AxisChart;
@@ -42,11 +43,11 @@ class CandlestickChartTS {
   FrontGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   ResetButton!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   ToolTipArea!: d3.Selection<SVGGElement, any, HTMLElement, any>;
-  BackChartGroup!:d3.Selection<SVGGElement, any, HTMLElement, any>;
+  BackChartGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   Buttonpanel!: void;
 
   constructor(stockdata: ChartDataIN, targetID: string) {
-    SetupChart.getInstance(700, 700, { targetID: targetID });
+    SetupChart.getInstance(1600, 800, { targetID: targetID });
     updateChartPlotData(arrangeData(stockdata));
     InitializeBaseProp();
     UpdateXscaleconfig();
@@ -63,7 +64,7 @@ class CandlestickChartTS {
 
     this.FrontGroup = this.SVGClass.FrontGroup;
     this.ResetButton = this.SVGClass.ResetButton;
-    this.BackChartGroup=this.SVGClass.BackChartGroup
+    this.BackChartGroup = this.SVGClass.BackChartGroup;
     this.Buttonpanel = this.SVGClass.createbuttonpanel(this.buttonClick.bind(this), numberofbutton, Shared_ButtonProp);
     this.SVGClass.createTooltipArea();
     this.ToolTipArea = this.SVGClass.ToolTipArea;
@@ -72,13 +73,13 @@ class CandlestickChartTS {
     this.FrontGroup.onEvent1("mousemove", (event: MouseEvent) => {
       // console.log(event)
       this.mousemovevent(event);
-    })
+    });
 
     this.FrontGroup.onEvent1("mouseout", (event: MouseEvent) => {
       // console.log(event)
       // this.mousemovevent(event);
       // console.log("out");
-      this.mouseoutvent(event)
+      this.mouseoutvent(event);
     });
 
     intialRendorAxis(this.BackGroup, this.FrontGroup);
@@ -87,7 +88,7 @@ class CandlestickChartTS {
       this.resetplot(event);
     });
   }
-  zoomX = d3.zoom().scaleExtent([0.5, 30]).on("zoom", this.zoomedX.bind(this));
+  zoomX = d3.zoom().scaleExtent([0.5, 70]).on("zoom", this.zoomedX.bind(this));
 
   zoomedX(event: any) {
     this.rendorAxis();
@@ -140,7 +141,7 @@ class CandlestickChartTS {
     this.BackGroup.selectAll(".crosshair").style("display", "none");
   }
   mousemovevent(event: MouseEvent) {
-    const {width,height,margin,svgWidth}=Shared_ChartDimension
+    const { width, height, margin, svgWidth } = Shared_ChartDimension;
     const [x, y] = d3.pointer(event);
     // console.log("in");
     this.svg.selectAll(`.tooltip`).style("display", "block");
@@ -156,70 +157,24 @@ class CandlestickChartTS {
         ? Shared_ChartPlotData[Shared_XScaleConfig[zoomXscaleAxis].xscaleDataTag].length - 1
         : Math.round(xValue);
 
-        updateTooltips(this.svg,index)  
-
-      // console.log(Shared_yaxisProp);
-      const tagyaxis=getAxisKeyForRangeValue(y)
-      // console.log(tagyaxis);
-      let valuestring=''
-      if (tagyaxis){
-        const yscaletag=Shared_yaxisProp[tagyaxis].yscaleTag
-        valuestring=Shared_YScaleConfig[yscaletag[0]].yscale().YSCALE?.invert(y).toFixed(2) as string
-        // console.log(AA);
-      }
-     
-     
-
-        this.BackGroup.selectAll(".crosshair").remove()
-      this.BackGroup.append("line")
-      .attr("class", "crosshair crosshair-x")
-      .attr("x1", margin.left+margin.innerLeft)
-      .attr("y1", y)
-      .attr("x2",  svgWidth-margin.right )
-      .attr("y2", y)
-      .attr("stroke", "black")
-      .attr("stroke-width", 1)
-      .attr("stroke-dasharray", "5 5")
-      .attr("pointer-events", "none")
-      .style("display", "block");
-
-      this.BackGroup
-      .append("line")
-      .attr("class", "crosshair crosshair-y")
-      .attr("x1", currentXscale(index))
-      .attr("y1", margin.top + margin.innerTop*2)
-      .attr("x2", currentXscale(index))
-      .attr("y2", margin.top + margin.innerTop + height)
-      .attr("stroke", "black")
-      .attr("stroke-width", 1)
-      .attr("stroke-dasharray", "5 5")
-      .attr("pointer-events", "none")
-      .style("display", "block");
-
-      this.BackGroup
-      .append("rect")
-      .attr("class", "crosshair crosshair-background")
-      .attr("x", svgWidth-margin.right) // Adjust the x-coordinate as needed
-      .attr("y", y-8) // Adjust the y-coordinate to center the text vertically
-      .attr("width", 100) // Adjust the width as needed
-      .attr("height", 18) // Adjust the height as needed
-      .attr("fill", "lightblue")
-      .attr("rx", 5) // Radius for rounded corners
-      .attr("ry", 5);
-
-      this.BackGroup
-      .append("text")
-      .attr("class", "crosshair crosshair-text")
-      .attr("x",svgWidth-margin.right) // Adjust the x-coordinate as needed
-      .attr("y", y)
-      .attr("dy", "0.35em") // Adjust vertical alignment as needed
-      .attr("text-anchor", "start")
-      .style("fill", "blue") // Font color
-      .style("font-size", "10px")
-      .text(` ${valuestring}`)
-
-
+    const tagyaxis = getAxisKeyForRangeValue(y);
     
+    let valuestring = "";
+    if (tagyaxis) {
+      const yscaletag = Shared_yaxisProp[tagyaxis].yscaleTag;
+      valuestring = Shared_YScaleConfig[yscaletag[0]].yscale().YSCALE?.invert(y).toFixed(2) as string;
+      // console.log(AA);
+    }
+
+    updateTooltips(this.svg, index);
+
+    drawCrosshair({
+      BackGroup: this.BackGroup,
+      index: index,
+      y: y,
+      valuestring: valuestring,
+      currentXscale: currentXscale,
+    });
   }
   rendorPlot() {
     this.getclippath();

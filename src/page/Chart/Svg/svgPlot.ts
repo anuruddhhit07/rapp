@@ -139,7 +139,7 @@ function drawPlotScatteryName(
     newyScale,
     plotName,
     yaxistag,
-    true
+    false
   );
 }
 

@@ -2,8 +2,8 @@ import React, { useEffect, useRef } from 'react';
 import { testdatamodule } from 'testdata';
 import CandlestickChartTS from './Chart';
 
-const testobj = new testdatamodule(150);
-const ohlcdata = testobj.getDataForPeriod(150);
+const testobj = new testdatamodule(1150);
+const ohlcdata = testobj.getDataForPeriod(1150);
 const divId = 'chartContainer';
 
 const ChartPage = () => {
