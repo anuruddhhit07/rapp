@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 
-import { createGroupAdv, createMultipleSqure } from "./SVGUtility";
+import { createGroupAdv, createMultipleSqure, enhanceGroup } from "./SVGUtility";
 import { PlotStatusByButtonTag } from "../BaseSetup/ShareDataType";
 import {
   Shared_ChartBaseData,
@@ -21,6 +21,7 @@ class SVGClass {
   ResetButton!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   Buttonpanel!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   ToolTipArea!: d3.Selection<SVGGElement, any, HTMLElement, any>;
+  BackChartGroup!:d3.Selection<SVGGElement, any, HTMLElement, any>;
   constructor() {
     const { targetID, svgWidth, svgHeight, margin, width, height } =
       Shared_ChartDimension;
@@ -35,6 +36,19 @@ class SVGClass {
       "blue",
       0.2
     );
+
+    this.BackChartGroup = createGroupAdv(this.svg, "backchart-border")
+    // .translate(margin.left*0 + margin.innerLeft*0,margin.top*0 + margin.innerTop*0)
+    // .drawBorder(
+    //   0,
+    //   0,
+    //   width + margin.innerRight,
+    //   height,
+    //   "green",
+    //   3,
+    //   "yellow",
+    //   0.1
+    // );
 
     this.FrontGroup = createGroupAdv(this.svg, "main-border").drawBorder(
       margin.left + margin.innerLeft,
@@ -167,7 +181,7 @@ class SVGClass {
     const uniquePlotplotName = Array.from(Shared_ChartBaseData.plotName);
     console.log(Shared_ChartBaseData)
     console.log(uniqueyaxisTag)
-    this.svg.selectAll(`.tooltip`).remove()
+    this.BackChartGroup.selectAll(`.tooltip`).remove()
     uniqueyaxisTag.map(yaxistag=>{
       
       const plotnameArray=Shared_yaxisProp[yaxistag].plotname
@@ -175,7 +189,9 @@ class SVGClass {
       plotnameArray.forEach((pltname)=>{
 
         if (Shared_PlotInfo[pltname].tooltip && Shared_PlotInfo[pltname].getTooltipHTML){
-        createGroupAdv(this.svg, `tooltip tooltip-${yaxistag}-${pltname}`)
+          
+      //   createGroupAdv(this.svg, `tooltip tooltip-${yaxistag}-${pltname}`)
+      enhanceGroup(this.BackChartGroup,`tooltip tooltip-${yaxistag}-${pltname}`)
         .translate(
         Shared_ChartDimension.margin.innerLeft +
           Shared_ChartDimension.margin.left ,

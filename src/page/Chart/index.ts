@@ -54,6 +54,7 @@ const callback: ProxyCallback = (
     const yaxisRangeArray= getYaxisRatio(Array.from(uniquePlotsData.yaxisTag))
     const axisrelation=getPlotNamesAndYScaleTagsByYAxisTag()
     console.log(axisrelation);
+    updateYaxis('',{},true)
     Object.entries(yaxisRangeArray).forEach(([yaxisTag, value]) => {
      // console.log(yaxisTag,value)
       updateYScaleConfigByKey("yaxisTag", yaxisTag,value)

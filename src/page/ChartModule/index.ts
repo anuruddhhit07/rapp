@@ -21,6 +21,7 @@ import {
   Shared_ChartPlotData,
   Shared_PlotInfo,
   Shared_XYrelation,
+  getAxisKeyForRangeValue,
 } from "../Chart/BaseSetup/SharedDataUtility";
 import proxy_plotinfo from "../Chart";
 import { InitializeBaseProp } from "../Chart/BaseSetup/BaseProp";
@@ -41,6 +42,7 @@ class CandlestickChartTS {
   FrontGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   ResetButton!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   ToolTipArea!: d3.Selection<SVGGElement, any, HTMLElement, any>;
+  BackChartGroup!:d3.Selection<SVGGElement, any, HTMLElement, any>;
   Buttonpanel!: void;
 
   constructor(stockdata: ChartDataIN, targetID: string) {
@@ -61,6 +63,7 @@ class CandlestickChartTS {
 
     this.FrontGroup = this.SVGClass.FrontGroup;
     this.ResetButton = this.SVGClass.ResetButton;
+    this.BackChartGroup=this.SVGClass.BackChartGroup
     this.Buttonpanel = this.SVGClass.createbuttonpanel(this.buttonClick.bind(this), numberofbutton, Shared_ButtonProp);
     this.SVGClass.createTooltipArea();
     this.ToolTipArea = this.SVGClass.ToolTipArea;
@@ -134,11 +137,14 @@ class CandlestickChartTS {
   mouseoutvent(event: MouseEvent) {
     // const [x, y] = d3.pointer(event)
     this.svg.selectAll(`.tooltip`).style("display", "none");
+    this.BackGroup.selectAll(".crosshair").style("display", "none");
   }
   mousemovevent(event: MouseEvent) {
+    const {width,height,margin,svgWidth}=Shared_ChartDimension
     const [x, y] = d3.pointer(event);
-    console.log("in");
+    // console.log("in");
     this.svg.selectAll(`.tooltip`).style("display", "block");
+    this.BackGroup.selectAll(".crosshair").style("display", "block");
     const currentTransform = this.FrontGroup.property("__zoom");
     const zoomXscaleAxis = "bot";
     const currentXscale = currentTransform.rescaleX(Shared_XScaleConfig[zoomXscaleAxis].xscale().XSCALE);
@@ -152,7 +158,38 @@ class CandlestickChartTS {
 
         updateTooltips(this.svg,index)  
 
-        
+      // console.log(Shared_yaxisProp,y);
+      const tagyaxis=getAxisKeyForRangeValue(y)
+      console.log("tagyaxis",tagyaxis);
+      const currentYvalue=
+
+        this.BackGroup.selectAll(".crosshair").remove()
+      this.BackGroup.append("line")
+      .attr("class", "crosshair crosshair-x")
+      .attr("x1", margin.left+margin.innerLeft)
+      .attr("y1", y)
+      .attr("x2",  svgWidth-margin.right )
+      .attr("y2", y)
+      .attr("stroke", "black")
+      .attr("stroke-width", 1)
+      .attr("stroke-dasharray", "5 5")
+      .attr("pointer-events", "none")
+      .style("display", "block");
+
+      this.BackGroup
+      .append("line")
+      .attr("class", "crosshair crosshair-y")
+      .attr("x1", currentXscale(index))
+      .attr("y1", margin.top + margin.innerTop)
+      .attr("x2", currentXscale(index))
+      .attr("y2", margin.top + margin.innerTop + height)
+      .attr("stroke", "black")
+      .attr("stroke-width", 1)
+      .attr("stroke-dasharray", "5 5")
+      .attr("pointer-events", "none")
+      .style("display", "block");
+
+
     
   }
   rendorPlot() {

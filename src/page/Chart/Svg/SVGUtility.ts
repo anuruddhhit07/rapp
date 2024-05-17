@@ -89,6 +89,74 @@ export function createGroupAdv(
   return group;
 }
 
+export function enhanceGroup(
+  groupmain: d3.Selection<SVGGElement, any, HTMLElement, any>,
+  className: string // Add a parameter for the class name
+): d3.Selection<SVGGElement, any, HTMLElement, any> {
+  // Set the class attribute for the group
+  const group = groupmain.append("g");
+
+  group.attr("class", className);
+
+  // Add a method to draw a border around the group
+  group.drawBorder = function (x: number, y: number, width: number, height: number, borderColor: string, borderWidth: number, fill: string, opacity: number) {
+    this.append("rect")
+      .attr("class", `${className}-border`) // Add class attribute
+      .attr("x", x)
+      .attr("y", y)
+      .attr("width", width)
+      .attr("height", height)
+      .attr("opacity", opacity)
+      .attr("fill", fill)
+      .style("stroke", borderColor)
+      .style("stroke-width", borderWidth);
+    return this; // Return the group selection for chaining
+  };
+
+  // Add a method to import data to the group
+  group.importData = function (data: any[]) {
+    // Example: bind data to group elements
+    const rects = this.selectAll("rect")
+      .data(data)
+      .enter()
+      .append("rect")
+      .attr("class", `${className}-data`) // Add class attribute
+      .attr("x", (d, i) => i * 30)
+      .attr("y", 0)
+      .attr("width", 20)
+      .attr("height", (d) => d.value)
+      .style("fill", "steelblue");
+    return this; // Return the group selection for chaining
+  };
+
+  // Add a method to translate the group
+  group.translate = function (x: number, y: number) {
+    this.attr("transform", `translate(${x},${y})`);
+    return this; // Return the group selection for chaining
+  };
+
+  group.insertHTML = function (html: string) {
+    this.selectAll(`.${className}-html`).remove();
+    const htmlGroup = this.append("g").attr("class", `${className}-html`);
+    htmlGroup.html(html); // Set the HTML content of the new group
+    return this; // Return the group selection for chaining
+  };
+
+  group.onEvent1 = function (
+    eventName: string,
+    eventHandler: (this: SVGGElement, event: any, d: any) => void // Adjust the listener function signature
+  ) {
+    this.on(eventName, function (this: SVGGElement, event, d) {
+      // Adjust the listener function parameters
+      return eventHandler.call(this, event, d); // Call the event handler with the correct parameters
+    });
+    return this; // Return the group selection for chaining
+  };
+
+  return group;
+}
+
+
 export function createClipPath(
   svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,
   id: string,

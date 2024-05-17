@@ -27,6 +27,7 @@ export function InitializeBaseProp() {
   updateSharedChartData(uniquePlotsData as any);
   const axisrelation=getPlotNamesAndYScaleTagsByYAxisTag()
   console.log(axisrelation);
+  updateYaxis('',{},true)
   const yaxisRangeArray= getYaxisRatio(Array.from(uniquePlotsData.yaxisTag))
   Object.entries(yaxisRangeArray).forEach(([yaxisTag, value]) => {
     // console.log(yaxisTag,value)

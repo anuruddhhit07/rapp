@@ -46,19 +46,36 @@ export function updateChartBaseProp(partialData: Partial<ChartDimensionType>): v
   Object.assign(Shared_ChartDimension, partialData);
 }
 
-export function updateYaxis(key: string, partialData: Partial<yaxisItemType>): void {
-  if (Shared_yaxisProp.hasOwnProperty(key)) {
-    // Merge the partial data with the existing DataToplotObjType object
-    Shared_yaxisProp[key] = { ...Shared_yaxisProp[key], ...partialData };
+export function updateYaxis(key: string, partialData: Partial<yaxisItemType>,reset?:boolean): void {
+  if (reset==true) {
+    Shared_yaxisProp={}
   } else {
-    // If the key does not exist, create a new DataToplotObjType object with the provided data
-    Shared_yaxisProp[key] = {
-      range: [0, 0],
-      plotname: [],
-      yscaleTag: [],
-      ...partialData, // Merge with additional partialData
-    };
+    if (Shared_yaxisProp.hasOwnProperty(key)) {
+      // Merge the partial data with the existing DataToplotObjType object
+      Shared_yaxisProp[key] = { ...Shared_yaxisProp[key], ...partialData };
+    } else {
+      // If the key does not exist, create a new DataToplotObjType object with the provided data
+      Shared_yaxisProp[key] = {
+        range: [0, 0],
+        plotname: [],
+        yscaleTag: [],
+        ...partialData, // Merge with additional partialData
+      };
+    }
   }
+  
+}
+
+export function getAxisKeyForRangeValue(value: number): string | undefined {
+  for (const key in Shared_yaxisProp) {
+    if (Shared_yaxisProp.hasOwnProperty(key)) {
+      const range = Shared_yaxisProp[key].range;
+      if (value >= range[1] && value <= range[0]) {
+        return key;
+      }
+    }
+  }
+  return undefined;
 }
 
 export function getPlotNamesAndYScaleTagsByYAxisTag(): { [key: keyof yaxisType]: { plotName: (keyof PlotInfoType)[]; yscaleTag: (keyof yScaleConfigType)[] } } {
