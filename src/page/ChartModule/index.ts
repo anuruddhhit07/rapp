@@ -82,6 +82,8 @@ class CandlestickChartTS {
       this.mousemovevent(event);
     });
 
+   
+
     intialRendorAxis(this.BackGroup, this.FrontGroup);
     this.rendorPlot();
     this.ResetButton.onEvent1("click", (event) => {
@@ -128,27 +130,30 @@ class CandlestickChartTS {
     drawYaxis(this.BackGroup, this.svg);
   }
 
+  isMouseInsideFrontGroup(x: number, y: number): boolean|undefined {
+    // Get FrontGroup element dimensions
+    const frontGroupRect = this.FrontGroup.node()?.getBoundingClientRect();
+    
+    // Check if mouse coordinates are inside FrontGroup
+    return frontGroupRect && x >= frontGroupRect.left && x <= frontGroupRect.right &&
+           y >= frontGroupRect.top && y <= frontGroupRect.bottom;
+}
+
   mousemovevent(event: MouseEvent) {
-   
     const [x, y] = d3.pointer(event);
+console.log(this.isMouseInsideFrontGroup(x,y));
+
     // console.log(`Group mousemove! at mousefunction:${x},y:${y} `);
     const currentTransform= this.FrontGroup.property("__zoom")
-
     const zoomXscaleAxis='bot'
     const currentXscale=currentTransform.rescaleX(Shared_XScaleConfig[zoomXscaleAxis].xscale().XSCALE)
     const xValue = currentXscale.invert(x)
-    // console.log(xValue,Shared_ChartPlotData[Shared_XScaleConfig[zoomXscaleAxis].xscaleDataTag])
     let index =
     Math.round(xValue) < 0
       ? 0
       : Math.round(xValue) > Shared_ChartPlotData[Shared_XScaleConfig[zoomXscaleAxis].xscaleDataTag].length - 1
         ? Shared_ChartPlotData[Shared_XScaleConfig[zoomXscaleAxis].xscaleDataTag].length - 1
         : Math.round(xValue);
-
-        // console.log("index",index)
-        // ToolTipArea
-      //  console.log(Shared_PlotInfo['ClosePlot'])
-      //console.log(Shared_ChartBaseData)
       const uniquePLot=Array.from(Shared_ChartBaseData.plotName)
       uniquePLot.forEach((plotname: keyof PlotInfoType) => {
         const plotInfo = Shared_PlotInfo[plotname];
@@ -157,37 +162,12 @@ class CandlestickChartTS {
           const yscaleTag = plotInfo.yscaleTag;
           const yaxistag = Shared_YScaleConfig[yscaleTag].yaxisTag;
           const tooltipSelection = this.svg.select(`.tooltip-${yaxistag}-${plotname}`) as d3.Selection<SVGGElement, any, HTMLElement, any>; // Correct the selector
-          // console.log(plotname,yaxistag,tooltipSelection)
-          // Check if getTooltipHTML method exists in plotInfo
-          // if (plotInfo.getTooltipHTML ) {
-            // Call getTooltipHTML method if it exists
-            // console.log(plotInfo,yaxistag,tooltipSelection)
             plotInfo.getTooltipHTML(yaxistag,index, tooltipSelection);
           // }
         }
       });
 
-      //  let tooltipHTML=''
-      //   if (Shared_PlotInfo['OHLCPlot'].getTooltipHTML){
-      //     // console.log(Shared_PlotInfo['ClosePlot'].getTooltipHTML(index))
-      //     // Shared_PlotInfo['OHLCPlot'].getTooltipHTML(index,this.ToolTipArea)
-
-      //   }
-        // console.log(tooltipHTML)
-        // d3.selectAll(`.tooltip-area`).html(tooltipHTML)
-        // .style("display", "block")
-        // this.ToolTipArea.insertHTML("<div>Hello, world!</div>")
-
-        // this.ToolTipArea.append("text")
-        // .attr("class", "tooliptext")
-        // .attr("x", 10)
-        // .attr("y", 0)
-        // .attr("font-size", "12px")
-        // .append("tspan")
-        // .text(`${'hello'}`)
-        // .attr("fill", "blue")
-
-        // this.ToolTipArea.html('content')
+    
 
   }
   rendorPlot() {
