@@ -124,6 +124,7 @@ class CandlestickChartTS {
 
   rendorAxis() {
     // this.BackGroup.selectAll(`.axis`).remove();
+    
     drawXaxis(this.BackGroup, this.FrontGroup);
     drawYaxis(this.BackGroup, this.svg);
   }

@@ -178,9 +178,9 @@ export function UpdatePlotInfo(){
 function XAxisOnSVG(scaleconfig: XScaleConfigItemType, currentTransformXb: any, axisAreaonSVG: any) {
   if (scaleconfig.xscale != null) {
     const XSL = scaleconfig.xscale().XSCALE as d3.ScaleLinear<number, number>;
-    let currentxscale = currentTransformXb.rescaleY(XSL);
+    let currentxscale = currentTransformXb.rescaleX(XSL);
     axisAreaonSVG.selectAll(`.x-axis-${scaleconfig.xscaleTag}`).remove();
-
+   
     axisAreaonSVG
     .append("g")
     .attr("class", `axis x-axis x-axis-${scaleconfig.xscaleTag}`)
@@ -252,6 +252,7 @@ export function drawXaxis(axisAreaonSVG: d3.Selection<SVGGElement, any, HTMLElem
       const XSL = scaleconfig.xscale().XSCALE as d3.ScaleLinear<number, number> | d3.ScaleTime<number, number>;
 
       const currentTransformXb = xzoomeventsvg.property("__zoom");
+      // console.log("currentTransformXb",currentTransformXb);
 
       let currentxscale = currentTransformXb.rescaleX(XSL);
       Shared_XYrelation[scaletag].map((yscaltag) => {

@@ -29,7 +29,7 @@ interface TooltipData {
   
     const data: TooltipData[] = [
       { I: { value: index } },
-      { D: { value: formatTimestamp(Shared_ChartPlotData.timestamp[index]), color: 'black' } },
+      { D: { value: formatTimestamp(Shared_ChartPlotData.timestamp[index]), color: 'blue' } },
       { O: { value: Shared_ChartPlotData.open[index] .toFixed(2), color: 'blue' } },
       { H: { value: Shared_ChartPlotData.high[index].toFixed(2), color: 'green' } },
       { L: { value: Shared_ChartPlotData.low[index].toFixed(2), color: 'red' } },
