@@ -34,21 +34,11 @@ class SVGClass {
       "red",
       2,
       "blue",
-      0.2
+      0
     );
 
     this.BackChartGroup = createGroupAdv(this.svg, "backchart-border")
-    // .translate(margin.left*0 + margin.innerLeft*0,margin.top*0 + margin.innerTop*0)
-    // .drawBorder(
-    //   0,
-    //   0,
-    //   width + margin.innerRight,
-    //   height,
-    //   "green",
-    //   3,
-    //   "yellow",
-    //   0.1
-    // );
+    
 
     this.FrontGroup = createGroupAdv(this.svg, "main-border").drawBorder(
       margin.left + margin.innerLeft,
@@ -58,7 +48,7 @@ class SVGClass {
       "green",
       3,
       "yellow",
-      0.2
+      0
     );
 
     this.ResetButton = createGroupAdv(this.svg, "reset-area").drawBorder(
@@ -68,8 +58,8 @@ class SVGClass {
       margin.bottom,
       "red",
       2,
-      "blue",
-      0.2
+      "green",
+      0.5
     );
     // .onEvent1("click", (event) => {
     //   // this.resetplot(event);
@@ -120,7 +110,7 @@ class SVGClass {
           "red",
           5,
           "green",
-          0.5 / (index + 1)
+          0 / (index + 1)
         )
         .call(callback);
     });
@@ -214,23 +204,7 @@ class SVGClass {
    
     })
 
-    // this.ToolTipArea = createGroupAdv(this.svg, "tooltip-area")
-    //   .translate(
-    //     Shared_ChartDimension.margin.innerLeft +
-    //       Shared_ChartDimension.margin.left +
-    //       50,
-    //     Shared_ChartDimension.margin.innerTop + 50
-    //   )
-    //   .drawBorder(
-    //     0,
-    //     0,
-    //     Shared_ChartDimension.svgWidth,
-    //     Shared_ChartDimension.margin.innerTop,
-    //     "red",
-    //     2,
-    //     "blue",
-    //     0.3
-    //   );
+   
   }
 
   setupSVG(): void {

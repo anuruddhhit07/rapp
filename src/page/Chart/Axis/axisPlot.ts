@@ -15,7 +15,6 @@ import {
 } from "../BaseSetup/SharedDataUtility";
 import { ChartDataType } from "../BaseSetup/chartdataTypes";
 import { formatVolume, multiFormat } from "./dateFormat";
-import { Shared_DataToplot } from "../../ChartModule/SharedObject";
 import { getTooltipHTMLLine, getTooltipHTMLOHLC, getTooltipHTMLVolume } from "../Svg/ToolTipUtility";
 
 function custumticformat(i: d3.NumberValue, stockid: string, datatotag: keyof ChartDataType): string | null {

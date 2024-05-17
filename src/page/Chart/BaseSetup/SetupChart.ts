@@ -1,9 +1,5 @@
 import { updateChartBaseProp } from "../../Chart/BaseSetup/SharedDataUtility";
-import {
-  ChartOptionsIn,
-  Margin,
-  CustomChartOptions,
-} from "../types/chartSetuptype";
+import { ChartOptionsIn } from "../Svg/chartSetuptype";
 import * as d3 from "d3";
 // import { updateChartBaseProp } from "../SharedObject";
 

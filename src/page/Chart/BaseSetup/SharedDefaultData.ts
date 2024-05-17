@@ -148,8 +148,8 @@ export const defaultChartDimensionProp: ChartDimensionType = {
       top: 20,
       right: 50,
       bottom: 20,
-      left: 10,
-      innerLeft: 20,
+      left: 0,
+      innerLeft: 0,
       innerRight: 100,
       innerBottom: 20,
       innerTop: 20
