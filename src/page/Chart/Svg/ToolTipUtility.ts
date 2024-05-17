@@ -1,6 +1,6 @@
 import { color } from "d3";
-import { PlotInfoItem } from "../BaseSetup/ShareDataType";
-import { Shared_ChartPlotData } from "../BaseSetup/SharedDataUtility";
+import { PlotInfoItem, PlotInfoType } from "../BaseSetup/ShareDataType";
+import { Shared_ChartBaseData, Shared_ChartPlotData, Shared_PlotInfo, Shared_YScaleConfig } from "../BaseSetup/SharedDataUtility";
 
 function formatTimestamp(timestamp: number): string {
     const date = new Date(timestamp * 1000); // Convert Unix timestamp to milliseconds
@@ -136,4 +136,17 @@ interface TooltipData {
         }
       }
     }
+  }
+
+export function updateTooltips(svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>, index: number): void {
+    const uniquePLot = Array.from(Shared_ChartBaseData.plotName);
+    uniquePLot.forEach((plotname: keyof PlotInfoType) => {
+      const plotInfo = Shared_PlotInfo[plotname];
+      if (plotInfo && plotInfo.tooltip && plotInfo.getTooltipHTML) {
+        const yscaleTag = plotInfo.yscaleTag;
+        const yaxistag = Shared_YScaleConfig[yscaleTag].yaxisTag;
+        const tooltipSelection = svg.select(`.tooltip-${yaxistag}-${plotname}`) as d3.Selection<SVGGElement, any, HTMLElement, any>; // Correct the selector
+        plotInfo.getTooltipHTML(yaxistag, index, tooltipSelection);
+      }
+    });
   }

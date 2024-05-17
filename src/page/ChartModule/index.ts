@@ -24,17 +24,10 @@ import {
 } from "../Chart/BaseSetup/SharedDataUtility";
 import proxy_plotinfo from "../Chart";
 import { InitializeBaseProp } from "../Chart/BaseSetup/BaseProp";
-import {
-  UpdatePlotInfo,
-  UpdateXscaleconfig,
-  UpdateYscaleconfig,
-  drawXaxis,
-  drawYaxis,
-  intialRendorAxis,
-} from "../Chart/Axis/axisPlot";
+import { UpdatePlotInfo, UpdateXscaleconfig, UpdateYscaleconfig, drawXaxis, drawYaxis, intialRendorAxis } from "../Chart/Axis/axisPlot";
 import { plotonsvg } from "../Chart/Svg/svgPlot";
 import { PlotInfoType } from "../Chart/BaseSetup/ShareDataType";
-
+import { updateTooltips } from "../Chart/Svg/ToolTipUtility";
 
 class CandlestickChartTS {
   // private axisChart: AxisChart;
@@ -56,7 +49,7 @@ class CandlestickChartTS {
     InitializeBaseProp();
     UpdateXscaleconfig();
     UpdateYscaleconfig();
-    UpdatePlotInfo()
+    UpdatePlotInfo();
     //console.log(Shared_YScaleConfig)
 
     this.SVGClass = SVGClass.getInstance();
@@ -65,24 +58,25 @@ class CandlestickChartTS {
     this.SVGClass.createYaxiseventArea(this.zoomY);
     const numberofbutton = 6;
     this.BackGroup = this.SVGClass.BackGroup;
-   
+
     this.FrontGroup = this.SVGClass.FrontGroup;
     this.ResetButton = this.SVGClass.ResetButton;
-    this.Buttonpanel = this.SVGClass.createbuttonpanel(
-      this.buttonClick.bind(this),
-      numberofbutton,
-      Shared_ButtonProp
-    );
-    this.SVGClass.createTooltipArea()
+    this.Buttonpanel = this.SVGClass.createbuttonpanel(this.buttonClick.bind(this), numberofbutton, Shared_ButtonProp);
+    this.SVGClass.createTooltipArea();
     this.ToolTipArea = this.SVGClass.ToolTipArea;
 
     this.FrontGroup.call(this.zoomX as any);
-    this.FrontGroup.onEvent1("mousemove", (event:MouseEvent) => {
+    this.FrontGroup.onEvent1("mousemove", (event: MouseEvent) => {
       // console.log(event)
       this.mousemovevent(event);
-    });
+    })
 
-   
+    this.FrontGroup.onEvent1("mouseout", (event: MouseEvent) => {
+      // console.log(event)
+      // this.mousemovevent(event);
+      // console.log("out");
+      this.mouseoutvent(event)
+    });
 
     intialRendorAxis(this.BackGroup, this.FrontGroup);
     this.rendorPlot();
@@ -110,14 +104,12 @@ class CandlestickChartTS {
   buttonClick(id: any, className: any, pressstate: any) {
     //console.log(id);
 
-    const plotarray = collectKeysByButtonId(id) as [
-      keyof typeof Shared_ButtonProp
-    ];
+    const plotarray = collectKeysByButtonId(id) as [keyof typeof Shared_ButtonProp];
     plotarray.map((toggleplot) => {
       proxy_plotinfo[toggleplot].plotStatus = pressstate;
     });
     this.SVGClass.createYaxiseventArea(this.zoomY);
-    this.SVGClass.createTooltipArea()
+    this.SVGClass.createTooltipArea();
     this.rendorAxis();
     this.rendorPlot();
 
@@ -130,45 +122,38 @@ class CandlestickChartTS {
     drawYaxis(this.BackGroup, this.svg);
   }
 
-  isMouseInsideFrontGroup(x: number, y: number): boolean|undefined {
+  isMouseInsideFrontGroup(x: number, y: number): boolean | undefined {
     // Get FrontGroup element dimensions
     const frontGroupRect = this.FrontGroup.node()?.getBoundingClientRect();
-    
-    // Check if mouse coordinates are inside FrontGroup
-    return frontGroupRect && x >= frontGroupRect.left && x <= frontGroupRect.right &&
-           y >= frontGroupRect.top && y <= frontGroupRect.bottom;
-}
+    console.log(frontGroupRect);
 
+    // Check if mouse coordinates are inside FrontGroup
+    return frontGroupRect && x >= frontGroupRect.left && x <= frontGroupRect.right && y >= frontGroupRect.top && y <= frontGroupRect.bottom;
+  }
+
+  mouseoutvent(event: MouseEvent) {
+    // const [x, y] = d3.pointer(event)
+    this.svg.selectAll(`.tooltip`).style("display", "none");
+  }
   mousemovevent(event: MouseEvent) {
     const [x, y] = d3.pointer(event);
-console.log(this.isMouseInsideFrontGroup(x,y));
-
-    // console.log(`Group mousemove! at mousefunction:${x},y:${y} `);
-    const currentTransform= this.FrontGroup.property("__zoom")
-    const zoomXscaleAxis='bot'
-    const currentXscale=currentTransform.rescaleX(Shared_XScaleConfig[zoomXscaleAxis].xscale().XSCALE)
-    const xValue = currentXscale.invert(x)
+    console.log("in");
+    this.svg.selectAll(`.tooltip`).style("display", "block");
+    const currentTransform = this.FrontGroup.property("__zoom");
+    const zoomXscaleAxis = "bot";
+    const currentXscale = currentTransform.rescaleX(Shared_XScaleConfig[zoomXscaleAxis].xscale().XSCALE);
+    const xValue = currentXscale.invert(x);
     let index =
-    Math.round(xValue) < 0
-      ? 0
-      : Math.round(xValue) > Shared_ChartPlotData[Shared_XScaleConfig[zoomXscaleAxis].xscaleDataTag].length - 1
+      Math.round(xValue) < 0
+        ? 0
+        : Math.round(xValue) > Shared_ChartPlotData[Shared_XScaleConfig[zoomXscaleAxis].xscaleDataTag].length - 1
         ? Shared_ChartPlotData[Shared_XScaleConfig[zoomXscaleAxis].xscaleDataTag].length - 1
         : Math.round(xValue);
-      const uniquePLot=Array.from(Shared_ChartBaseData.plotName)
-      uniquePLot.forEach((plotname: keyof PlotInfoType) => {
-        const plotInfo = Shared_PlotInfo[plotname];
-        // console.log(plotname)
-        if (plotInfo && plotInfo.tooltip && plotInfo.getTooltipHTML) {
-          const yscaleTag = plotInfo.yscaleTag;
-          const yaxistag = Shared_YScaleConfig[yscaleTag].yaxisTag;
-          const tooltipSelection = this.svg.select(`.tooltip-${yaxistag}-${plotname}`) as d3.Selection<SVGGElement, any, HTMLElement, any>; // Correct the selector
-            plotInfo.getTooltipHTML(yaxistag,index, tooltipSelection);
-          // }
-        }
-      });
 
+        updateTooltips(this.svg,index)  
+
+        
     
-
   }
   rendorPlot() {
     this.getclippath();
@@ -180,9 +165,7 @@ console.log(this.isMouseInsideFrontGroup(x,y));
     const yscaleTagSet = Array.from(Shared_ChartBaseData.yscaleTag);
     yscaleTagSet.map((scaletag) => {
       const scaleconfig = Shared_YScaleConfig[scaletag];
-      this.svg
-        .select(`.yzoom-${scaleconfig.yaxisTag}`)
-        .call(this.zoomY.transform as any, d3.zoomIdentity);
+      this.svg.select(`.yzoom-${scaleconfig.yaxisTag}`).call(this.zoomY.transform as any, d3.zoomIdentity);
       updateShared_YScaleConfig(scaleconfig.yscaleTag, {
         yzoomtransform: d3.zoomIdentity,
       });
@@ -201,8 +184,7 @@ console.log(this.isMouseInsideFrontGroup(x,y));
       createClipPath(
         this.svg,
         `clip-${yaxistag}`,
-        Shared_ChartDimension.margin.left +
-          Shared_ChartDimension.margin.innerLeft,
+        Shared_ChartDimension.margin.left + Shared_ChartDimension.margin.innerLeft,
         range[1],
         Shared_ChartDimension.width + Shared_ChartDimension.margin.innerRight,
         range[0] - range[1]

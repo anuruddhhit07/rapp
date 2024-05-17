@@ -44,7 +44,7 @@ class SVGClass {
       "green",
       3,
       "yellow",
-      0.4
+      0.2
     );
 
     this.ResetButton = createGroupAdv(this.svg, "reset-area").drawBorder(
