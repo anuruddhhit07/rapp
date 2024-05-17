@@ -1,5 +1,5 @@
 import { color } from "d3";
-import { PlotInfoItem, PlotInfoType } from "../BaseSetup/ShareDataType";
+import { PlotInfoItem, PlotInfoType } from "../types";
 import { Shared_ChartBaseData, Shared_ChartPlotData, Shared_PlotInfo, Shared_YScaleConfig } from "../BaseSetup/SharedDataUtility";
 
 function formatTimestamp(timestamp: number): string {

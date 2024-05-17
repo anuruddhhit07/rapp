@@ -12,7 +12,7 @@ import {
   yScaleConfigType,
   yaxisItemType,
   yaxisType,
-} from "./ShareDataType";
+} from "../types";
 import { defaultChartDimensionProp, defaultchartData, plotInfoInput, xScaleConfigInput, yScaleConfigInput } from "./SharedDefaultData";
 import { ChartDataType } from "./chartdataTypes";
 import { NumberValue, ScaleBand, ScaleLinear, ScaleTime } from "d3";

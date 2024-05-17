@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { PlotInfoItem, XScaleConfigItemType, YScaleConfigItemType, xScaleConfigType, yScaleConfigType } from "../BaseSetup/ShareDataType";
+import { PlotInfoItem, XScaleConfigItemType, YScaleConfigItemType, xScaleConfigType, yScaleConfigType } from "../types";
 import {
   Shared_ChartBaseData,
   Shared_ChartDimension,

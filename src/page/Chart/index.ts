@@ -27,10 +27,9 @@ import proxy_plotinfo from "../Chart/BaseSetup";
 import { InitializeBaseProp } from "../Chart/BaseSetup/BaseProp";
 import { UpdatePlotInfo, UpdateXscaleconfig, UpdateYscaleconfig, drawXaxis, drawYaxis, intialRendorAxis } from "../Chart/Axis/axisPlot";
 import { plotonsvg } from "../Chart/Svg/svgPlot";
-import { PlotInfoType } from "../Chart/BaseSetup/ShareDataType";
 import { updateTooltips } from "../Chart/Svg/ToolTipUtility";
 import { drawCrosshair } from "./Svg/CrosshairUtility";
-import { defaultChartparamater } from "./types";
+import { DefaultChartParameter } from "./types";
 
 
 class CandlestickChartTS {
@@ -48,7 +47,7 @@ class CandlestickChartTS {
   BackChartGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   Buttonpanel!: void;
 
-  constructor(stockdata: ChartDataIN, targetID: string,Candlestickparamater:defaultChartparamater) {
+  constructor(stockdata: ChartDataIN, targetID: string,Candlestickparamater:DefaultChartParameter) {
     SetupChart.getInstance(Candlestickparamater?.divWidth??1600, Candlestickparamater?.divHeight??800, { targetID: targetID });
     updateChartPlotData(arrangeData(stockdata));
     InitializeBaseProp();

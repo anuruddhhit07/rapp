@@ -3,7 +3,7 @@ import {
   PlotInfoInputType,
   XScaleConfigInputType,
   YScaleConfigInputType,
-} from "./ShareDataType";
+} from "../types";
 import { Shared_ChartDimension } from "./SharedDataUtility";
 import { ChartDataType } from "./chartdataTypes";
 
