@@ -30,6 +30,8 @@ import { plotonsvg } from "../Chart/Svg/svgPlot";
 import { PlotInfoType } from "../Chart/BaseSetup/ShareDataType";
 import { updateTooltips } from "../Chart/Svg/ToolTipUtility";
 import { drawCrosshair } from "./Svg/CrosshairUtility";
+import { defaultChartparamater } from "./types";
+
 
 class CandlestickChartTS {
   // private axisChart: AxisChart;
@@ -46,8 +48,8 @@ class CandlestickChartTS {
   BackChartGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   Buttonpanel!: void;
 
-  constructor(stockdata: ChartDataIN, targetID: string) {
-    SetupChart.getInstance(1600, 800, { targetID: targetID });
+  constructor(stockdata: ChartDataIN, targetID: string,Candlestickparamater:defaultChartparamater) {
+    SetupChart.getInstance(Candlestickparamater?.divWidth??1600, Candlestickparamater?.divHeight??800, { targetID: targetID });
     updateChartPlotData(arrangeData(stockdata));
     InitializeBaseProp();
     UpdateXscaleconfig();
