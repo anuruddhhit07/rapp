@@ -184,6 +184,26 @@ export function createClipPath(
 
   return clipPath;
 }
+export function createSVGDefs(
+  svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,
+  defs: { [key: string]: string }
+): void {
+  // Select the existing defs element if available, or create a new one
+  let defsElement: d3.Selection<SVGDefsElement, any, HTMLElement, any> = svg.select<SVGDefsElement>('defs');
+  if (defsElement.empty()) {
+    defsElement = svg.append('defs');
+  }
+
+  // Append each SVG definition directly to the defs element
+  Object.entries(defs).forEach(([id, svgString]) => {
+    defsElement.append(() => {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(svgString, 'image/svg+xml');
+      return doc.documentElement;
+    }).attr('id', id);
+  });
+}
+
 
 export function createMultipleSqure(
   svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,
