@@ -1,12 +1,12 @@
-import SetupChart from "../Chart/BaseSetup/SetupChart";
+import SetupChart from "../ChartModule/BaseSetup/SetupChart";
 import { arrangeData } from "./DataUtility/arrangeData";
 
-import { ChartDataIN } from "../Chart/BaseSetup/chartdataTypes";
+import { ChartDataIN } from "../ChartModule/BaseSetup/chartdataTypes";
 import * as d3 from "d3";
 
-import { createClipPath } from "../Chart/Svg/SVGUtility";
+import { createClipPath } from "../ChartModule/Svg/SVGUtility";
 
-import SVGClass from "../Chart/Svg/SvgClassModel";
+import SVGClass from "../ChartModule/Svg/SvgClassModel";
 
 import {
   Shared_ChartBaseData,
@@ -22,12 +22,12 @@ import {
   Shared_PlotInfo,
   Shared_XYrelation,
   getAxisKeyForRangeValue,
-} from "../Chart/BaseSetup/SharedDataUtility";
-import proxy_plotinfo from "../Chart/BaseSetup";
-import { InitializeBaseProp } from "../Chart/BaseSetup/BaseProp";
-import { UpdatePlotInfo, UpdateXscaleconfig, UpdateYscaleconfig, drawXaxis, drawYaxis, intialRendorAxis } from "../Chart/Axis/axisPlot";
-import { plotonsvg } from "../Chart/Svg/svgPlot";
-import { updateTooltips } from "../Chart/Svg/ToolTipUtility";
+} from "../ChartModule/BaseSetup/SharedDataUtility";
+import proxy_plotinfo from "../ChartModule/BaseSetup";
+import { InitializeBaseProp } from "../ChartModule/BaseSetup/BaseProp";
+import { UpdatePlotInfo, UpdateXscaleconfig, UpdateYscaleconfig, drawXaxis, drawYaxis, intialRendorAxis } from "../ChartModule/Axis/axisPlot";
+import { plotonsvg } from "../ChartModule/Svg/svgPlot";
+import { updateTooltips } from "../ChartModule/Svg/ToolTipUtility";
 import { drawCrosshair } from "./Svg/CrosshairUtility";
 import { DefaultChartParameter } from "./types";
 

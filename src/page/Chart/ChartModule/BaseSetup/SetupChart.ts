@@ -1,4 +1,4 @@
-import { updateChartBaseProp } from "../../Chart/BaseSetup/SharedDataUtility";
+import { updateChartBaseProp } from "../../ChartModule/BaseSetup/SharedDataUtility";
 import { ChartOptionsIn } from "../Svg/chartSetuptype";
 import * as d3 from "d3";
 // import { updateChartBaseProp } from "../SharedObject";
