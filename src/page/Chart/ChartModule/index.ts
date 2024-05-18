@@ -92,8 +92,10 @@ class CandlestickChartTS {
   zoomX = d3.zoom().scaleExtent([0.5, 70]).on("zoom", this.zoomedX.bind(this));
 
   zoomedX(event: any) {
+    const [x, y] = d3.pointer(event);
     this.rendorAxis();
     this.rendorPlot();
+    this.handleTooltipAndCrosshair(x, y)
   }
 
   zoomY = d3.zoom().scaleExtent([0.5, 4]).on("zoom", this.zoomedY.bind(this));
@@ -146,38 +148,44 @@ class CandlestickChartTS {
     const { width, height, margin, svgWidth } = Shared_ChartDimension;
     const [x, y] = d3.pointer(event);
     // console.log("in");
-    this.svg.selectAll(`.tooltip`).style("display", "block");
-    this.BackGroup.selectAll(".crosshair").style("display", "block");
-    const currentTransform = this.FrontGroup.property("__zoom");
-    const zoomXscaleAxis = "bot";
-    const currentXscale = currentTransform.rescaleX(Shared_XScaleConfig[zoomXscaleAxis].xscale().XSCALE);
-    const xValue = currentXscale.invert(x);
-    let index =
-      Math.round(xValue) < 0
-        ? 0
-        : Math.round(xValue) > Shared_ChartPlotData[Shared_XScaleConfig[zoomXscaleAxis].xscaleDataTag].length - 1
-        ? Shared_ChartPlotData[Shared_XScaleConfig[zoomXscaleAxis].xscaleDataTag].length - 1
-        : Math.round(xValue);
+    this.handleTooltipAndCrosshair(x, y)
+  }
 
+ handleTooltipAndCrosshair(x: d3.NumberValue, y: number) {
+    // Display tooltip and crosshair elements
+    this.svg.selectAll('.tooltip').style('display', 'block');
+    this.BackGroup.selectAll('.crosshair').style('display', 'block');
+
+    // Get current zoom transform
+    const currentTransform = this.FrontGroup.property('__zoom');
+    const zoomXscaleAxis = 'bot';
+    const currentXscale = currentTransform.rescaleX(Shared_XScaleConfig[zoomXscaleAxis].xscale().XSCALE);
+
+    // Calculate x value and index
+    const xValue = currentXscale.invert(x);
+    let index = Math.round(xValue) < 0 ? 0 : Math.round(xValue) > Shared_ChartPlotData[Shared_XScaleConfig[zoomXscaleAxis].xscaleDataTag].length - 1
+        ? Shared_ChartPlotData[Shared_XScaleConfig[zoomXscaleAxis].xscaleDataTag].length - 1 : Math.round(xValue);
+
+    // Get the corresponding y-axis tag and value string
     const tagyaxis = getAxisKeyForRangeValue(y);
-    
     let valuestring = "";
     if (tagyaxis) {
-      const yscaletag = Shared_yaxisProp[tagyaxis].yscaleTag;
-      valuestring = Shared_YScaleConfig[yscaletag[0]].yscale().YSCALE?.invert(y).toFixed(2) as string;
-      // console.log(AA);
+        const yscaletag = Shared_yaxisProp[tagyaxis].yscaleTag;
+        valuestring = Shared_YScaleConfig[yscaletag[0]].yscale().YSCALE?.invert(y).toFixed(2) as string;
     }
 
+    // Update tooltips and draw crosshair
     updateTooltips(this.svg, index);
-
     drawCrosshair({
-      BackGroup: this.BackGroup,
-      index: index,
-      y: y,
-      valuestring: valuestring,
-      currentXscale: currentXscale,
+        BackGroup: this.BackGroup,
+        index: index,
+        y: y,
+        valuestring: valuestring,
+        currentXscale: currentXscale,
     });
-  }
+}
+
+  
   rendorPlot() {
     this.getclippath();
     plotonsvg(this.BackGroup, this.FrontGroup, this.AxisYGroup);

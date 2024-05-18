@@ -65,4 +65,39 @@ export function drawCrosshair({
       .style("font-size", "10px")
       .text(` ${valuestring}`);
   }
+
+//   function handleTooltipAndCrosshair(svg, BackGroup, FrontGroup, Shared_XScaleConfig, Shared_ChartPlotData, Shared_yaxisProp, Shared_YScaleConfig, x, y) {
+//     // Display tooltip and crosshair elements
+//     svg.selectAll('.tooltip').style('display', 'block');
+//     BackGroup.selectAll('.crosshair').style('display', 'block');
+
+//     // Get current zoom transform
+//     const currentTransform = FrontGroup.property('__zoom');
+//     const zoomXscaleAxis = 'bot';
+//     const currentXscale = currentTransform.rescaleX(Shared_XScaleConfig[zoomXscaleAxis].xscale().XSCALE);
+
+//     // Calculate x value and index
+//     const xValue = currentXscale.invert(x);
+//     let index = Math.round(xValue) < 0 ? 0 : Math.round(xValue) > Shared_ChartPlotData[Shared_XScaleConfig[zoomXscaleAxis].xscaleDataTag].length - 1
+//         ? Shared_ChartPlotData[Shared_XScaleConfig[zoomXscaleAxis].xscaleDataTag].length - 1 : Math.round(xValue);
+
+//     // Get the corresponding y-axis tag and value string
+//     const tagyaxis = getAxisKeyForRangeValue(y);
+//     let valuestring = "";
+//     if (tagyaxis) {
+//         const yscaletag = Shared_yaxisProp[tagyaxis].yscaleTag;
+//         valuestring = Shared_YScaleConfig[yscaletag[0]].yscale().YSCALE?.invert(y).toFixed(2) as string;
+//     }
+
+//     // Update tooltips and draw crosshair
+//     updateTooltips(svg, index);
+//     drawCrosshair({
+//         BackGroup: BackGroup,
+//         index: index,
+//         y: y,
+//         valuestring: valuestring,
+//         currentXscale: currentXscale,
+//     });
+// }
+
   
