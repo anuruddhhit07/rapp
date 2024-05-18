@@ -228,15 +228,7 @@ class SVGClass {
       .style("stroke", "black")
       .style("stroke-width", 1);
 
-    this.svg
-      .append("defs")
-      .append("clipPath")
-      .attr("id", `clip1-${targetID}`)
-      .append("rect")
-      .attr("x", margin.left + margin.innerLeft)
-      .attr("y", margin.top + margin.innerTop)
-      .attr("width", width + 0 * margin.innerLeft)
-      .attr("height", height);
+    
   }
 }
 

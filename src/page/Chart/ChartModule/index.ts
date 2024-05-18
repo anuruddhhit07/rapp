@@ -207,7 +207,8 @@ class CandlestickChartTS {
   }
 
   getclippath() {
-    this.svg.select("defs").selectAll("*").remove();
+    //this.svg.select("defs").selectAll("*").remove();
+    this.svg.selectAll(".clipplot").remove();
     const yaxistags = Array.from(Shared_ChartBaseData.yaxisTag);
     yaxistags.map((yaxistag) => {
       // console.log(Shared_yaxisProp[yaxistag].range);
