@@ -23,6 +23,7 @@ interface TooltipData {
     tooltiparea: d3.Selection<SVGGElement, any, HTMLElement, any>
   ) {
     // Remove existing tooltips
+    if (Number.isNaN(index)) return
     tooltiparea.selectAll(`.tooliptext-${yaxistag}-${this.plotName}`).remove();
   
     const xPos = [0,50, 150, 80, 80,80]; // Adjust x positions as needed

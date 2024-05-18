@@ -92,7 +92,7 @@ class CandlestickChartTS {
   zoomX = d3.zoom().scaleExtent([0.5, 70]).on("zoom", this.zoomedX.bind(this));
 
   zoomedX(event: any) {
-    const [x, y] = d3.pointer(event);
+    const [x, y] = d3.pointer(event)
     this.rendorAxis();
     this.rendorPlot();
     this.handleTooltipAndCrosshair(x, y)
