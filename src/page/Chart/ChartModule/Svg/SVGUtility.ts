@@ -1,18 +1,50 @@
 // SVGUtility.ts
 
 import * as d3 from "d3";
-import { BaseType, groups, index } from "d3";
-import { CandlestickData, MulitlineLineChartData, ScatterDataType } from "./chartSetuptype";
+import { BaseType, groups, index, Selection } from "d3";
+import {
+  CandlestickData,
+  MulitlineLineChartData,
+  ScatterDataType,
+} from "./chartSetuptype";
 
 declare module "d3" {
-  interface Selection<GElement extends BaseType, Datum, PElement extends BaseType, PDatum> {
-    drawBorder(x: number, y: number, width: number, height: number, borderColor: string, borderWidth: number, fill: string, opacity: number): this;
+  interface Selection<
+    GElement extends BaseType,
+    Datum,
+    PElement extends BaseType,
+    PDatum
+  > {
+    drawBorder(
+      x: number,
+      y: number,
+      width: number,
+      height: number,
+      borderColor: string,
+      borderWidth: number,
+      fill: string,
+      opacity: number,
+      iconContent?: string,
+      isPath?: boolean
+    ): this;
     importData(data: any[]): this;
     translate(x: number, y: number): this;
-    insertHTML(html: string):this;
-    onEvent1(eventName: string, eventHandler: (this: SVGGElement, event: any, d: any) => void): this;
-    createSquaresHorizontally( numSquares: number,squareWidth: number,spacing: number,pressstate:boolean[],idarray:string[]):this
-    attachClickEvent(callback: (id: string, className: string, pressstate: boolean) => void):this
+    insertHTML(html: string): this;
+    onEvent1(
+      eventName: string,
+      eventHandler: (this: SVGGElement, event: any, d: any) => void
+    ): this;
+    createSquaresHorizontally(
+      numSquares: number,
+      squareWidth: number,
+      spacing: number,
+      pressstate: boolean[],
+      idarray: string[]
+    ): this;
+    attachClickEvent(
+      callback: (id: string, className: string, pressstate: boolean) => void
+    ): this;
+    addIconImageToRect(iconSvg: string): this;
   }
 }
 
@@ -24,10 +56,23 @@ export function createGroupAdv(
 
   // Set the class attribute for the group
   group.attr("class", className);
+  let lastRect: Selection<SVGRectElement, unknown, HTMLElement, any> | null =
+    null;
 
   // Add a method to draw a border around the group
-  group.drawBorder = function (x: number, y: number, width: number, height: number, borderColor: string, borderWidth: number, fill: string, opacity: number) {
-    this.append("rect")
+  group.drawBorder = function (
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    borderColor: string,
+    borderWidth: number,
+    fill: string,
+    opacity: number,
+    iconContent?: string,
+    isPath?: boolean 
+  ) {
+    lastRect = this.append("rect")
       .attr("class", `${className}-border`) // Add class attribute
       .attr("x", x)
       .attr("y", y)
@@ -37,6 +82,27 @@ export function createGroupAdv(
       .attr("fill", fill)
       .style("stroke", borderColor)
       .style("stroke-width", borderWidth);
+
+    if (iconContent) {
+      const foreignObject = this.append("foreignObject")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("x", x)
+        .attr("y", y);
+
+      foreignObject
+        .append("xhtml:div")
+        .html(
+          isPath
+            ? `<svg class="svgclass" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink"><use xlink:href="${iconContent}" /></svg>`
+            : iconContent
+        )
+        .style("width", "50%")
+        .style("height", "50%")
+        .style("display", "flex")
+        .style("justify-content", "center")
+        .style("align-items", "center");
+    }
     return this; // Return the group selection for chaining
   };
 
@@ -67,7 +133,6 @@ export function createGroupAdv(
     const htmlGroup = this.append("g").attr("class", `${className}-html`);
     htmlGroup.html(html); // Set the HTML content of the new group
     return this; // Return the group selection for chaining
-    
   };
 
   group.onEvent1 = function (
@@ -81,10 +146,29 @@ export function createGroupAdv(
     return this; // Return the group selection for chaining
   };
 
-  // group.onCall = function (func: Function) {
-  //     func.call(this); // Call the external function in the context of the group
-  //     return this; // Return the group selection for chaining
-  // };
+  group.addIconImageToRect = function (iconSvg: string) {
+    if (!lastRect) {
+      throw new Error("No rectangle found. Please draw a border first.");
+    }
+
+    const foreignObject = this.append("foreignObject")
+      .attr("width", lastRect.attr("width"))
+      .attr("height", lastRect.attr("height"))
+      .attr("x", lastRect.attr("x"))
+      .attr("y", lastRect.attr("y"));
+    // .on("click", clickhandler);
+
+    foreignObject
+      .append("xhtml:div")
+      .html(iconSvg)
+      .style("width", "100%")
+      .style("height", "100%")
+      .style("display", "flex")
+      .style("justify-content", "center")
+      .style("align-items", "center");
+
+    return this;
+  };
 
   return group;
 }
@@ -99,7 +183,16 @@ export function enhanceGroup(
   group.attr("class", className);
 
   // Add a method to draw a border around the group
-  group.drawBorder = function (x: number, y: number, width: number, height: number, borderColor: string, borderWidth: number, fill: string, opacity: number) {
+  group.drawBorder = function (
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    borderColor: string,
+    borderWidth: number,
+    fill: string,
+    opacity: number
+  ) {
     this.append("rect")
       .attr("class", `${className}-border`) // Add class attribute
       .attr("x", x)
@@ -156,7 +249,6 @@ export function enhanceGroup(
   return group;
 }
 
-
 export function createClipPath(
   svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,
   id: string,
@@ -166,21 +258,26 @@ export function createClipPath(
   height: number
 ): d3.Selection<SVGClipPathElement, any, HTMLElement, any> {
   // Select the existing defs element if available, or create a new one
-  let defs:d3.Selection<d3.BaseType, any, HTMLElement, any> = svg.select('defs') ;
+  let defs: d3.Selection<d3.BaseType, any, HTMLElement, any> =
+    svg.select("defs");
   if (defs.empty()) {
-    defs = svg.append('defs') as any;
+    defs = svg.append("defs") as any;
   }
 
   // Append the clip path to the defs element
-  const clipPath = defs.append('clipPath').attr('id', id).attr('class', 'clipplot');
+  const clipPath = defs
+    .append("clipPath")
+    .attr("id", id)
+    .attr("class", "clipplot");
 
   // Append a rect to the clip path
-  clipPath.append('rect')
-    .attr('x', x)
-    .attr('y', y)
-    .attr('width', width)
-    .attr('height', height)
-    .style('fill', 'steelblue');
+  clipPath
+    .append("rect")
+    .attr("x", x)
+    .attr("y", y)
+    .attr("width", width)
+    .attr("height", height)
+    .style("fill", "steelblue");
 
   return clipPath;
 }
@@ -189,21 +286,23 @@ export function createSVGDefs(
   defs: { [key: string]: string }
 ): void {
   // Select the existing defs element if available, or create a new one
-  let defsElement: d3.Selection<SVGDefsElement, any, HTMLElement, any> = svg.select<SVGDefsElement>('defs');
+  let defsElement: d3.Selection<SVGDefsElement, any, HTMLElement, any> =
+    svg.select<SVGDefsElement>("defs");
   if (defsElement.empty()) {
-    defsElement = svg.append('defs');
+    defsElement = svg.append("defs");
   }
 
   // Append each SVG definition directly to the defs element
   Object.entries(defs).forEach(([id, svgString]) => {
-    defsElement.append(() => {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(svgString, 'image/svg+xml');
-      return doc.documentElement;
-    }).attr('id', id);
+    defsElement
+      .append(() => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(svgString, "image/svg+xml");
+        return doc.documentElement;
+      })
+      .attr("id", id);
   });
 }
-
 
 export function createMultipleSqure(
   svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,
@@ -215,7 +314,14 @@ export function createMultipleSqure(
   group.attr("class", className);
 
   // Define squaresData array
-  let squaresData: { x: number; y: number; size: number; id: string; class: string; pressstate: boolean| undefined; }[];
+  let squaresData: {
+    x: number;
+    y: number;
+    size: number;
+    id: string;
+    class: string;
+    pressstate: boolean | undefined;
+  }[];
 
   // Add method to translate the group
   group.translate = function (x: number, y: number) {
@@ -224,7 +330,16 @@ export function createMultipleSqure(
   };
 
   // Add method to draw border
-  group.drawBorder = function (x: number, y: number, width: number, height: number, borderColor: string, borderWidth: number, fill: string, opacity: number) {
+  group.drawBorder = function (
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    borderColor: string,
+    borderWidth: number,
+    fill: string,
+    opacity: number
+  ) {
     this.append("rect")
       .attr("class", `${className}-border`) // Add class attribute
       .attr("x", x)
@@ -244,16 +359,15 @@ export function createMultipleSqure(
     squareWidth: number,
     spacing: number,
     pressstate: boolean[] | undefined = undefined,
-    idarray:string[] | undefined = undefined
+    idarray: string[] | undefined = undefined
   ) {
-
     squaresData = Array.from({ length: numSquares }, (_, i) => ({
       x: i * (squareWidth + spacing),
       y: 0,
       size: squareWidth,
-      id: idarray ? idarray[i] : 'no-idset',
+      id: idarray ? idarray[i] : "no-idset",
       class: `${className}-square`,
-      pressstate: pressstate ? pressstate[i] : undefined 
+      pressstate: pressstate ? pressstate[i] : undefined,
     }));
 
     // console.log("squaresData",squaresData);
@@ -269,7 +383,7 @@ export function createMultipleSqure(
       .attr("id", (d) => d.id)
       .attr("class", (d) => d.class)
       .style("fill", (d) => {
-        if (typeof d.pressstate === 'undefined') return "gray"; // Color for undefined state
+        if (typeof d.pressstate === "undefined") return "gray"; // Color for undefined state
         return d.pressstate ? "green" : "steelblue"; // Colors for true and false states
       });
 
@@ -277,29 +391,33 @@ export function createMultipleSqure(
   };
 
   // Add method to attach click event to squares
-  group.attachClickEvent = function (callback: (id: string, className: string, pressstate: boolean) => void) {
-    this.selectAll("rect")
-    .on("click", function (d) {
+  group.attachClickEvent = function (
+    callback: (id: string, className: string, pressstate: boolean) => void
+  ) {
+    this.selectAll("rect").on("click", function (d) {
       const rect = d3.select(this);
       const id = rect.attr("id");
       const className = rect.attr("class");
 
       // Find the index of the clicked rectangle in the squaresData array
-      const dataIndex = squaresData.findIndex(item => item.id === id);
+      const dataIndex = squaresData.findIndex((item) => item.id === id);
 
       if (dataIndex !== -1) {
         // Toggle the pressstate in the squaresData array only if it's not undefined
-        if (typeof squaresData[dataIndex].pressstate !== 'undefined') {
-          squaresData[dataIndex].pressstate = !squaresData[dataIndex].pressstate;
+        if (typeof squaresData[dataIndex].pressstate !== "undefined") {
+          squaresData[dataIndex].pressstate =
+            !squaresData[dataIndex].pressstate;
 
           // Update the fill color based on the updated pressstate
-          rect.style("fill", squaresData[dataIndex].pressstate ? "green" : "steelblue");
+          rect.style(
+            "fill",
+            squaresData[dataIndex].pressstate ? "green" : "steelblue"
+          );
         }
 
         // Call the callback function with square ID, class name, and pressstate
         callback(id, className, squaresData[dataIndex].pressstate as boolean);
       }
-
     });
     return this; // Return the group selection for chaining
   };
@@ -307,12 +425,19 @@ export function createMultipleSqure(
   return group;
 }
 
-
-
-
-
-export function createLine(svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>, x1: number, y1: number, x2: number, y2: number): void {
-  svg.append("line").attr("x1", x1).attr("y1", y1).attr("x2", x2).attr("y2", y2);
+export function createLine(
+  svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number
+): void {
+  svg
+    .append("line")
+    .attr("x1", x1)
+    .attr("y1", y1)
+    .attr("x2", x2)
+    .attr("y2", y2);
 }
 
 export function createRect(
@@ -322,7 +447,12 @@ export function createRect(
   width: number,
   height: number
 ): d3.Selection<SVGRectElement, any, HTMLElement, any> {
-  return svg.append("rect").attr("x", x).attr("y", y).attr("width", width).attr("height", height);
+  return svg
+    .append("rect")
+    .attr("x", x)
+    .attr("y", y)
+    .attr("width", width)
+    .attr("height", height);
 }
 
 export function drawLineOnSVG(
@@ -382,8 +512,6 @@ export function drawBarChartOnSVG(
     .attr("fill", barColor); // Set color for the bar
 }
 
-
-
 export function drawCandlestickOnSVG(
   svgGroup: d3.Selection<SVGGElement, any, any, any>,
   xdata: number[],
@@ -431,7 +559,9 @@ export function drawCandlestickOnSVG(
     .attr("width", tickwidth / 2)
     .attr("height", (d, i) => {
       // console.log(d,currentYscale(d),this.yAxisRange[currentyaxis][0]-currentYscale(d))
-      return Math.abs(yScale(open[i]) - yScale(close[i])) == 0 ? yScale(close[i]) * 0.001 : Math.abs(yScale(open[i]) - yScale(close[i]));
+      return Math.abs(yScale(open[i]) - yScale(close[i])) == 0
+        ? yScale(close[i]) * 0.001
+        : Math.abs(yScale(open[i]) - yScale(close[i]));
     })
     .attr("fill", (d, i) => (open[i] > close[i] ? "red" : "green"))
     .attr("stroke", "black")
@@ -443,13 +573,14 @@ export function drawCandlestickOnSVG(
 export function drawMultipleLineChartOnSVG(
   svgGroup: d3.Selection<SVGGElement, any, any, any>,
   lineData: MulitlineLineChartData[],
-  classNameTag: string,
+  classNameTag: string
 ) {
   // Create line generators for each line
   const lineGenerators: any[] = [];
 
   lineData.forEach((data) => {
-    const lineGenerator = d3.line()
+    const lineGenerator = d3
+      .line()
       .x((d: any) => d.x1)
       .y((d: any) => d.y1);
 
@@ -458,7 +589,8 @@ export function drawMultipleLineChartOnSVG(
 
   // Draw lines
   lineData.forEach((data, index) => {
-    svgGroup.append("path")
+    svgGroup
+      .append("path")
       .datum([data]) // Set data for the line
       .attr("class", `all multiline multiline-line multiline-${classNameTag}`)
       .attr("d", lineGenerators[index])
@@ -469,8 +601,12 @@ export function drawMultipleLineChartOnSVG(
 
   // Add labels to the lines
   lineData.forEach((data) => {
-    svgGroup.append("text")
-    .attr("class", `all multiline multiline-label multiline-label-${classNameTag}`)
+    svgGroup
+      .append("text")
+      .attr(
+        "class",
+        `all multiline multiline-label multiline-label-${classNameTag}`
+      )
       .attr("x", (data.x1 + data.x2) / 2)
       .attr("y", (data.y1 + data.y2) / 2)
       .text(data.label)
@@ -479,7 +615,6 @@ export function drawMultipleLineChartOnSVG(
   });
 }
 
-
 export function drawScatterPlotOnSVG(
   svgGroup: d3.Selection<SVGGElement, any, any, any>,
   scatterData: ScatterDataType[],
@@ -487,13 +622,18 @@ export function drawScatterPlotOnSVG(
   yScale: d3.ScaleLinear<number, number>,
   classNameTag: string,
   yaxistag: string,
-  labelstatus:boolean
+  labelstatus: boolean
 ) {
   // Draw the scatter plot points
-  svgGroup.selectAll(".scatter-point")
+  svgGroup
+    .selectAll(".scatter-point")
     .data(scatterData)
-    .enter().append("circle")
-    .attr("class", ` all scatterplot scatter-point  scatter-point-${classNameTag}`)
+    .enter()
+    .append("circle")
+    .attr(
+      "class",
+      ` all scatterplot scatter-point  scatter-point-${classNameTag}`
+    )
     .attr("clip-path", `url(#clip-${yaxistag})`)
     .attr("cx", (d) => xScale(d.xData))
     .attr("cy", (d) => yScale(d.yData))
@@ -502,17 +642,21 @@ export function drawScatterPlotOnSVG(
     .attr("stroke", "none");
 
   // Add labels to the scatter plot points
-  if (labelstatus){
-    svgGroup.selectAll(".scatter-label")
-    .data(scatterData)
-    .enter().append("text")
-    .attr("class", `all scatterplot scatter-label scatter-label-${classNameTag}`)
-    .attr("clip-path", `url(#clip-${yaxistag})`)
-    .attr("x", (d) => xScale(d.xData) + 5) // Adjust the offset as needed
-    .attr("y", (d) => yScale(d.yData) - 5) // Adjust the offset as needed
-    .text((d) => d.label)
-    .attr("fill", "black")
-    .style("font-size", "10px"); // Adjust the font size as needed
+  if (labelstatus) {
+    svgGroup
+      .selectAll(".scatter-label")
+      .data(scatterData)
+      .enter()
+      .append("text")
+      .attr(
+        "class",
+        `all scatterplot scatter-label scatter-label-${classNameTag}`
+      )
+      .attr("clip-path", `url(#clip-${yaxistag})`)
+      .attr("x", (d) => xScale(d.xData) + 5) // Adjust the offset as needed
+      .attr("y", (d) => yScale(d.yData) - 5) // Adjust the offset as needed
+      .text((d) => d.label)
+      .attr("fill", "black")
+      .style("font-size", "10px"); // Adjust the font size as needed
   }
-  
 }

@@ -13,6 +13,17 @@ const svgDefs = {
   symbol1: '<symbol id="symbol1" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="red" /></symbol>',
   gradient1: '<linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:rgb(255,255,0);stop-opacity:1" /><stop offset="100%" style="stop-color:rgb(255,0,0);stop-opacity:1" /></linearGradient>'
 };
+const trendSvg = `<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+  <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M18 5C17.4477 5 17 5.44772 17 6C17 6.27642 17.1108 6.52505 17.2929 6.70711C17.475 6.88917 17.7236 7 18 7C18.5523 7 19 6.55228 19 6C19 5.44772 18.5523 5 18 5ZM15 6C15 4.34315 16.3431 3 18 3C19.6569 3 21 4.34315 21 6C21 7.65685 19.6569 9 18 9C17.5372 9 17.0984 8.8948 16.7068 8.70744L8.70744 16.7068C8.8948 17.0984 9 17.5372 9 18C9 19.6569 7.65685 21 6 21C4.34315 21 3 19.6569 3 18C3 16.3431 4.34315 15 6 15C6.46278 15 6.90157 15.1052 7.29323 15.2926L15.2926 7.29323C15.1052 6.90157 15 6.46278 15 6ZM6 17C5.44772 17 5 17.4477 5 18C5 18.5523 5.44772 19 6 19C6.55228 19 7 18.5523 7 18C7 17.7236 6.88917 17.475 6.70711 17.2929C6.52505 17.1108 6.27642 17 6 17Z" fill="#000000"/>
+  </svg>`;
+
+  const homesvg=`<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 512 512">
+  <g id="icomoon-ignore">
+  </g>
+  <path d="M512 295.222l-256-198.713-256 198.714v-81.019l256-198.713 256 198.714zM448 288v192h-128v-128h-128v128h-128v-192l192-144z"></path>
+  </svg>`
+
 class SVGClass {
   private static instance: SVGClass | null = null;
   svg!: d3.Selection<SVGSVGElement, any, HTMLElement, any>;
@@ -63,11 +74,10 @@ class SVGClass {
       "red",
       2,
       "green",
-      0.5
-    );
-    // .onEvent1("click", (event) => {
-    //   // this.resetplot(event);
-    // });
+      0.5,homesvg,false
+    )
+    // .addIconImageToRect(trendSvg)
+   
   }
 
   static getInstance(): SVGClass {
