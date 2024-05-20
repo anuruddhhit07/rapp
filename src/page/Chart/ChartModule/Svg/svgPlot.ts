@@ -358,7 +358,7 @@ function drawPlotMulitBarByName(
     plotName,
     yaxistag,
     yaxisraange,
-    {a1:"red",b1:"green"}
+    {a1:"brown",b1:"lightblue"}
   );
 }
 function drawPlotOHLCByName(

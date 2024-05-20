@@ -84,7 +84,8 @@ export const plotInfoInput: PlotInfoInputType[] = [
     xscaleTag: "Funda_xscale",
     yscaleTag: "Funda_yscale",
     plotType: "mulitbar",
-    buttontag:"FundaPlot"
+    buttontag:"FundaPlot",
+    // plotcolor
   },
 
 
