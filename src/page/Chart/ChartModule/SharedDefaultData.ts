@@ -33,14 +33,14 @@ export const plotInfoInput: PlotInfoInputType[] = [
   },
   {
     plotStatus: true,
-    plotName: "LowPlot",
+    plotName: "SMAPlot",
     xdataTag: "xindex",
     ydataTag: "sma",
     xscaleTag: "bot",
     yscaleTag: "TR",
     plotType: "line",
     plotcolor: "red",
-    buttontag:"LowPlot",
+    buttontag:"SMAPlot",
     tooltip:true
   },
   {
@@ -65,16 +65,16 @@ export const plotInfoInput: PlotInfoInputType[] = [
     plotType: "scatter",
     buttontag:"HighPlot"
   },
-  // {
-  //   plotStatus: true,
-  //   plotName: "FundaPlot",
-  //   xdataTag: "fundaX1",
-  //   ydataTag: "fundaY2",
-  //   xscaleTag: "Funda_xscale",
-  //   yscaleTag: "Funda_yscale",
-  //   plotType: "bar",
-  //   buttontag:"FundaPlot"
-  // },
+  {
+    plotStatus: false,
+    plotName: "LowPlot",
+    xdataTag: "xindex",
+    ydataTag: "low",
+    xscaleTag: "bot",
+    yscaleTag: "LR",
+    plotType: "line",
+    buttontag:"HighPlot"
+  },
 
   {
     plotStatus: false,

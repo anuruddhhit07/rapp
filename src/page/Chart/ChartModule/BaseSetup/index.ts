@@ -46,6 +46,7 @@ const callback: ProxyCallback = (
       xscaleTag: Set<string>;
       yscaleTag: Set<string>;
       yaxisTag: Set<string>}
+      // console.log(uniquePlotsData);
     updateSharedChartData(uniquePlotsData as any)
     const yaxisRangeArray= getYaxisRatio(Array.from(uniquePlotsData.yaxisTag))
     const axisrelation=getPlotNamesAndYScaleTagsByYAxisTag()

@@ -163,9 +163,10 @@ export function UpdatePlotInfo(){
   updateShared_PlotInfo('VolumePlot',{
     getTooltipHTML:getTooltipHTMLVolume
   })
-  updateShared_PlotInfo('LowPlot',{
-    getTooltipHTML:getTooltipHTMLLine
-  })
+
+  // updateShared_PlotInfo('LowPlot',{
+  //   getTooltipHTML:getTooltipHTMLLine
+  // })
 
   
 

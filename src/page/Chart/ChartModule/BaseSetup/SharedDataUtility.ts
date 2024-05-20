@@ -359,6 +359,7 @@ export function getUniquePlotsWithStatusTrue(plotInfo: PlotInfoType): {
   Object.values(plotInfo)
     .filter((plot) => plot.plotStatus)
     .forEach((plot) => {
+      // console.log(plot);
       uniquePlotNames.add(plot.plotName);
       uniquexscaletags.add(plot.xscaleTag);
       uniqueyscaletags.add(plot.yscaleTag);

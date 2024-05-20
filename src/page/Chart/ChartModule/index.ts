@@ -66,6 +66,7 @@ class CandlestickChartTS {
     this.FrontGroup = this.SVGClass.FrontGroup;
     this.ResetButton = this.SVGClass.ResetButton;
     this.BackChartGroup = this.SVGClass.BackChartGroup;
+    console.log(Shared_ButtonProp);
     this.Buttonpanel = this.SVGClass.createbuttonpanel(this.buttonClick.bind(this), numberofbutton, Shared_ButtonProp);
     this.SVGClass.createTooltipArea();
     this.ToolTipArea = this.SVGClass.ToolTipArea;

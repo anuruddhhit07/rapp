@@ -186,6 +186,7 @@ class SVGClass {
     // console.log(Shared_ChartBaseData)
     // console.log(uniqueyaxisTag)
     this.BackChartGroup.selectAll(`.tooltip`).remove()
+    // console.log(Shared_yaxisProp);
     uniqueyaxisTag.map(yaxistag=>{
       
       const plotnameArray=Shared_yaxisProp[yaxistag].plotname
