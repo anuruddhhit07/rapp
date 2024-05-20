@@ -2,7 +2,8 @@ import React, { useEffect, useRef } from 'react';
 import { testdatamodule } from 'testdata';
 import CandlestickChartTS from './Chart/ChartModule';
 import { DefaultChartParameter } from './Chart/ChartModule/types';
-import { taa } from './Chart/TechModule';
+// import { taa } from './Chart/TechModule';
+
 
 const testobj = new testdatamodule(1150);
 const ohlcdata = testobj.getDataForPeriod(1150);
@@ -13,7 +14,7 @@ const Candlestickparamater:DefaultChartParameter={}
 // ohlcdata.map(item=>{
 
 // })
-console.log(taa);
+// console.log(taa);
 
 const ChartPage = () => {
   const chartRef = useRef<CandlestickChartTS | null>(null);

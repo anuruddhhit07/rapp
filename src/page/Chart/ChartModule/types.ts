@@ -31,7 +31,7 @@ const AA: OptionsFlags<Features> = {
 //   open: number[];
 // }
 
-interface OHLCV {
+export interface OHLCV {
     timestamp: number;
       open: number;
       high: number;

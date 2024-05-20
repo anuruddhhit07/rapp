@@ -1,6 +1,10 @@
 import { ChartDataIN,ChartDataType } from "../types";
+import TechGroup from "../../TechModule";
+
+const techGroup= TechGroup.getInstance();
 
 export function arrangeData(this: any, stockData: ChartDataIN, funda: number = 0): ChartDataType {
+    
     const ohlcDataArray = stockData.histdata || [];
     const techDataobject = stockData.techdata || {};
     const fundaDataobject = stockData.fundadata || {};
@@ -19,6 +23,8 @@ export function arrangeData(this: any, stockData: ChartDataIN, funda: number = 0
     const fundatakeys = Object.keys(shareholdingData);
     const fundaMappedX1=["2018","2019","2020","2021","2022","2023"]
 
+    techGroup.attachOHLCV(ohlcDataArray);
+
     return {
         xindex:ohlcDataArray.map((item,index)=>index),
         timestamp:ohlcDataArray.map(item=>item.timestamp),
@@ -30,6 +36,7 @@ export function arrangeData(this: any, stockData: ChartDataIN, funda: number = 0
         fundaMappedX1:fundaMappedX1,
         fundaX1:fundaMappedX1.map((item: any,index: number)=>index),
         fundaY2:[10,41,21,5,41,15],
-        fundaMultibarY:{a1:[200,41,21,5,41,15],b1:[100,41,21,5,41,1]}
+        fundaMultibarY:{a1:[200,41,21,5,41,15],b1:[100,41,21,5,41,1]},
+        sma:techGroup.calculateSMA('close',10)
     }
 }

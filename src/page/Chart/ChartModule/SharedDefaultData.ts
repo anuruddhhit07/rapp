@@ -32,14 +32,14 @@ export const plotInfoInput: PlotInfoInputType[] = [
     tooltip:true
   },
   {
-    plotStatus: false,
+    plotStatus: true,
     plotName: "LowPlot",
     xdataTag: "xindex",
-    ydataTag: "low",
+    ydataTag: "sma",
     xscaleTag: "bot",
     yscaleTag: "TR",
     plotType: "line",
-    plotcolor: "black",
+    plotcolor: "red",
     buttontag:"LowPlot",
     tooltip:true
   },

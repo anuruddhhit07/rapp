@@ -181,7 +181,7 @@ function drawPlotLineByName(
     // if (xScaleType=="Linear"){
     //   XDATA=XDATA.map((item,index)=>index)
     // }
-    console.log(plotName,XDATA);
+    // console.log(plotName,XDATA);
 
 
 //   const XDATA = Shared_PlotInfo[plotName].xdata;
@@ -211,13 +211,25 @@ function drawPlotLineByName(
   const yaxistag =
     Shared_YScaleConfig[Shared_PlotInfo[plotName].yscaleTag].yaxisTag;
 
-  console.log(XDATA,YDATA,plotColor);
+  // console.log(XDATA,YDATA,plotColor);
   // console.log(currentTransformX,currentTransformY);
+
+  const validDataIndices: number[] = [];
+  const filteredYData: number[] = [];
+  YDATA.forEach((d, i) => {
+    if (!isNaN(d) && d !== undefined) {
+      validDataIndices.push(i);
+      filteredYData.push(d);
+    }
+  });
+
+  // Create arrays containing valid x and y data points
+  const validXData: number[] = validDataIndices.map(i => XDATA[i]);
 
   drawLineOnSVG(
     PlotGroupArea,
-    XDATA as number[],
-    YDATA as number[],
+    validXData as number[],
+    filteredYData as number[],
     newxScale,
     newyScale,
     plotName,
