@@ -183,8 +183,8 @@ class SVGClass {
   createTooltipArea() {
     const uniqueyaxisTag = Array.from(Shared_ChartBaseData.yaxisTag);
     const uniquePlotplotName = Array.from(Shared_ChartBaseData.plotName);
-    console.log(Shared_ChartBaseData)
-    console.log(uniqueyaxisTag)
+    // console.log(Shared_ChartBaseData)
+    // console.log(uniqueyaxisTag)
     this.BackChartGroup.selectAll(`.tooltip`).remove()
     uniqueyaxisTag.map(yaxistag=>{
       

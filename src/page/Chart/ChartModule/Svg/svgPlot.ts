@@ -93,8 +93,10 @@ function drawPlotScatteryName(
         YDATA = Shared_PlotInfo[plotName].ydata.slice(visiblerange[0], visiblerange[1])
     }
 
-//   const XDATA = Shared_PlotInfo[plotName].xdata;
-//   const YDATA = Shared_PlotInfo[plotName].ydata;
+    // const xScaleType = Shared_XScaleConfig[Shared_PlotInfo[plotName].xscaleTag].xsaleType
+    // if (xScaleType=="Linear"){
+    //   XDATA=XDATA.map((item,index)=>index)
+    // }
 
   // const YDATA = Shared_DataToplot[plotName].ydata();
   let plotColor = Shared_PlotInfo[plotName].plotcolor;
@@ -151,6 +153,7 @@ function drawPlotLineByName(
   xzoomeventsvg: d3.Selection<SVGGElement, any, HTMLElement, any>
 ) {
     const visiblerange=Shared_YScaleConfig[Shared_PlotInfo[plotName].yscaleTag].xscaleVisibleRange
+    
 
     let XDATA:number[]=[]
     let YDATA:number[]=[]
@@ -163,6 +166,13 @@ function drawPlotLineByName(
         XDATA = Shared_PlotInfo[plotName].xdata.slice(visiblerange[0], visiblerange[1])
         YDATA = Shared_PlotInfo[plotName].ydata.slice(visiblerange[0], visiblerange[1])
     }
+
+    // const xScaleType = Shared_XScaleConfig[Shared_PlotInfo[plotName].xscaleTag].xsaleType
+    // if (xScaleType=="Linear"){
+    //   XDATA=XDATA.map((item,index)=>index)
+    // }
+    console.log(plotName,XDATA);
+
 
 //   const XDATA = Shared_PlotInfo[plotName].xdata;
 //   const YDATA = Shared_PlotInfo[plotName].ydata;
@@ -191,7 +201,7 @@ function drawPlotLineByName(
   const yaxistag =
     Shared_YScaleConfig[Shared_PlotInfo[plotName].yscaleTag].yaxisTag;
 
-  // console.log(XDATA,YDATA,plotColor);
+  console.log(XDATA,YDATA,plotColor);
   // console.log(currentTransformX,currentTransformY);
 
   drawLineOnSVG(
@@ -225,7 +235,12 @@ function drawPlotBarByName(
         YDATA = Shared_PlotInfo[plotName].ydata.slice(visiblerange[0], visiblerange[1])
     }
 
-  // const YDATA = Shared_DataToplot[plotName].ydata();
+    const xScaleType = Shared_XScaleConfig[Shared_PlotInfo[plotName].xscaleTag].xsaleType
+
+    // if (xScaleType=="Linear"){
+    //   XDATA=XDATA.map((item,index)=>index)
+    // }
+
   let plotColor = Shared_PlotInfo[plotName].plotcolor;
   // // const currentTransformX = Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag].currentTransformX;
   const currentTransformX = xzoomeventsvg.property("__zoom");
@@ -250,7 +265,7 @@ function drawPlotBarByName(
     Shared_YScaleConfig[Shared_PlotInfo[plotName].yscaleTag].yaxisTag;
     const yaxisraange=Shared_yaxisProp[yaxistag].range
 
-  //console.log(XDATA,YDATA,plotColor);
+  // console.log(XDATA,YDATA,plotColor);
   // console.log(currentTransformX,currentTransformY);
 
   drawBarChartOnSVG(

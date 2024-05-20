@@ -129,6 +129,7 @@ interface backtestdata{
     ohlckeyvlaue?: any;
     zigzaglineX?: number[];
     zigzaglineY?: number[];
+    fundaMappedX1?:string[]
     fundaX1?: number[];
     fundaY2?: number[];
     fundaY1?: FundData[];

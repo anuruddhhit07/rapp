@@ -120,7 +120,7 @@ class CandlestickChartTS {
     this.rendorAxis();
     this.rendorPlot();
 
-    console.log(Shared_yaxisProp);
+    // console.log(Shared_yaxisProp);
   }
 
   rendorAxis() {

@@ -114,22 +114,29 @@ export function getPlotNamesAndYScaleTagsByYAxisTag(): { [key: keyof yaxisType]:
 
 export function getXscale(this: any): { domain: Iterable<NumberValue>; XSCALE: any } {
   // console.log("hello", this);
-  const domain = d3.extent(Shared_ChartPlotData[this.xscaleDataTag as keyof ChartDataType]) as Iterable<NumberValue>;
-  // console.log("domain1",domain,this.xsaleType);
+let tempdomain:Iterable<NumberValue>=[]
+  if (this.xsaleType='Linear'){
+    const tempdatalenght=Shared_ChartPlotData[this.xscaleDataTag as keyof ChartDataType].length
+    tempdomain=d3.extent([0,tempdatalenght]) as Iterable<NumberValue>;
+  } else {
+    tempdomain = d3.extent(Shared_ChartPlotData[this.xscaleDataTag as keyof ChartDataType]) as Iterable<NumberValue>;
+  }
+  
+  // console.log("domain1",tempdomain);
 
   const XSCALE: ScaleLinear<number, number> | ScaleTime<number, number> | ScaleBand<string> | null =
     this.xsaleType == "Linear"
-      ? d3.scaleLinear().range(this.xscaleRange).domain(domain)
+      ? d3.scaleLinear().range(this.xscaleRange).domain(tempdomain)
       : this.xsaleType === "TimeScale"
-      ? d3.scaleTime().range(this.xscaleRange).domain(domain)
+      ? d3.scaleTime().range(this.xscaleRange).domain(tempdomain)
       : d3
           .scaleBand<string>()
           .range(this.xscaleRange)
-          .domain((domain as [number, number]).map((d: any) => d.toString()));
+          .domain((tempdomain as [number, number]).map((d: any) => d.toString()));
 
   // console.log("domain2",XSCALE.domain());
 
-  return { domain: domain, XSCALE: XSCALE };
+  return { domain: tempdomain, XSCALE: XSCALE };
 }
 
 export function getYscale(this: YScaleConfigItemType): {
@@ -315,7 +322,7 @@ export const updateplotInfo = (plotInfoInputArray = plotInfoInput) => {
       xscaleTag: xscaleTag,
       yscaleTag: yscaleTag,
       plotType: plotType,
-      plotcolor: plotcolor ? plotcolor : "black",
+      plotcolor: plotcolor ? plotcolor : "green",
       buttontag: buttontag ? buttontag : "no-button",
       tooltip:tooltip?tooltip:false
     };

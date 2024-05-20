@@ -1,6 +1,6 @@
 import { ChartDataIN,ChartDataType } from "../types";
 
-export function arrangeData(stockData: ChartDataIN, funda: number = 0): ChartDataType {
+export function arrangeData(this: any, stockData: ChartDataIN, funda: number = 0): ChartDataType {
     const ohlcDataArray = stockData.histdata || [];
     const techDataobject = stockData.techdata || {};
     const fundaDataobject = stockData.fundadata || {};
@@ -17,6 +17,7 @@ export function arrangeData(stockData: ChartDataIN, funda: number = 0): ChartDat
     const EPS1 = quartersData["EPS in Rs"] || {};
   
     const fundatakeys = Object.keys(shareholdingData);
+    const fundaMappedX1=["2018","2019","2020","2021","2022","2023"]
 
     return {
         xindex:ohlcDataArray.map((item,index)=>index),
@@ -26,7 +27,8 @@ export function arrangeData(stockData: ChartDataIN, funda: number = 0): ChartDat
         low :ohlcDataArray.map(item=>item.low),
         close:ohlcDataArray.map(item=>item.close),
         volume:ohlcDataArray.map(item=>item.volume),
-        fundaX1:[0,1,2,3,4,5],
+        fundaMappedX1:fundaMappedX1,
+        fundaX1:fundaMappedX1.map((item: any,index: number)=>index),
         fundaY2:[10,41,21,5,41,15]
     }
 }

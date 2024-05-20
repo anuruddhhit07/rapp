@@ -38,23 +38,37 @@ function xaxisgenerator(
   const tickCount = Math.ceil((end - start) / pxPerTick);
   // return axisGenerator.ticks(tickCount).tickFormat((i) => i);
 
-  if (ticlavelmappedwith == "timestamp") {
-    return axisGenerator.ticks(tickCount).tickFormat((i: Date | d3.NumberValue) => {
+  // if (ticlavelmappedwith == "timestamp") {
+    return axisGenerator.ticks(tickCount).tickFormat((i: Date | d3.NumberValue,index:number) => {
       // Convert the Date or number value to a string
-      // console.log("i111", i);
+      // console.log("i111", i,index,+i);
       if (i instanceof Date) {
         return i.toLocaleDateString(); // Format date using toLocaleDateString
       } else {
         //   return i.toString(); // Convert other values to string
-        return custumticformat(i, "stockid", ticlavelmappedwith) as string;
+        // console.log(ticlavelmappedwith);
+        if (ticlavelmappedwith == "timestamp"){
+          return custumticformat(i, "stockid", ticlavelmappedwith) as string;
+        } 
+        else if (ticlavelmappedwith == "fundaMappedX1"){
+          if (Shared_ChartPlotData.fundaMappedX1){
+            // console.log(Shared_ChartPlotData.fundaX1,+i);
+            // console.log(Shared_ChartPlotData.fundaX1[+i]);
+            return Shared_ChartPlotData.fundaMappedX1[+i] as string
+          }
+          // return i.toString()+"Hi11"
+        }
+
+        return i.toString();
+       
       }
     });
-  }
+  // }
 
-  return axisGenerator.ticks(tickCount).tickFormat((i) => {
-    // Convert the Date or number value to a string
-    return i.toString();
-  });
+  // return axisGenerator.ticks(tickCount).tickFormat((i) => {
+  //   // Convert the Date or number value to a string
+  //   return i.toString();
+  // });
 }
 function yaxisgenerator(
   yScale: d3.ScaleLinear<number, number>,
@@ -107,8 +121,8 @@ export function UpdateXscaleconfig() {
   updateShared_XScaleConfig("Funda_xscale", {
     ypoint: Shared_ChartDimension.svgHeight - Shared_ChartDimension.margin.bottom,
     xscaleRange: [
-      Shared_ChartDimension.margin.innerLeft + Shared_ChartDimension.margin.left,
-      Shared_ChartDimension.svgWidth - Shared_ChartDimension.margin.right,
+      Shared_ChartDimension.margin.innerLeft + Shared_ChartDimension.margin.left+Shared_ChartDimension.width*(15/100),
+      Shared_ChartDimension.svgWidth - Shared_ChartDimension.margin.right-+Shared_ChartDimension.width*(15/100),
     ],
   });
 }

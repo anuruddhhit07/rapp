@@ -52,6 +52,7 @@ export const plotInfoInput: PlotInfoInputType[] = [
     yscaleTag: "BR",
     plotType: "bar",
     buttontag:"VolumePlot",
+    plotcolor:"blue",
     tooltip:true
   },
   {
@@ -71,7 +72,7 @@ export const plotInfoInput: PlotInfoInputType[] = [
     ydataTag: "fundaY2",
     xscaleTag: "Funda_xscale",
     yscaleTag: "Funda_yscale",
-    plotType: "line",
+    plotType: "bar",
     buttontag:"FundaPlot"
   },
 ];
@@ -102,7 +103,7 @@ export const xScaleConfigInput: XScaleConfigInputType[] = [
     xscaleTag: "Funda_xscale",
     xsaleType:'Linear',
     scaleSide:'Top',
-    ticlavelmappedwith:'fundaX1',
+    ticlavelmappedwith:'fundaMappedX1',
     ypoint: 20,
     xscaleRange: [0, 100],
     xscaleDataTag:'fundaX1',
