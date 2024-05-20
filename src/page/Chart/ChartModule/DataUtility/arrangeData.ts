@@ -25,6 +25,8 @@ export function arrangeData(stockData: ChartDataIN, funda: number = 0): ChartDat
         high:ohlcDataArray.map(item=>item.high),
         low :ohlcDataArray.map(item=>item.low),
         close:ohlcDataArray.map(item=>item.close),
-        volume:ohlcDataArray.map(item=>item.volume)
+        volume:ohlcDataArray.map(item=>item.volume),
+        fundaX1:[0,1,2,3,4,5],
+        fundaY2:[10,41,21,5,41,15]
     }
 }

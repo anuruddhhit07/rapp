@@ -64,6 +64,16 @@ export const plotInfoInput: PlotInfoInputType[] = [
     plotType: "scatter",
     buttontag:"HighPlot"
   },
+  {
+    plotStatus: true,
+    plotName: "FundaPlot",
+    xdataTag: "fundaX1",
+    ydataTag: "fundaY2",
+    xscaleTag: "Funda_xscale",
+    yscaleTag: "Funda_yscale",
+    plotType: "line",
+    buttontag:"FundaPlot"
+  },
 ];
 
 
@@ -86,6 +96,17 @@ export const xScaleConfigInput: XScaleConfigInputType[] = [
     ypoint: 300,
     xscaleRange: [0, 100],
     xscaleDataTag:'xindex',
+  },
+  
+  {
+    xscaleTag: "Funda_xscale",
+    xsaleType:'Linear',
+    scaleSide:'Top',
+    ticlavelmappedwith:'fundaX1',
+    ypoint: 20,
+    xscaleRange: [0, 100],
+    xscaleDataTag:'fundaX1',
+    zoomstatus: false,
   },
 ];
 
@@ -133,6 +154,17 @@ export const yScaleConfigInput: YScaleConfigInputType[] = [
     xscaleVisibleRange: [0, 0],
     autozoom:true,
     zoomstatus:true,
+  },
+  {
+    yscaleTag: "Funda_yscale",
+    yaxisTag:"FundaAxis",
+    scaleSide:'Right',
+    xpoint: 20,
+    // yscaleRange: [0, 100],
+    yscaleDataTag:'fundaY2',
+    xscaleVisibleRange: [0, 0],
+    autozoom:false,
+    zoomstatus:false,
   },
 ];
 

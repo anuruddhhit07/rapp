@@ -103,6 +103,14 @@ export function UpdateXscaleconfig() {
       Shared_ChartDimension.svgWidth - Shared_ChartDimension.margin.right,
     ],
   });
+
+  updateShared_XScaleConfig("Funda_xscale", {
+    ypoint: Shared_ChartDimension.svgHeight - Shared_ChartDimension.margin.bottom,
+    xscaleRange: [
+      Shared_ChartDimension.margin.innerLeft + Shared_ChartDimension.margin.left,
+      Shared_ChartDimension.svgWidth - Shared_ChartDimension.margin.right,
+    ],
+  });
 }
 
 export function UpdateYscaleconfig() {
@@ -125,6 +133,12 @@ export function UpdateYscaleconfig() {
   updateShared_YScaleConfig("LR", {
     xpoint: Shared_ChartDimension.svgWidth - Shared_ChartDimension.margin.right,
     // xpoint:200
+  });
+
+  updateShared_YScaleConfig("Funda_yscale", {
+    xpoint: Shared_ChartDimension.svgWidth - Shared_ChartDimension.margin.right,
+    //   xscaleVisibleRange:[0,Shared_ChartPlotData]
+    //xpoint: 50,
   });
 }
 
@@ -178,7 +192,7 @@ export function UpdatePlotInfo(){
 function XAxisOnSVG(scaleconfig: XScaleConfigItemType, currentTransformXb: any, axisAreaonSVG: any) {
   if (scaleconfig.xscale != null) {
     const XSL = scaleconfig.xscale().XSCALE as d3.ScaleLinear<number, number>;
-    let currentxscale = currentTransformXb.rescaleX(XSL);
+    let currentxscale = scaleconfig.zoomstatus?currentTransformXb.rescaleX(XSL):XSL
     axisAreaonSVG.selectAll(`.x-axis-${scaleconfig.xscaleTag}`).remove();
    
     axisAreaonSVG
@@ -257,7 +271,7 @@ export function drawXaxis(axisAreaonSVG: d3.Selection<SVGGElement, any, HTMLElem
       let currentxscale = currentTransformXb.rescaleX(XSL);
       Shared_XYrelation[scaletag].map((yscaltag) => {
         // console.log("autozoom",Shared_YScaleConfig[yscaltag].autozoom);
-        if (Shared_YScaleConfig[yscaltag].autozoom) {
+        if (Shared_YScaleConfig[yscaltag].autozoom && scaleconfig.zoomstatus) {
           const newvisibleRange = currentxscale.domain();
           const allowablerange = [0, Shared_ChartPlotData[scaleconfig.xscaleDataTag].length];
           // console.log("allowablerange");

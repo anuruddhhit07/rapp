@@ -112,7 +112,9 @@ function drawPlotScatteryName(
     Shared_PlotInfo[plotName].yscaleTag
   ].yscale().TranSFormedYscale as d3.ScaleLinear<number, number>;
 
-  let newxScale = currentTransformX.rescaleX(xScale);
+
+  const zoomstatus= Shared_XScaleConfig[Shared_PlotInfo[plotName].xscaleTag].zoomstatus
+  let newxScale = zoomstatus?currentTransformX.rescaleX(xScale):xScale
   let newyScale = yScale;
 
   const yaxistag =
@@ -181,7 +183,9 @@ function drawPlotLineByName(
     Shared_PlotInfo[plotName].yscaleTag
   ].yscale().TranSFormedYscale as d3.ScaleLinear<number, number>;
 
-  let newxScale = currentTransformX.rescaleX(xScale);
+  //let newxScale = currentTransformX.rescaleX(xScale);
+  const zoomstatus= Shared_XScaleConfig[Shared_PlotInfo[plotName].xscaleTag].zoomstatus
+  let newxScale = zoomstatus?currentTransformX.rescaleX(xScale):xScale
   let newyScale = yScale;
 
   const yaxistag =
@@ -237,7 +241,9 @@ function drawPlotBarByName(
     Shared_PlotInfo[plotName].yscaleTag
   ].yscale().TranSFormedYscale as d3.ScaleLinear<number, number>;
 
-  let newxScale = currentTransformX.rescaleX(xScale);
+  //let newxScale = currentTransformX.rescaleX(xScale);
+  const zoomstatus= Shared_XScaleConfig[Shared_PlotInfo[plotName].xscaleTag].zoomstatus
+  let newxScale = zoomstatus?currentTransformX.rescaleX(xScale):xScale
   let newyScale = yScale;
 
   const yaxistag =
@@ -302,7 +308,9 @@ function drawPlotOHLCByName(
       Shared_PlotInfo[plotName].yscaleTag
     ].yscale().TranSFormedYscale as d3.ScaleLinear<number, number>;
   
-    let newxScale = currentTransformX.rescaleX(xScale);
+    //let newxScale = currentTransformX.rescaleX(xScale);
+    const zoomstatus= Shared_XScaleConfig[Shared_PlotInfo[plotName].xscaleTag].zoomstatus
+    let newxScale = zoomstatus?currentTransformX.rescaleX(xScale):xScale
     let newyScale =yScale;
   
     const yaxistag =
