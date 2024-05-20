@@ -29,13 +29,7 @@ class TechGroup {
         }
         if (typeof data === 'string') {
             const dataaaray = this.ohlcv.map(item => item[data as keyof OHLCV]);
-            const sma=ta.sma(dataaaray, period).fill(NaN,0,50)
-            // for (let i = 0; i < sma.length; i++) {
-            //     if (isNaN(sma[i]) || sma[i] === undefined) {
-            //         sma[i] = dataaaray[i];
-            //     }
-            // }
-
+            const sma=ta.sma(dataaaray, period)
             return sma;
         } else if (Array.isArray(data)) {
             return ta.sma(data, period);
@@ -45,9 +39,57 @@ class TechGroup {
     }
 
     // Method to calculate Exponential Moving Average (EMA)
-    calculateEMA(data: string | number[], period: number) {
-        // Implement EMA calculation logic here
+    calculateEMA(data: string | number[], period: number): number[] {
+        if (!this.ohlcv) {
+            throw new Error('OHLCV data has not been attached.');
+        }
+        if (typeof data === 'string') {
+            const dataaaray = this.ohlcv.map(item => item[data as keyof OHLCV]);
+            const ema=ta.ema(dataaaray, period)
+            return ema;
+        } else if (Array.isArray(data)) {
+            return ta.ema(data, period);
+        } else {
+            throw new Error('Invalid data format. Expecting string or number[].');
+        }
     }
+
+    calculateRSI(data: string | number[], period: number): number[] {
+        if (!this.ohlcv) {
+            throw new Error('OHLCV data has not been attached.');
+        }
+        if (typeof data === 'string') {
+            const dataaaray = this.ohlcv.map(item => item[data as keyof OHLCV]);
+            const rsi=ta.rsi(dataaaray, period)
+            return rsi;
+        } else if (Array.isArray(data)) {
+            return ta.rsi(data, period);
+        } else {
+            throw new Error('Invalid data format. Expecting string or number[].');
+        }
+    }
+
+    calculateADX(period: number): {adx:number[],dmp:number[],dmn:number[]} {
+        if (!this.ohlcv) {
+            throw new Error('OHLCV data has not been attached.');
+        }
+        // if (typeof data === 'string') {
+            
+            const highdata = this.ohlcv.map(item => item['high' as keyof OHLCV]);
+            const lowdata = this.ohlcv.map(item => item['low' as keyof OHLCV]);
+            const adx=ta.adx(highdata,lowdata, period)
+
+            const dm=ta.dm(highdata,lowdata, period)
+            console.log(dm);
+
+            return {adx:adx,dmp:dm[0],dmn:dm[1]};
+
+
+
+       
+    }
+
+
 }
 
 export default TechGroup;

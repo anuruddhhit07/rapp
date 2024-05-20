@@ -35,7 +35,7 @@ export const plotInfoInput: PlotInfoInputType[] = [
     plotStatus: true,
     plotName: "SMAPlot",
     xdataTag: "xindex",
-    ydataTag: "sma",
+    ydataTag: "ema",
     xscaleTag: "bot",
     yscaleTag: "TR",
     plotType: "line",
@@ -65,26 +65,60 @@ export const plotInfoInput: PlotInfoInputType[] = [
     plotType: "scatter",
     buttontag:"HighPlot"
   },
-  {
-    plotStatus: false,
-    plotName: "LowPlot",
-    xdataTag: "xindex",
-    ydataTag: "low",
-    xscaleTag: "bot",
-    yscaleTag: "LR",
-    plotType: "line",
-    buttontag:"HighPlot"
-  },
+  // {
+  //   plotStatus: false,
+  //   plotName: "LowPlot",
+  //   xdataTag: "xindex",
+  //   ydataTag: "low",
+  //   xscaleTag: "bot",
+  //   yscaleTag: "LR",
+  //   plotType: "line",
+  //   buttontag:"HighPlot"
+  // },
 
   {
     plotStatus: false,
-    plotName: "HPlot",
+    plotName: "RSIplt",
     xdataTag: "xindex",
-    ydataTag: "high",
+    ydataTag: "rsi",
     xscaleTag: "bot",
-    yscaleTag: "LR",
+    yscaleTag: "rsi_scale",
     plotType: "line",
-    buttontag:"HPlot"
+    plotcolor:"black",
+    buttontag:"RSIPlot"
+  },
+  {
+    plotStatus: false,
+    plotName: "AdxPlt",
+    xdataTag: "xindex",
+    ydataTag: "adx",
+    xscaleTag: "bot",
+    yscaleTag: "rsi_scale",
+    plotType: "line",
+    plotcolor:'blue',
+    buttontag:"ADXplot"
+  },
+  {
+    plotStatus: false,
+    plotName: "dmpPlt",
+    xdataTag: "xindex",
+    ydataTag: "dmp",
+    xscaleTag: "bot",
+    yscaleTag: "rsi_scale",
+    plotType: "line",
+    plotcolor:'green',
+    buttontag:"ADXplot"
+  },
+  {
+    plotStatus: false,
+    plotName: "dmnPlt",
+    xdataTag: "xindex",
+    ydataTag: "dmn",
+    xscaleTag: "bot",
+    yscaleTag: "rsi_scale",
+    plotType: "line",
+    plotcolor:'red',
+    buttontag:"ADXplot"
   },
 
   {
@@ -174,7 +208,7 @@ export const yScaleConfigInput: YScaleConfigInputType[] = [
   },
   {
     yscaleTag: "LR",
-    yaxisTag:"scatterAxis",
+    yaxisTag:"rsiAxis",
     scaleSide:'Right',
     xpoint: 20,
     // yscaleRange: [0, 100],
@@ -182,6 +216,17 @@ export const yScaleConfigInput: YScaleConfigInputType[] = [
     xscaleVisibleRange: [0, 0],
     autozoom:true,
     zoomstatus:true,
+  },
+  {
+    yscaleTag: "rsi_scale",
+    yaxisTag:"rsiAxis",
+    scaleSide:'Right',
+    xpoint: 0,
+    // yscaleRange: [0, 100],
+    yscaleDataTag:'rsi',
+    xscaleVisibleRange: [0, 0],
+    autozoom:false,
+    zoomstatus:false,
   },
   {
     yscaleTag: "Funda_yscale",

@@ -126,6 +126,8 @@ interface backtestdata{
     rsi?: any;
     atr?: any;
     adx?: any;
+    dmp?: any;
+    dmn?: any;
     ohlckeyvlaue?: any;
     zigzaglineX?: number[];
     zigzaglineY?: number[];

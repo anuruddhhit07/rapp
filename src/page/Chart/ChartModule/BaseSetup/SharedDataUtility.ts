@@ -179,6 +179,19 @@ export function getYscale(this: YScaleConfigItemType): {
       d3.max(fundaMultibarYCombined.slice(visiblerange[0], visiblerange[1])) as number,
     ];
   }
+  else if (this.yscaleDataTag == "rsi") {
+    const tempyArray=Object.values(Shared_ChartPlotData[this.yscaleDataTag as keyof ChartDataType]) as number[][]
+    // console.log(tempyArray);
+    const fundaMultibarYCombined: number[] = [].concat(...tempyArray as any);
+
+   visiblerange = this.xscaleVisibleRange[1] == 0 ? [0, tempyArray[0].length] : this.xscaleVisibleRange;
+    domain = [
+      d3.min(fundaMultibarYCombined.slice(visiblerange[0], visiblerange[1])) as number,
+      d3.max(fundaMultibarYCombined.slice(visiblerange[0], visiblerange[1])) as number,
+    ];
+
+    domain=[0,100]
+  }
   
   else {
     visiblerange = this.xscaleVisibleRange[1] == 0 ? [0, Shared_ChartPlotData[this.yscaleDataTag as keyof ChartDataType].length] : this.xscaleVisibleRange;

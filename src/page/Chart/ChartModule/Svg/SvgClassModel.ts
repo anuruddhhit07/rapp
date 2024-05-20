@@ -181,6 +181,9 @@ class SVGClass {
       0,
       numberofbutton - 1
     );
+
+// console.log(object);
+
     const updatedIdArray = [
       ...buttonidarray,
       ...replacingifArray.slice(buttonidarray.length),
