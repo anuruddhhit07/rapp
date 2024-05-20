@@ -8,7 +8,7 @@ import {
   groupDataByPlotType,
 } from "../BaseSetup/SharedDataUtility";
 import { ChartDataType } from "../types";
-import { drawBarChartOnSVG, drawCandlestickOnSVG, drawLineOnSVG, drawScatterPlotOnSVG } from "./SVGUtility";
+import { drawBarChartOnSVG, drawCandlestickOnSVG, drawLineOnSVG, drawMultiBarChartOnSVG, drawScatterPlotOnSVG } from "./SVGUtility";
 import { ScatterDataType } from "./chartSetuptype";
 
 export function plotonsvg(
@@ -25,7 +25,7 @@ export function plotonsvg(
   plotAreaonSVG.selectAll(`.barplot`).remove();
   plotAreaonSVG.selectAll(`.ohlcplot`).remove();
   plotAreaonSVG.selectAll(`.scatterplot`).remove();
-
+  plotAreaonSVG.selectAll(`.mulitbarplot`).remove();
   
   
   for (let plotType in groupedplotData) {
@@ -48,6 +48,16 @@ export function plotonsvg(
           if (plotTag.includes(PlotName)) {
             // console.log(PlotName);
             drawPlotBarByName(PlotName, plotAreaonSVG, xzoomeventsvg);
+          }
+        });
+      }
+
+      if (plotType == "mulitbar") {
+        groupedplotData[plotType].forEach((PlotName) => {
+          // console.log(PlotName);
+          if (plotTag.includes(PlotName)) {
+            // console.log(PlotName);
+            drawPlotMulitBarByName(PlotName, plotAreaonSVG, xzoomeventsvg);
           }
         });
       }
@@ -278,6 +288,77 @@ function drawPlotBarByName(
     yaxistag,
     yaxisraange,
     plotColor
+  );
+}
+
+function drawPlotMulitBarByName(
+  plotName: string,
+  PlotGroupArea: d3.Selection<SVGGElement, any, HTMLElement, any>,
+  xzoomeventsvg: d3.Selection<SVGGElement, any, HTMLElement, any>
+) {
+    const visiblerange=Shared_YScaleConfig[Shared_PlotInfo[plotName].yscaleTag].xscaleVisibleRange
+
+    let XDATA:number[]=[]
+    let YDATA:{ [key: string]: number[] }={}
+
+    if (visiblerange[1]==0){
+        XDATA = Shared_PlotInfo[plotName].xdata
+        YDATA = Shared_PlotInfo[plotName].ydata as unknown as { [key: string]: number[] }
+    }
+    else {
+        XDATA = Shared_PlotInfo[plotName].xdata.slice(visiblerange[0], visiblerange[1])
+        // YDATA = Shared_PlotInfo[plotName].ydata.slice(visiblerange[0], visiblerange[1]) as unknown as { [key: string]: number[] }
+        let tempyData=Shared_PlotInfo[plotName].ydata as unknown as { [key: string]: number[] }
+        Object.keys(tempyData).forEach(key => {
+          YDATA[key] = tempyData[key].slice(visiblerange[0], visiblerange[1]);
+        });
+    }
+
+    // const xScaleType = Shared_XScaleConfig[Shared_PlotInfo[plotName].xscaleTag].xsaleType
+
+    // if (xScaleType=="Linear"){
+    //   XDATA=XDATA.map((item,index)=>index)
+    // }
+    // console.log(YDATA);
+
+  let plotColor = Shared_PlotInfo[plotName].plotcolor;
+  // // const currentTransformX = Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag].currentTransformX;
+  const currentTransformX = xzoomeventsvg.property("__zoom");
+  // const currentTransformY = yzoomeventsvg.property("__zoom");
+  const currentTransformY =
+    Shared_YScaleConfig[Shared_PlotInfo[plotName].yscaleTag].yzoomtransform;
+  // console.log(currentTransformY);
+  // // const currentTransformY = this.AxisYGroup.property("__zoom");
+  const xScale = Shared_XScaleConfig[
+    Shared_PlotInfo[plotName].xscaleTag
+  ].xscale().XSCALE as d3.ScaleLinear<number, number>;
+  const yScale = Shared_YScaleConfig[
+    Shared_PlotInfo[plotName].yscaleTag
+  ].yscale().TranSFormedYscale as d3.ScaleLinear<number, number>;
+
+  //let newxScale = currentTransformX.rescaleX(xScale);
+  const zoomstatus= Shared_XScaleConfig[Shared_PlotInfo[plotName].xscaleTag].zoomstatus
+  let newxScale = zoomstatus?currentTransformX.rescaleX(xScale):xScale
+  let newyScale = yScale;
+
+  const yaxistag =
+    Shared_YScaleConfig[Shared_PlotInfo[plotName].yscaleTag].yaxisTag;
+    const yaxisraange=Shared_yaxisProp[yaxistag].range
+
+  // console.log(XDATA,YDATA,plotColor);
+  // console.log(currentTransformX,currentTransformY);
+  
+
+  drawMultiBarChartOnSVG(
+    PlotGroupArea,
+    XDATA as number[],
+    YDATA as { [key: string]: number[] },
+    newxScale,
+    newyScale,
+    plotName,
+    yaxistag,
+    yaxisraange,
+    {a1:"red",b1:"green"}
   );
 }
 function drawPlotOHLCByName(

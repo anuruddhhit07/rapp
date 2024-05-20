@@ -512,6 +512,54 @@ export function drawBarChartOnSVG(
     .attr("fill", barColor); // Set color for the bar
 }
 
+
+export function drawMultiBarChartOnSVG(
+  svgGroup: d3.Selection<SVGGElement, any, any, any>,
+  xData: number[],
+  yData: { [key: string]: number[] }, // Updated yData to accept an object with multiple arrays
+  xScale: d3.ScaleLinear<number, number>,
+  yScale: d3.ScaleLinear<number, number>,
+  classNameTag: string,
+  yaxistag: string,
+  yaxisRange: [number, number],
+  barColors: { [key: string]: string } // Object to map each y-data array to its corresponding bar color
+) {
+  // Calculate the width of each bar group based on the scale
+  const tickWidth = xScale(xData[1]) - xScale(xData[0]);
+
+  // Number of different bar series (categories)
+  const numCategories = Object.keys(yData).length;
+
+  // Add a gap between groups of bars
+  const groupGap = tickWidth * 0.2; // 20% of the tick width as gap
+  const effectiveTickWidth = tickWidth - groupGap;
+
+  // Calculate the width of each individual bar
+  const barWidth = effectiveTickWidth / numCategories;
+
+  // Iterate over each key in yData
+  Object.keys(yData).forEach((key, index) => {
+    const yDataArray = yData[key];
+
+    // Append a rectangle element for each data point in the current yData array
+    svgGroup
+      .selectAll(`.bar-${key}`) // Select bars corresponding to the current key
+      .data(yDataArray)
+      .enter()
+      .append("rect")
+      .attr("class", `all allplot mulitbarplot mulitbarplot-${classNameTag} bar-${key}`)
+      .attr("clip-path", `url(#clip-${yaxistag})`)
+      .attr("x", (d, i) => xScale(xData[i]) - effectiveTickWidth / 2 + index * barWidth + (effectiveTickWidth - barWidth * numCategories) / 2) // Adjust x position to distribute bars evenly with a gap
+      .attr("y", (d) => yScale(d)) // Set y position based on the data value
+      .attr("width", barWidth) // Set the width of the bar
+      .attr("height", (d) => yaxisRange[0] - yScale(d)) // Calculate the height of the bar
+      .attr("fill", barColors[key]); // Set color for the bar based on the key
+  });
+}
+
+
+
+
 export function drawCandlestickOnSVG(
   svgGroup: d3.Selection<SVGGElement, any, any, any>,
   xdata: number[],

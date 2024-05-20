@@ -56,7 +56,7 @@ export const plotInfoInput: PlotInfoInputType[] = [
     tooltip:true
   },
   {
-    plotStatus: true,
+    plotStatus: false,
     plotName: "HighPlot",
     xdataTag: "xindex",
     ydataTag: "high",
@@ -65,16 +65,29 @@ export const plotInfoInput: PlotInfoInputType[] = [
     plotType: "scatter",
     buttontag:"HighPlot"
   },
+  // {
+  //   plotStatus: true,
+  //   plotName: "FundaPlot",
+  //   xdataTag: "fundaX1",
+  //   ydataTag: "fundaY2",
+  //   xscaleTag: "Funda_xscale",
+  //   yscaleTag: "Funda_yscale",
+  //   plotType: "bar",
+  //   buttontag:"FundaPlot"
+  // },
+
   {
-    plotStatus: true,
+    plotStatus: false,
     plotName: "FundaPlot",
     xdataTag: "fundaX1",
-    ydataTag: "fundaY2",
+    ydataTag: "fundaMultibarY",
     xscaleTag: "Funda_xscale",
     yscaleTag: "Funda_yscale",
-    plotType: "bar",
+    plotType: "mulitbar",
     buttontag:"FundaPlot"
   },
+
+
 ];
 
 
@@ -109,6 +122,8 @@ export const xScaleConfigInput: XScaleConfigInputType[] = [
     xscaleDataTag:'fundaX1',
     zoomstatus: false,
   },
+
+
 ];
 
 export const yScaleConfigInput: YScaleConfigInputType[] = [
@@ -162,10 +177,10 @@ export const yScaleConfigInput: YScaleConfigInputType[] = [
     scaleSide:'Right',
     xpoint: 20,
     // yscaleRange: [0, 100],
-    yscaleDataTag:'fundaY2',
+    yscaleDataTag:'fundaMultibarY',
     xscaleVisibleRange: [0, 0],
     autozoom:false,
-    zoomstatus:false,
+    zoomstatus:true,
   },
 ];
 

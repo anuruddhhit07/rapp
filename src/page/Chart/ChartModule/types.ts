@@ -133,6 +133,7 @@ interface backtestdata{
     fundaX1?: number[];
     fundaY2?: number[];
     fundaY1?: FundData[];
+    fundaMultibarY?:{ [key: string]: number[] };
     fundabarY1?: FundData[];
     tempfundata?: FundData[];
     Operating_ProfitX?: string[];

@@ -29,6 +29,7 @@ export function arrangeData(this: any, stockData: ChartDataIN, funda: number = 0
         volume:ohlcDataArray.map(item=>item.volume),
         fundaMappedX1:fundaMappedX1,
         fundaX1:fundaMappedX1.map((item: any,index: number)=>index),
-        fundaY2:[10,41,21,5,41,15]
+        fundaY2:[10,41,21,5,41,15],
+        fundaMultibarY:{a1:[200,41,21,5,41,15],b1:[100,41,21,5,41,1]}
     }
 }

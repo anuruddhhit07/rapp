@@ -167,10 +167,24 @@ export function getYscale(this: YScaleConfigItemType): {
       d3.min(Shared_ChartPlotData["low"].slice(visiblerange[0], visiblerange[1])) as number,
       d3.max(Shared_ChartPlotData["high"].slice(visiblerange[0], visiblerange[1])) as number,
     ];
-  } else {
+  }
+  else if (this.yscaleDataTag == "fundaMultibarY") {
+    const tempyArray=Object.values(Shared_ChartPlotData[this.yscaleDataTag as keyof ChartDataType]) as number[][]
+    // console.log(tempyArray);
+    const fundaMultibarYCombined: number[] = [].concat(...tempyArray as any);
+
+   visiblerange = this.xscaleVisibleRange[1] == 0 ? [0, tempyArray[0].length] : this.xscaleVisibleRange;
+    domain = [
+      d3.min(fundaMultibarYCombined.slice(visiblerange[0], visiblerange[1])) as number,
+      d3.max(fundaMultibarYCombined.slice(visiblerange[0], visiblerange[1])) as number,
+    ];
+  }
+  
+  else {
     visiblerange = this.xscaleVisibleRange[1] == 0 ? [0, Shared_ChartPlotData[this.yscaleDataTag as keyof ChartDataType].length] : this.xscaleVisibleRange;
     domain = d3.extent(Shared_ChartPlotData[this.yscaleDataTag as keyof ChartDataType].slice(visiblerange[0], visiblerange[1])) as Iterable<NumberValue>;
   }
+  // console.log(this.yscaleDataTag,domain);
 
   const padding = 0.1;
   const domainArray = Array.from(domain) as [number, number];
