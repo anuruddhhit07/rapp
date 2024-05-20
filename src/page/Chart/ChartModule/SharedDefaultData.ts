@@ -5,7 +5,7 @@ import {
   YScaleConfigInputType,
 } from "./types";
 import { Shared_ChartDimension } from "./BaseSetup/SharedDataUtility";
-import { ChartDataType } from "./BaseSetup/chartdataTypes";
+import { ChartDataType } from "./types";
 
 export const defaultchartData: ChartDataType = {
   timestamp: [],

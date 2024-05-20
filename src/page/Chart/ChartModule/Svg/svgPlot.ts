@@ -7,7 +7,7 @@ import {
   Shared_yaxisProp,
   groupDataByPlotType,
 } from "../BaseSetup/SharedDataUtility";
-import { ChartDataType } from "../BaseSetup/chartdataTypes";
+import { ChartDataType } from "../types";
 import { drawBarChartOnSVG, drawCandlestickOnSVG, drawLineOnSVG, drawScatterPlotOnSVG } from "./SVGUtility";
 import { ScatterDataType } from "./chartSetuptype";
 

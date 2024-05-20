@@ -1,6 +1,6 @@
-import { ChartDataIN,ChartDataObj } from "./chartdataTypes";
+import { ChartDataIN,ChartDataType } from "../types";
 
-export function arrangeData(stockData: ChartDataIN, funda: number = 0): ChartDataObj {
+export function arrangeData(stockData: ChartDataIN, funda: number = 0): ChartDataType {
     const ohlcDataArray = stockData.histdata || [];
     const techDataobject = stockData.techdata || {};
     const fundaDataobject = stockData.fundadata || {};

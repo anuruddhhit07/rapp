@@ -1,7 +1,7 @@
 import SetupChart from "../ChartModule/BaseSetup/SetupChart";
 import { arrangeData } from "./DataUtility/arrangeData";
 
-import { ChartDataIN } from "../ChartModule/BaseSetup/chartdataTypes";
+import { ChartDataIN } from "./types";
 import * as d3 from "d3";
 
 import { createClipPath } from "../ChartModule/Svg/SVGUtility";

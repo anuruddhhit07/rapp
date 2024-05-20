@@ -14,7 +14,7 @@ import {
   yaxisType,
 } from "../types";
 import { defaultChartDimensionProp, defaultchartData, plotInfoInput, xScaleConfigInput, yScaleConfigInput } from "../SharedDefaultData";
-import { ChartDataType } from "./chartdataTypes";
+import { ChartDataType } from "../types";
 import { NumberValue, ScaleBand, ScaleLinear, ScaleTime } from "d3";
 
 export let Shared_ChartPlotData: ChartDataType = defaultchartData;

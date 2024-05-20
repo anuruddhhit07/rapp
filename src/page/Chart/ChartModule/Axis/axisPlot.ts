@@ -13,7 +13,7 @@ import {
   updateShared_YScaleConfig,
   updateYScaleConfigByKey,
 } from "../BaseSetup/SharedDataUtility";
-import { ChartDataType } from "../BaseSetup/chartdataTypes";
+import { ChartDataType } from "../types";
 import { formatVolume, multiFormat } from "./dateFormat";
 import { getTooltipHTMLLine, getTooltipHTMLOHLC, getTooltipHTMLVolume } from "../Svg/ToolTipUtility";
 
