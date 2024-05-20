@@ -78,6 +78,17 @@ export const plotInfoInput: PlotInfoInputType[] = [
 
   {
     plotStatus: false,
+    plotName: "HPlot",
+    xdataTag: "xindex",
+    ydataTag: "high",
+    xscaleTag: "bot",
+    yscaleTag: "LR",
+    plotType: "line",
+    buttontag:"HPlot"
+  },
+
+  {
+    plotStatus: false,
     plotName: "FundaPlot",
     xdataTag: "fundaX1",
     ydataTag: "fundaMultibarY",

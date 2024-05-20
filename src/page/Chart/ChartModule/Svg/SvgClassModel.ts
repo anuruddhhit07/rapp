@@ -138,16 +138,39 @@ class SVGClass {
     numberofbutton: number,
     buttonProp: PlotStatusByButtonTag
   ) {
-    const arrayLength = Object.keys(buttonProp).length;
+
+    interface PlotData {
+      plotStatus: boolean;
+      plotName: string;
+      buttonid: string;
+    }
+    
+    interface GroupedData {
+      [buttonid: string]: PlotData[];
+    }
+
+    const groupedData:GroupedData= {};
+    for (const key in buttonProp) {
+      const buttonid = buttonProp[key].buttonid;
+      if (!(buttonid in groupedData)) {
+        groupedData[buttonid] = [];
+      }
+      groupedData[buttonid].push(buttonProp[key]);
+    }
+
+    console.log(groupedData);
+
+    const arrayLength = Object.keys(groupedData).length;
+    console.log(arrayLength);
     // Initialize the array with false values
     const initialPlotStatusArray: boolean[] = new Array(arrayLength).fill(
       false
     );
     const buttonidarray: string[] = [];
     // Iterate over each key in the interface and set the initial value in the array
-    Object.keys(buttonProp).forEach((key, index) => {
-      initialPlotStatusArray[index] = buttonProp[key].plotStatus;
-      buttonidarray[index] = buttonProp[key].buttonid;
+    Object.keys(groupedData).forEach((key, index) => {
+      initialPlotStatusArray[index] = groupedData[key][0].plotStatus; // Assuming each group has at least one plot data object
+      buttonidarray[index] = key;
     });
 
     // const replacingArray = Array(numberofbutton).fill(false, 0, numberofbutton-1);
