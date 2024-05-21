@@ -147,6 +147,53 @@ export function createGroupAdv(
 
   return group;
 }
+export function appendSvgElementsArray(mainSvg: d3.Selection<SVGSVGElement, any, any, any>, symbolIds: string[], svgProps: {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}): void {
+  const { x, y, width, height } = svgProps;
+
+  // Create nested SVG at the specified location with the given width and height
+  const nestedSvg = mainSvg.append('svg')
+    .attr('x', x)
+    .attr('y', y)
+    .attr('width', width)
+    .attr('height', height);
+
+  // Append use element to nestedSvg for each symbolId
+  symbolIds.forEach((symbolId, index) => {
+    nestedSvg.append('use')
+      .attr('xlink:href', `#${symbolId}`)
+      .attr('width', width)
+      .attr('height', height)
+      .attr('y', index * height) // Adjust the y position for each symbol
+      .style('fill', 'red');
+  });
+}
+export function appendSvgElements(mainSvg: d3.Selection<SVGSVGElement, any, any, any>, symbolId: string, svgProps: {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}): void {
+  const { x, y, width, height } = svgProps;
+
+  // Create nested SVG at the specified location with the given width and height
+  const nestedSvg = mainSvg.append('svg')
+    .attr('x', x)
+    .attr('y', y)
+    .attr('width', width)
+    .attr('height', height);
+
+  // Append use element to nestedSvg
+  nestedSvg.append('use')
+    .attr('xlink:href', `#${symbolId}`)
+    .attr('width', width)
+    .attr('height', height)
+    .style('fill', 'red');
+}
 
 export function enhanceGroup(
   groupmain: d3.Selection<SVGGElement, any, HTMLElement, any>,
@@ -236,6 +283,18 @@ export function createClipPath(
   clipPath.append("rect").attr("x", x).attr("y", y).attr("width", width).attr("height", height).style("fill", "steelblue");
 
   return clipPath;
+}
+
+export function createSVGDefs2(svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>, symbolDef: string ): void {
+  // Select the existing defs element if available, or create a new one
+  let defsElement: d3.Selection<SVGDefsElement, any, HTMLElement, any> = svg.select<SVGDefsElement>("defs");
+  if (defsElement.empty()) {
+    defsElement = svg.append("defs");
+  }
+  defsElement.html(symbolDef);
+
+
+
 }
 export function createSVGDefs(svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>, defs: { [key: string]: string }): void {
   // Select the existing defs element if available, or create a new one

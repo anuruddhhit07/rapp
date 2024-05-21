@@ -33,7 +33,7 @@ const ChartPage = () => {
     if (!chartRef.current && chartContainer) {
       const width = chartContainer.offsetWidth; // Get the width of the chart container
       //const height = chartContainer.offsetHeight; // Get the height of the chart container
-      const height=700
+      const height=500
       chartRef.current = new CandlestickChartTS(Shared_Allstockdata, divId,{divWidth:width,divHeight:height});
     }
   }, []); // Empty dependency array ensures the effect runs only once, similar to componentDidMount in class components

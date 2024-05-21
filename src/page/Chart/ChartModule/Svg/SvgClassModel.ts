@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 
-import { createGroupAdv, createMultipleSqure, createSVGDefs, enhanceGroup } from "./SVGUtility";
+import { appendSvgElements, appendSvgElementsArray, createGroupAdv, createMultipleSqure, createSVGDefs, createSVGDefs2, enhanceGroup } from "./SVGUtility";
 import { PlotStatusByButtonTag } from "../types";
 import {
   Shared_ChartBaseData,
@@ -11,7 +11,13 @@ import {
 
 const svgDefs = {
   symbol1: '<symbol id="symbol1" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="red" /></symbol>',
-  gradient1: '<linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:rgb(255,255,0);stop-opacity:1" /><stop offset="100%" style="stop-color:rgb(255,0,0);stop-opacity:1" /></linearGradient>'
+  gradient1: '<linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:rgb(255,255,0);stop-opacity:1" /><stop offset="100%" style="stop-color:rgb(255,0,0);stop-opacity:1" /></linearGradient>',
+  circlee:`<circle id="myCircle" cx="50" cy="50" r="50" />`,
+  user:`<symbol id="icon-user" viewBox="0 0 32 32">
+  <title>user</title>
+  <path d="M18 22.082v-1.649c2.203-1.241 4-4.337 4-7.432 0-4.971 0-9-6-9s-6 4.029-6 9c0 3.096 1.797 6.191 4 7.432v1.649c-6.784 0.555-12 3.888-12 7.918h28c0-4.030-5.216-7.364-12-7.918z"></path>
+</symbol>`
+
 };
 const trendSvg = `<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
   <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -269,7 +275,35 @@ class SVGClass {
       .style("stroke", "black")
       .style("stroke-width", 1);
 
-      createSVGDefs(this.svg,svgDefs)
+      // createSVGDefs(this.svg,svgDefs)
+
+      createSVGDefs2(this.svg,svgDefs.user)
+      const svgProps = { x: 0, y: 10, width: 20, height: 20 }
+      // appendSvgElements(this.svg,'icon-user',svgProps)
+      appendSvgElementsArray(this.svg,['icon-user','icon-user'],svgProps)
+
+    //   const group = this.svg.append('g')
+    //   .attr('transform', 'translate(10, 10) scale(3)'); // Adjust the scale as needed
+  
+    // // Append the use element to the group
+    // group.append('use')
+    //   .attr('xlink:href', '#icon-user')
+    //   .style('fill', 'red')
+
+
+    //   const nestedSvg = this.svg.append('svg')
+    // .attr('x', 1)
+    // .attr('y', 16)
+    // .attr('width',50)
+    // .attr('height',50)
+
+    // nestedSvg.append('use')
+    // .attr('xlink:href', '#icon-user')
+    // .attr('width', 20)
+    // .attr('height', 20)
+    // .style('fill', 'red');
+
+
   }
 }
 
