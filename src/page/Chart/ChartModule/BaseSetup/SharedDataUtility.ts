@@ -243,6 +243,7 @@ export function updateShared_PlotInfo(key: string, partialData: Partial<PlotInfo
       plotcolor: "red",
       buttontag: "no-button",
       tooltip:false,
+      clipdata:true,
       ...partialData, // Merge with additional partialData
     };
   }
@@ -271,6 +272,7 @@ export function updateShared_XScaleConfig(key: string, partialData: Partial<XSca
 }
 export function updateShared_YScaleConfig(key: string, partialData: Partial<YScaleConfigItemType>): void {
   // Check if the key already exists in Shared_DataToplot
+  
   if (Shared_YScaleConfig.hasOwnProperty(key)) {
     // Merge the partial data with the existing DataToplotObjType object
     Shared_YScaleConfig[key] = { ...Shared_YScaleConfig[key], ...partialData };
@@ -340,7 +342,7 @@ export const updateYscaleconfig = (yScaleConfigInputArray = yScaleConfigInput) =
 
 export const updateplotInfo = (plotInfoInputArray = plotInfoInput) => {
   plotInfoInputArray.map((plotinfoitem) => {
-    const { plotStatus, plotName, xdataTag, ydataTag, xscaleTag, yscaleTag, plotType, plotcolor, buttontag ,tooltip} = plotinfoitem;
+    const { plotStatus, plotName, xdataTag, ydataTag, xscaleTag, yscaleTag, plotType, plotcolor, buttontag ,tooltip,clipdata} = plotinfoitem;
     const tempplotinforItem: PlotInfoItem = {
       plotStatus: plotStatus,
       plotName: plotName,
@@ -351,7 +353,8 @@ export const updateplotInfo = (plotInfoInputArray = plotInfoInput) => {
       plotType: plotType,
       plotcolor: plotcolor ? plotcolor : "green",
       buttontag: buttontag ? buttontag : "no-button",
-      tooltip:tooltip?tooltip:false
+      tooltip:tooltip?tooltip:false,
+      clipdata:clipdata!=undefined?clipdata:true
     };
 
     updateShared_PlotInfo(plotName, tempplotinforItem);

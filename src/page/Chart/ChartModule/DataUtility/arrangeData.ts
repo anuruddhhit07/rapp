@@ -1,5 +1,6 @@
 import { ChartDataIN,ChartDataType } from "../types";
 import TechGroup from "../../TechModule";
+import { zigzagdatasub } from "../../TechModule/ZigZAgTool/types/type";
 
 const techGroup= TechGroup.getInstance();
 
@@ -9,7 +10,7 @@ export function arrangeData(this: any, stockData: ChartDataIN, funda: number = 0
     const techDataobject = stockData.techdata || {};
     const fundaDataobject = stockData.fundadata || {};
   
-    const zigzagdata = techDataobject.zigzagdata || {};
+    const zigzagdata = techDataobject.zigzagdatasub || {} as zigzagdatasub;
     const indicatordata = techDataobject.indicatordata || {};
     const backtestdata = techDataobject.btresult || {};
   
@@ -23,8 +24,10 @@ export function arrangeData(this: any, stockData: ChartDataIN, funda: number = 0
     const fundatakeys = Object.keys(shareholdingData);
     const fundaMappedX1=["2018","2019","2020","2021","2022","2023"]
 
-    techGroup.attachOHLCV(ohlcDataArray);
+   
     const ADX=techGroup.calculateADX(14)
+    console.log(zigzagdata);
+    
 
     return {
         xindex:ohlcDataArray.map((item,index)=>index),
@@ -38,10 +41,12 @@ export function arrangeData(this: any, stockData: ChartDataIN, funda: number = 0
         fundaX1:fundaMappedX1.map((item: any,index: number)=>index),
         fundaY2:[10,41,21,5,41,15],
         fundaMultibarY:{a1:[200,41,21,5,41,15],b1:[100,41,21,5,41,1]},
-        ema:techGroup.calculateEMA('close',5),
+        ema:techGroup.calculateEMA('close',25),
         rsi:techGroup.calculateRSI('close',14),
         adx:ADX.adx,
         dmp:ADX.dmp,
-        dmn:ADX.dmn
+        dmn:ADX.dmn,
+        zigzagX:zigzagdata.sublist.map(({orgindex})=>orgindex),
+        zigzagY:zigzagdata.sublist.map(({value})=>value)
     }
 }

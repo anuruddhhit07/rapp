@@ -39,17 +39,17 @@ export interface OHLCV {
       close: number;
       volume: number;
 }
-interface zigzagdata{
+interface zigzagdatasub{
     sublist: { orgindex: number; value: number }[];
     tobebreakdata?: { tobebreakcandelid: number; pricetobebreak: number };
     tobebreakdowndata?: { tobebreakcandelid: number; pricetobebreakdown: number };
     brlist: {
-      rejectat: number | null;
+      rejectat: number;
       broutfor: number;
       broutat: number;
       highatref: number;
       highatrejec: number;
-      breakoutperiod: string;
+      breakoutperiod: number;
     }[];
   }
 
@@ -97,7 +97,7 @@ interface backtestdata{
   export interface ChartDataIN {
     histdata: OHLCV[];
     techdata?: {
-      zigzagdata?: zigzagdata;
+      zigzagdatasub?: zigzagdatasub;
       indicatordata?: indicatordata;
       darvasBoxList?: any;
       btresult?: backtestdata;
@@ -155,6 +155,8 @@ interface backtestdata{
     SIGNALLINE?: number[];
     backtestresult?: number[];
     backtestreport?: string[];
+    zigzagX?:number[],
+    zigzagY?:number[]
   }
 
 //   export {ChartDataIN,ChartDataObj}
@@ -253,7 +255,8 @@ export interface PlotInfoInputType {
   plotType: string;
   plotcolor?: string;
   buttontag?:string
-  tooltip?:boolean
+  tooltip?:boolean,
+  clipdata?:boolean
 }
 
 export interface PlotInfoItem {
@@ -268,6 +271,7 @@ export interface PlotInfoItem {
   buttontag:string;
   tooltip:boolean;
   getTooltipHTML?: (this:PlotInfoItem,yaxistag:string,index: number,tooltiparea:d3.Selection<SVGGElement, any, HTMLElement, any>) => void
+  clipdata:boolean
 }
 export interface PlotInfoType {
   [key: string]: PlotInfoItem;

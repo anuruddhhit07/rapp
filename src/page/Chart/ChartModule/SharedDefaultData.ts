@@ -33,6 +33,19 @@ export const plotInfoInput: PlotInfoInputType[] = [
   },
   {
     plotStatus: true,
+    plotName: "zigzaglot",
+    xdataTag: "zigzagX",
+    ydataTag: "zigzagY",
+    xscaleTag: "bot",
+    yscaleTag: "TR",
+    plotType: "line",
+    plotcolor: "blue",
+    buttontag:"OHLCPlot",
+    tooltip:true,
+    clipdata:false
+  },
+  {
+    plotStatus: false,
     plotName: "SMAPlot",
     xdataTag: "xindex",
     ydataTag: "ema",

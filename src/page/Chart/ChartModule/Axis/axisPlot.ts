@@ -286,14 +286,17 @@ export function drawXaxis(axisAreaonSVG: d3.Selection<SVGGElement, any, HTMLElem
       let currentxscale = currentTransformXb.rescaleX(XSL);
       Shared_XYrelation[scaletag].map((yscaltag) => {
         // console.log("autozoom",Shared_YScaleConfig[yscaltag].autozoom);
-        if (Shared_YScaleConfig[yscaltag].autozoom && scaleconfig.zoomstatus) {
+        // if (Shared_YScaleConfig[yscaltag].autozoom ) {
           const newvisibleRange = currentxscale.domain();
           const allowablerange = [0, Shared_ChartPlotData[scaleconfig.xscaleDataTag].length];
           // console.log("allowablerange");
-          updateShared_YScaleConfig(yscaltag, {
+          // console.log(scaletag,yscaltag,allowablerange,newvisibleRange);
+          if (yscaltag!='Funda_yscale'){
+             updateShared_YScaleConfig(yscaltag, {
             xscaleVisibleRange: [Math.max(newvisibleRange[0], allowablerange[0]), Math.min(newvisibleRange[1], allowablerange[1])],
-          });
+          })
         }
+        // }
       });
 
       XAxisOnSVG(scaleconfig,currentTransformXb,axisAreaonSVG)

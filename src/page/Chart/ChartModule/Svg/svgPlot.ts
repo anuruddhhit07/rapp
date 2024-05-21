@@ -11,6 +11,20 @@ import { ChartDataType } from "../types";
 import { drawBarChartOnSVG, drawCandlestickOnSVG, drawLineOnSVG, drawMultiBarChartOnSVG, drawScatterPlotOnSVG } from "./SVGUtility";
 import { ScatterDataType } from "./chartSetuptype";
 
+function filterData(xdata: number[], ydata: number[], lowerLimit: number, upperLimit: number): { xdata: number[], ydata: number[] } {
+  const filteredXData: number[] = [];
+  const filteredYData: number[] = [];
+
+  for (let i = 0; i < xdata.length; i++) {
+      if (xdata[i] >= lowerLimit && xdata[i] <= upperLimit) {
+          filteredXData.push(xdata[i]);
+          filteredYData.push(ydata[i]);
+      }
+  }
+
+  return { xdata: filteredXData, ydata: filteredYData };
+}
+
 export function plotonsvg(
   plotAreaonSVG: d3.Selection<SVGGElement, any, HTMLElement, any>,
   xzoomeventsvg: d3.Selection<SVGGElement, any, HTMLElement, any>,
@@ -167,27 +181,28 @@ function drawPlotLineByName(
 
     let XDATA:number[]=[]
     let YDATA:number[]=[]
+    let XDATA_fillter1:number[]=[]
+    let YDATA_fillter1:number[]=[]
 
-    if (visiblerange[1]==0){
+    if (visiblerange[1]==0 ){
         XDATA = Shared_PlotInfo[plotName].xdata
         YDATA = Shared_PlotInfo[plotName].ydata
     }
     else {
-        XDATA = Shared_PlotInfo[plotName].xdata.slice(visiblerange[0], visiblerange[1])
-        YDATA = Shared_PlotInfo[plotName].ydata.slice(visiblerange[0], visiblerange[1])
+      // console.log(Shared_PlotInfo[plotName].clipdata);
+      if (Shared_PlotInfo[plotName].clipdata){
+        // console.log(plotName,visiblerange)
+        const filterdata=filterData(Shared_PlotInfo[plotName].xdata,Shared_PlotInfo[plotName].ydata,visiblerange[0],visiblerange[1])
+        XDATA=filterdata.xdata
+        YDATA=filterdata.ydata
+      } else {
+        XDATA = Shared_PlotInfo[plotName].xdata
+        YDATA = Shared_PlotInfo[plotName].ydata
+      }
+        
     }
 
-    // const xScaleType = Shared_XScaleConfig[Shared_PlotInfo[plotName].xscaleTag].xsaleType
-    // if (xScaleType=="Linear"){
-    //   XDATA=XDATA.map((item,index)=>index)
-    // }
-    // console.log(plotName,XDATA);
-
-
-//   const XDATA = Shared_PlotInfo[plotName].xdata;
-//   const YDATA = Shared_PlotInfo[plotName].ydata;
-
-  // const YDATA = Shared_DataToplot[plotName].ydata();
+// console.log(plotName,XDATA.length,Shared_PlotInfo[plotName].clipdata,visiblerange);
   let plotColor = Shared_PlotInfo[plotName].plotcolor;
   // // const currentTransformX = Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag].currentTransformX;
   const currentTransformX = xzoomeventsvg.property("__zoom");

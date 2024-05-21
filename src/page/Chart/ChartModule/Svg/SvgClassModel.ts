@@ -158,10 +158,10 @@ class SVGClass {
       groupedData[buttonid].push(buttonProp[key]);
     }
 
-    console.log(groupedData);
+    // console.log(groupedData);
 
     const arrayLength = Object.keys(groupedData).length;
-    console.log(arrayLength);
+    // console.log(arrayLength);
     // Initialize the array with false values
     const initialPlotStatusArray: boolean[] = new Array(arrayLength).fill(
       false

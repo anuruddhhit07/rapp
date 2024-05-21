@@ -1,14 +1,19 @@
 import { IndicatorsNormalizedSync } from "./@ixjb94/indicators/dist";
 import { OHLCV } from "../ChartModule/types";
+// import zigtagind from "./ZigZAgTool";
+import ZigProcessor from "./ZigZAgTool/core/zigzag"
+import { ZigzagData, zigzagdatasub } from "./ZigZAgTool/types/type";
+
 
 let ta = new IndicatorsNormalizedSync();
 
 class TechGroup {
     private static instance: TechGroup | null = null;
     private ohlcv: OHLCV[] | null = null;
+    private zigProcessor: ZigProcessor;
 
     private constructor() {
-        // Initialize any properties or configurations here
+        this.zigProcessor = ZigProcessor.getInstance();
     }
 
     static getInstance(): TechGroup {
@@ -20,6 +25,7 @@ class TechGroup {
 
     attachOHLCV(ohlcv: OHLCV[]): void {
         this.ohlcv = ohlcv;
+        this.zigProcessor.attachOHLCV(ohlcv.map(item=>({...item,time:item.timestamp})))
     }
 
     // Method to calculate Simple Moving Average (SMA)
@@ -46,6 +52,7 @@ class TechGroup {
         if (typeof data === 'string') {
             const dataaaray = this.ohlcv.map(item => item[data as keyof OHLCV]);
             const ema=ta.ema(dataaaray, period)
+            // console.log(ema);
             return ema;
         } else if (Array.isArray(data)) {
             return ta.ema(data, period);
@@ -80,14 +87,40 @@ class TechGroup {
             const adx=ta.adx(highdata,lowdata, period)
 
             const dm=ta.dm(highdata,lowdata, period)
-            console.log(dm);
+            // console.log(dm);
 
             return {adx:adx,dmp:dm[0],dmn:dm[1]};
 
-
-
-       
     }
+
+    calculateZizZag(): zigzagdatasub {
+        if (!this.ohlcv) {
+            throw new Error('OHLCV data has not been attached.');
+        }
+        
+        const zigzag = this.zigProcessor.zseries() as ZigzagData;
+        
+        const zigzagSubset: zigzagdatasub = {
+            sublist: zigzag.sublist.map(({ orgindex, value }) => ({ orgindex, value })),
+            tobebreakdata: zigzag.tobebreakdata
+                ? { tobebreakcandelid: zigzag.tobebreakdata.tobebreakcandelid, pricetobebreak: zigzag.tobebreakdata.pricetobebreak }
+                : undefined,
+            tobebreakdowndata: zigzag.tobebreakdowndata
+                ? { tobebreakcandelid: zigzag.tobebreakdowndata.tobebreakcandelid, pricetobebreakdown: zigzag.tobebreakdowndata.pricetobebreakdown }
+                : undefined,
+            brlist: zigzag.brlist.map(({ rejectat, broutfor, broutat, highatref, highatrejec, breakoutperiod }) => ({
+                rejectat,
+                broutfor,
+                broutat,
+                highatref,
+                highatrejec,
+                breakoutperiod
+            }))
+        };
+        
+        return zigzagSubset;
+    }
+    
 
 
 }
