@@ -109,6 +109,12 @@ interface backtestdata{
     };
   }
 
+  export interface brlistType {
+   x:number[];
+   y:number[];
+   label:string
+  }
+
   export interface ChartDataType {
     xdata?: number[];
     xdata1?: number[];
@@ -156,7 +162,8 @@ interface backtestdata{
     backtestresult?: number[];
     backtestreport?: string[];
     zigzagX?:number[],
-    zigzagY?:number[]
+    zigzagY?:number[],
+    brlinedata?:brlistType[]
   }
 
 //   export {ChartDataIN,ChartDataObj}

@@ -44,6 +44,22 @@ export const plotInfoInput: PlotInfoInputType[] = [
     tooltip:true,
     clipdata:false
   },
+
+  {
+    plotStatus: true,
+    plotName: "brlinelot",
+    xdataTag: "xindex",
+    ydataTag: "brlinedata",
+    xscaleTag: "bot",
+    yscaleTag: "TR",
+    plotType: "multiline",
+    plotcolor: "black",
+    buttontag:"BrlInePlot",
+    tooltip:true,
+    clipdata:false
+  },
+
+
   {
     plotStatus: false,
     plotName: "SMAPlot",

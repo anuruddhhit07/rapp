@@ -354,12 +354,23 @@ attachOHLCV(ohlcv: HistoryResponceData[]): void {
     refpoint: number;
     lowpointfilter: number[];
     getlatestbreakout: GetLatestBreakout;
-  }): any {
+  }): BreakoutData {
     var startpoint = lowpointfilter.find((element) => element > refpoint);
     var refvalue = stockdata[refpoint].high;
-    let rejCdindex: number | null = null;
+    let rejCdindex: number=NaN ;
 
-    var CANDLE_BROUT: any = {};
+    var CANDLE_BROUT: BreakoutData = {
+      broutfor: NaN,
+      broutat: NaN,
+      rejectat: NaN,
+      brekoutcandleago: NaN,
+      breakoutperiod: NaN,
+      breakoutpercentage: NaN,
+      highatref: NaN,
+      highatrejec: NaN,
+      highatbr: NaN,
+      closeatbr: NaN
+    };
 
     for (let i = startpoint!; i < stockdata.length; i++) {
       const high = stockdata[i].high;
@@ -371,12 +382,12 @@ attachOHLCV(ohlcv: HistoryResponceData[]): void {
       }
 
       if (close > refvalue) {
-        let validhighvalue = rejCdindex === null ? stockdata[refpoint].high : stockdata[rejCdindex].high;
+        let validhighvalue = isNaN(rejCdindex) ? stockdata[refpoint].high : stockdata[rejCdindex].high;
 
         CANDLE_BROUT = {
           broutfor: refpoint,
           broutat: i,
-          rejectat: rejCdindex,
+          rejectat: isNaN(rejCdindex) ? refpoint : rejCdindex,
           brekoutcandleago: getlatestbreakout.laststockindex + 1 - i,
           highatref: stockdata[refpoint].high,
           highatrejec: validhighvalue,
@@ -393,7 +404,7 @@ attachOHLCV(ohlcv: HistoryResponceData[]): void {
           getlatestbreakout.latestbreakobj = {
             broutfor: stockdata[refpoint].timestamp,
             broutat: stockdata[i].timestamp,
-            rejectat: rejCdindex === null ? stockdata[refpoint].timestamp : stockdata[rejCdindex].timestamp,
+            rejectat:isNaN(rejCdindex) ? stockdata[refpoint].timestamp : stockdata[rejCdindex].timestamp,
             brekoutcandleago: getlatestbreakout.laststockindex + 1 - i,
             highatref: stockdata[refpoint].high,
             highatrejec: validhighvalue,
@@ -408,7 +419,7 @@ attachOHLCV(ohlcv: HistoryResponceData[]): void {
             getlatestbreakout.latestbreakobj = {
               broutfor: stockdata[refpoint].timestamp,
               broutat: stockdata[i].timestamp,
-              rejectat: rejCdindex === null ? stockdata[refpoint].timestamp : stockdata[rejCdindex].timestamp,
+              rejectat: isNaN(rejCdindex) ? stockdata[refpoint].timestamp : stockdata[rejCdindex].timestamp,
               brekoutcandleago: getlatestbreakout.laststockindex + 1 - i,
               highatref: stockdata[refpoint].high,
               highatrejec: validhighvalue,
@@ -424,7 +435,7 @@ attachOHLCV(ohlcv: HistoryResponceData[]): void {
       }
     }
 
-    return null;
+    return CANDLE_BROUT;
   }
 
   private fullbrtable({ stockdata, zigdata }: { stockdata: HistoryResponceData[]; zigdata: ZigzaglineData[] }): FullBRResult {
@@ -471,7 +482,7 @@ attachOHLCV(ohlcv: HistoryResponceData[]): void {
     if (ind_break) {
       breakStrength = this.getbreakouttrength({ breakoutdetails: getlatestbreakout, stockdata });
     }
-
+    
     return { FullBRDATA, latestbreakout: getlatestbreakout, breakStrength };
   }
   private nearbrtable({ stockdata, zigdata }: { stockdata: HistoryResponceData[]; zigdata: ZigzaglineData[] }): BreakoutData_ToBe_base {

@@ -8,7 +8,7 @@ import {
   groupDataByPlotType,
 } from "../BaseSetup/SharedDataUtility";
 import { ChartDataType } from "../types";
-import { drawBarChartOnSVG, drawCandlestickOnSVG, drawLineOnSVG, drawMultiBarChartOnSVG, drawScatterPlotOnSVG } from "./SVGUtility";
+import { DrawMultilineonSVG, drawBarChartOnSVG, drawCandlestickOnSVG, drawLineOnSVG, drawMultiBarChartOnSVG, drawScatterPlotOnSVG } from "./SVGUtility";
 import { ScatterDataType } from "./chartSetuptype";
 
 function filterData(xdata: number[], ydata: number[], lowerLimit: number, upperLimit: number): { xdata: number[], ydata: number[] } {
@@ -40,6 +40,7 @@ export function plotonsvg(
   plotAreaonSVG.selectAll(`.ohlcplot`).remove();
   plotAreaonSVG.selectAll(`.scatterplot`).remove();
   plotAreaonSVG.selectAll(`.mulitbarplot`).remove();
+  plotAreaonSVG.selectAll(`.multilineplot`).remove();
   
   
   for (let plotType in groupedplotData) {
@@ -52,6 +53,16 @@ export function plotonsvg(
           if (plotTag.includes(PlotName)) {
             // console.log(PlotName);
             drawPlotLineByName(PlotName, plotAreaonSVG, xzoomeventsvg);
+          }
+        });
+      }
+
+      if (plotType == "multiline") {
+        groupedplotData[plotType].forEach((PlotName) => {
+          // console.log(PlotName);
+          if (plotTag.includes(PlotName)) {
+            // console.log(PlotName);
+            drawPlotMultiLineByName(PlotName, plotAreaonSVG, xzoomeventsvg);
           }
         });
       }
@@ -248,6 +259,78 @@ function drawPlotLineByName(
     newxScale,
     newyScale,
     plotName,
+    yaxistag,
+    plotColor
+  );
+}
+function drawPlotMultiLineByName(
+  plotName: string,
+  PlotGroupArea: d3.Selection<SVGGElement, any, HTMLElement, any>,
+  xzoomeventsvg: d3.Selection<SVGGElement, any, HTMLElement, any>
+) {
+    const visiblerange=Shared_YScaleConfig[Shared_PlotInfo[plotName].yscaleTag].xscaleVisibleRange
+    
+
+    let Multilinedata:{
+      x: number[];
+      y: number[];
+      label: string;
+    }[]=[]
+
+
+    Multilinedata=Shared_PlotInfo[plotName].ydata as unknown as {
+      x: number[];
+      y: number[];
+      label: string;
+    }[]
+
+  
+
+// console.log(plotName,XDATA.length,Shared_PlotInfo[plotName].clipdata,visiblerange);
+  let plotColor = Shared_PlotInfo[plotName].plotcolor;
+  // // const currentTransformX = Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag].currentTransformX;
+  const currentTransformX = xzoomeventsvg.property("__zoom");
+  // const currentTransformY = yzoomeventsvg.property("__zoom");
+  const currentTransformY =
+    Shared_YScaleConfig[Shared_PlotInfo[plotName].yscaleTag].yzoomtransform;
+  // console.log(currentTransformY);
+  // // const currentTransformY = this.AxisYGroup.property("__zoom");
+  const xScale = Shared_XScaleConfig[
+    Shared_PlotInfo[plotName].xscaleTag
+  ].xscale().XSCALE as d3.ScaleLinear<number, number>;
+  const yScale = Shared_YScaleConfig[
+    Shared_PlotInfo[plotName].yscaleTag
+  ].yscale().TranSFormedYscale as d3.ScaleLinear<number, number>;
+
+  //let newxScale = currentTransformX.rescaleX(xScale);
+  const zoomstatus= Shared_XScaleConfig[Shared_PlotInfo[plotName].xscaleTag].zoomstatus
+  let newxScale = zoomstatus?currentTransformX.rescaleX(xScale):xScale
+  let newyScale = yScale;
+
+  const yaxistag =
+    Shared_YScaleConfig[Shared_PlotInfo[plotName].yscaleTag].yaxisTag;
+
+  // console.log(XDATA,YDATA,plotColor);
+  // console.log(currentTransformX,currentTransformY);
+
+  // const validDataIndices: number[] = [];
+  // const filteredYData: number[] = [];
+  // YDATA.forEach((d, i) => {
+  //   if (!isNaN(d) && d !== undefined) {
+  //     validDataIndices.push(i);
+  //     filteredYData.push(d);
+  //   }
+  // });
+
+  // // Create arrays containing valid x and y data points
+  // const validXData: number[] = validDataIndices.map(i => XDATA[i]);
+  // console.log(Multilinedata);
+
+  DrawMultilineonSVG(
+    PlotGroupArea,
+    Multilinedata,
+    newxScale,
+    newyScale,
     yaxistag,
     plotColor
   );

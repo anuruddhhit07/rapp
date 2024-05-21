@@ -27,7 +27,13 @@ export function arrangeData(this: any, stockData: ChartDataIN, funda: number = 0
    
     const ADX=techGroup.calculateADX(14)
     console.log(zigzagdata);
-    
+    // const brlinedata:=zigzagdata.brlist.map(({broutfor,rejectat,broutat,highatref,highatrejec,breakoutperiod})=>({
+    //     x:[broutfor,rejectat,broutat],
+    //     y:[highatref,highatrejec,highatrejec],
+    //     label:breakoutperiod.toString()
+    // }))
+
+// console.log(brlinedata);
 
     return {
         xindex:ohlcDataArray.map((item,index)=>index),
@@ -47,6 +53,12 @@ export function arrangeData(this: any, stockData: ChartDataIN, funda: number = 0
         dmp:ADX.dmp,
         dmn:ADX.dmn,
         zigzagX:zigzagdata.sublist.map(({orgindex})=>orgindex),
-        zigzagY:zigzagdata.sublist.map(({value})=>value)
+        zigzagY:zigzagdata.sublist.map(({value})=>value),
+        brlinedata:zigzagdata.brlist.map(({broutfor,rejectat,broutat,highatref,highatrejec,breakoutperiod})=>({
+            x:[broutfor,rejectat,broutat],
+            y:[highatref,highatrejec,highatrejec],
+            label:breakoutperiod.toString()
+        }))
+
     }
 }

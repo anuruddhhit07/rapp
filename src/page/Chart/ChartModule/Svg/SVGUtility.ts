@@ -2,19 +2,10 @@
 
 import * as d3 from "d3";
 import { BaseType, groups, index, Selection } from "d3";
-import {
-  CandlestickData,
-  MulitlineLineChartData,
-  ScatterDataType,
-} from "./chartSetuptype";
+import { CandlestickData, MulitlineLineChartData, ScatterDataType } from "./chartSetuptype";
 
 declare module "d3" {
-  interface Selection<
-    GElement extends BaseType,
-    Datum,
-    PElement extends BaseType,
-    PDatum
-  > {
+  interface Selection<GElement extends BaseType, Datum, PElement extends BaseType, PDatum> {
     drawBorder(
       x: number,
       y: number,
@@ -30,20 +21,9 @@ declare module "d3" {
     importData(data: any[]): this;
     translate(x: number, y: number): this;
     insertHTML(html: string): this;
-    onEvent1(
-      eventName: string,
-      eventHandler: (this: SVGGElement, event: any, d: any) => void
-    ): this;
-    createSquaresHorizontally(
-      numSquares: number,
-      squareWidth: number,
-      spacing: number,
-      pressstate: boolean[],
-      idarray: string[]
-    ): this;
-    attachClickEvent(
-      callback: (id: string, className: string, pressstate: boolean) => void
-    ): this;
+    onEvent1(eventName: string, eventHandler: (this: SVGGElement, event: any, d: any) => void): this;
+    createSquaresHorizontally(numSquares: number, squareWidth: number, spacing: number, pressstate: boolean[], idarray: string[]): this;
+    attachClickEvent(callback: (id: string, className: string, pressstate: boolean) => void): this;
     addIconImageToRect(iconSvg: string): this;
   }
 }
@@ -56,8 +36,7 @@ export function createGroupAdv(
 
   // Set the class attribute for the group
   group.attr("class", className);
-  let lastRect: Selection<SVGRectElement, unknown, HTMLElement, any> | null =
-    null;
+  let lastRect: Selection<SVGRectElement, unknown, HTMLElement, any> | null = null;
 
   // Add a method to draw a border around the group
   group.drawBorder = function (
@@ -70,7 +49,7 @@ export function createGroupAdv(
     fill: string,
     opacity: number,
     iconContent?: string,
-    isPath?: boolean 
+    isPath?: boolean
   ) {
     lastRect = this.append("rect")
       .attr("class", `${className}-border`) // Add class attribute
@@ -84,11 +63,7 @@ export function createGroupAdv(
       .style("stroke-width", borderWidth);
 
     if (iconContent) {
-      const foreignObject = this.append("foreignObject")
-        .attr("width", width)
-        .attr("height", height)
-        .attr("x", x)
-        .attr("y", y);
+      const foreignObject = this.append("foreignObject").attr("width", width).attr("height", height).attr("x", x).attr("y", y);
 
       foreignObject
         .append("xhtml:div")
@@ -183,16 +158,7 @@ export function enhanceGroup(
   group.attr("class", className);
 
   // Add a method to draw a border around the group
-  group.drawBorder = function (
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    borderColor: string,
-    borderWidth: number,
-    fill: string,
-    opacity: number
-  ) {
+  group.drawBorder = function (x: number, y: number, width: number, height: number, borderColor: string, borderWidth: number, fill: string, opacity: number) {
     this.append("rect")
       .attr("class", `${className}-border`) // Add class attribute
       .attr("x", x)
@@ -258,36 +224,22 @@ export function createClipPath(
   height: number
 ): d3.Selection<SVGClipPathElement, any, HTMLElement, any> {
   // Select the existing defs element if available, or create a new one
-  let defs: d3.Selection<d3.BaseType, any, HTMLElement, any> =
-    svg.select("defs");
+  let defs: d3.Selection<d3.BaseType, any, HTMLElement, any> = svg.select("defs");
   if (defs.empty()) {
     defs = svg.append("defs") as any;
   }
 
   // Append the clip path to the defs element
-  const clipPath = defs
-    .append("clipPath")
-    .attr("id", id)
-    .attr("class", "clipplot");
+  const clipPath = defs.append("clipPath").attr("id", id).attr("class", "clipplot");
 
   // Append a rect to the clip path
-  clipPath
-    .append("rect")
-    .attr("x", x)
-    .attr("y", y)
-    .attr("width", width)
-    .attr("height", height)
-    .style("fill", "steelblue");
+  clipPath.append("rect").attr("x", x).attr("y", y).attr("width", width).attr("height", height).style("fill", "steelblue");
 
   return clipPath;
 }
-export function createSVGDefs(
-  svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,
-  defs: { [key: string]: string }
-): void {
+export function createSVGDefs(svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>, defs: { [key: string]: string }): void {
   // Select the existing defs element if available, or create a new one
-  let defsElement: d3.Selection<SVGDefsElement, any, HTMLElement, any> =
-    svg.select<SVGDefsElement>("defs");
+  let defsElement: d3.Selection<SVGDefsElement, any, HTMLElement, any> = svg.select<SVGDefsElement>("defs");
   if (defsElement.empty()) {
     defsElement = svg.append("defs");
   }
@@ -330,16 +282,7 @@ export function createMultipleSqure(
   };
 
   // Add method to draw border
-  group.drawBorder = function (
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    borderColor: string,
-    borderWidth: number,
-    fill: string,
-    opacity: number
-  ) {
+  group.drawBorder = function (x: number, y: number, width: number, height: number, borderColor: string, borderWidth: number, fill: string, opacity: number) {
     this.append("rect")
       .attr("class", `${className}-border`) // Add class attribute
       .attr("x", x)
@@ -391,9 +334,7 @@ export function createMultipleSqure(
   };
 
   // Add method to attach click event to squares
-  group.attachClickEvent = function (
-    callback: (id: string, className: string, pressstate: boolean) => void
-  ) {
+  group.attachClickEvent = function (callback: (id: string, className: string, pressstate: boolean) => void) {
     this.selectAll("rect").on("click", function (d) {
       const rect = d3.select(this);
       const id = rect.attr("id");
@@ -405,14 +346,10 @@ export function createMultipleSqure(
       if (dataIndex !== -1) {
         // Toggle the pressstate in the squaresData array only if it's not undefined
         if (typeof squaresData[dataIndex].pressstate !== "undefined") {
-          squaresData[dataIndex].pressstate =
-            !squaresData[dataIndex].pressstate;
+          squaresData[dataIndex].pressstate = !squaresData[dataIndex].pressstate;
 
           // Update the fill color based on the updated pressstate
-          rect.style(
-            "fill",
-            squaresData[dataIndex].pressstate ? "green" : "steelblue"
-          );
+          rect.style("fill", squaresData[dataIndex].pressstate ? "green" : "steelblue");
         }
 
         // Call the callback function with square ID, class name, and pressstate
@@ -425,19 +362,8 @@ export function createMultipleSqure(
   return group;
 }
 
-export function createLine(
-  svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,
-  x1: number,
-  y1: number,
-  x2: number,
-  y2: number
-): void {
-  svg
-    .append("line")
-    .attr("x1", x1)
-    .attr("y1", y1)
-    .attr("x2", x2)
-    .attr("y2", y2);
+export function createLine(svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>, x1: number, y1: number, x2: number, y2: number): void {
+  svg.append("line").attr("x1", x1).attr("y1", y1).attr("x2", x2).attr("y2", y2);
 }
 
 export function createRect(
@@ -447,12 +373,7 @@ export function createRect(
   width: number,
   height: number
 ): d3.Selection<SVGRectElement, any, HTMLElement, any> {
-  return svg
-    .append("rect")
-    .attr("x", x)
-    .attr("y", y)
-    .attr("width", width)
-    .attr("height", height);
+  return svg.append("rect").attr("x", x).attr("y", y).attr("width", width).attr("height", height);
 }
 
 export function drawLineOnSVG(
@@ -512,6 +433,51 @@ export function drawBarChartOnSVG(
     .attr("fill", barColor); // Set color for the bar
 }
 
+export function DrawMultilineonSVG(
+  svgGroup: d3.Selection<SVGGElement, any, any, any>,
+  multilineData: {
+    x: number[];
+    y: number[];
+    label: string;
+  }[],
+  xScale: d3.ScaleLinear<number, number>,
+  yScale: d3.ScaleLinear<number, number>,
+  yaxistag: string,
+  plotColor: string
+) {
+  // Iterate over each line data in multilineData
+  multilineData.forEach((lineData, index) => {
+    // Create a line generator for the current line
+
+    const avgX = lineData.x.reduce((sum, point) => sum + point, 0) / lineData.x.length;
+    const avgY = lineData.y.reduce((sum, point) => sum + point, 0) / lineData.y.length;
+
+    const lineGenerator = d3
+      .line<number>()
+      .x((d, i) => xScale(lineData.x[i]))
+      .y((d, i) => yScale(lineData.y[i]));
+
+    // Append a path element to the SVG group for the current line
+    svgGroup
+      .append("path")
+      .datum(lineData.y) // Set data for the line
+      .attr("class", `all allplot multilineplot multilineplot-${lineData.label}`)
+      .attr("clip-path", `url(#clip-${yaxistag})`)
+      .attr("fill", "none")
+      .attr("stroke", plotColor) // Set color for the line
+      .attr("stroke-width", 1) // Set width for the line
+      .attr("d", lineGenerator as any); // Generate the line path using the line generator
+
+      svgGroup
+      .append('text')
+      .attr('x', xScale(avgX))
+      .attr('y', yScale(avgY) - 10)
+      .attr('fill', plotColor)
+      .attr('class', `all multilineplot avg-label-${lineData.label}`)
+      .text(`${lineData.label}`);
+
+  });
+}
 
 export function drawMultiBarChartOnSVG(
   svgGroup: d3.Selection<SVGGElement, any, any, any>,
@@ -556,9 +522,6 @@ export function drawMultiBarChartOnSVG(
       .attr("fill", barColors[key]); // Set color for the bar based on the key
   });
 }
-
-
-
 
 export function drawCandlestickOnSVG(
   svgGroup: d3.Selection<SVGGElement, any, any, any>,
@@ -607,9 +570,7 @@ export function drawCandlestickOnSVG(
     .attr("width", tickwidth / 2)
     .attr("height", (d, i) => {
       // console.log(d,currentYscale(d),this.yAxisRange[currentyaxis][0]-currentYscale(d))
-      return Math.abs(yScale(open[i]) - yScale(close[i])) == 0
-        ? yScale(close[i]) * 0.001
-        : Math.abs(yScale(open[i]) - yScale(close[i]));
+      return Math.abs(yScale(open[i]) - yScale(close[i])) == 0 ? yScale(close[i]) * 0.001 : Math.abs(yScale(open[i]) - yScale(close[i]));
     })
     .attr("fill", (d, i) => (open[i] > close[i] ? "red" : "green"))
     .attr("stroke", "black")
@@ -618,11 +579,7 @@ export function drawCandlestickOnSVG(
   candlesticks.exit().remove();
 }
 
-export function drawMultipleLineChartOnSVG(
-  svgGroup: d3.Selection<SVGGElement, any, any, any>,
-  lineData: MulitlineLineChartData[],
-  classNameTag: string
-) {
+export function drawMultipleLineChartOnSVG(svgGroup: d3.Selection<SVGGElement, any, any, any>, lineData: MulitlineLineChartData[], classNameTag: string) {
   // Create line generators for each line
   const lineGenerators: any[] = [];
 
@@ -651,10 +608,7 @@ export function drawMultipleLineChartOnSVG(
   lineData.forEach((data) => {
     svgGroup
       .append("text")
-      .attr(
-        "class",
-        `all multiline multiline-label multiline-label-${classNameTag}`
-      )
+      .attr("class", `all multiline multiline-label multiline-label-${classNameTag}`)
       .attr("x", (data.x1 + data.x2) / 2)
       .attr("y", (data.y1 + data.y2) / 2)
       .text(data.label)
@@ -678,10 +632,7 @@ export function drawScatterPlotOnSVG(
     .data(scatterData)
     .enter()
     .append("circle")
-    .attr(
-      "class",
-      ` all scatterplot scatter-point  scatter-point-${classNameTag}`
-    )
+    .attr("class", ` all scatterplot scatter-point  scatter-point-${classNameTag}`)
     .attr("clip-path", `url(#clip-${yaxistag})`)
     .attr("cx", (d) => xScale(d.xData))
     .attr("cy", (d) => yScale(d.yData))
@@ -696,10 +647,7 @@ export function drawScatterPlotOnSVG(
       .data(scatterData)
       .enter()
       .append("text")
-      .attr(
-        "class",
-        `all scatterplot scatter-label scatter-label-${classNameTag}`
-      )
+      .attr("class", `all scatterplot scatter-label scatter-label-${classNameTag}`)
       .attr("clip-path", `url(#clip-${yaxistag})`)
       .attr("x", (d) => xScale(d.xData) + 5) // Adjust the offset as needed
       .attr("y", (d) => yScale(d.yData) - 5) // Adjust the offset as needed
