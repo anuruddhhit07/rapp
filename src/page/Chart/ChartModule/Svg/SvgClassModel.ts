@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 
-import { appendSvgElements, appendSvgElementsArray, createGroupAdv, createMultipleSqure, createSVGDefs, createSVGDefs2, enhanceGroup } from "./SVGUtility";
+import { appendSvgElementsArray, createGroupAdv, createMultipleSqure, createSVGDefs3, enhanceGroup } from "./SVGUtility";
 import { PlotStatusByButtonTag } from "../types";
 import {
   Shared_ChartBaseData,
@@ -8,17 +8,9 @@ import {
   Shared_PlotInfo,
   Shared_yaxisProp,
 } from "../BaseSetup/SharedDataUtility";
+import { svgDefs } from "./svgSybolLibraray";
 
-const svgDefs = {
-  symbol1: '<symbol id="symbol1" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="red" /></symbol>',
-  gradient1: '<linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:rgb(255,255,0);stop-opacity:1" /><stop offset="100%" style="stop-color:rgb(255,0,0);stop-opacity:1" /></linearGradient>',
-  circlee:`<circle id="myCircle" cx="50" cy="50" r="50" />`,
-  user:`<symbol id="icon-user" viewBox="0 0 32 32">
-  <title>user</title>
-  <path d="M18 22.082v-1.649c2.203-1.241 4-4.337 4-7.432 0-4.971 0-9-6-9s-6 4.029-6 9c0 3.096 1.797 6.191 4 7.432v1.649c-6.784 0.555-12 3.888-12 7.918h28c0-4.030-5.216-7.364-12-7.918z"></path>
-</symbol>`
 
-};
 const trendSvg = `<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
   <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
   <path fill-rule="evenodd" clip-rule="evenodd" d="M18 5C17.4477 5 17 5.44772 17 6C17 6.27642 17.1108 6.52505 17.2929 6.70711C17.475 6.88917 17.7236 7 18 7C18.5523 7 19 6.55228 19 6C19 5.44772 18.5523 5 18 5ZM15 6C15 4.34315 16.3431 3 18 3C19.6569 3 21 4.34315 21 6C21 7.65685 19.6569 9 18 9C17.5372 9 17.0984 8.8948 16.7068 8.70744L8.70744 16.7068C8.8948 17.0984 9 17.5372 9 18C9 19.6569 7.65685 21 6 21C4.34315 21 3 19.6569 3 18C3 16.3431 4.34315 15 6 15C6.46278 15 6.90157 15.1052 7.29323 15.2926L15.2926 7.29323C15.1052 6.90157 15 6.46278 15 6ZM6 17C5.44772 17 5 17.4477 5 18C5 18.5523 5.44772 19 6 19C6.55228 19 7 18.5523 7 18C7 17.7236 6.88917 17.475 6.70711 17.2929C6.52505 17.1108 6.27642 17 6 17Z" fill="#000000"/>
@@ -207,9 +199,12 @@ class SVGClass {
         Shared_ChartDimension.margin.top,
         2,
         initialPlotStatusArray,
-        updatedIdArray
+        updatedIdArray,
+        ['barchart','hline','A_svg']
       )
       .attachClickEvent(callback);
+      
+      // appendSvgElementsArray(this.svg,['icon-user','symbol1'],svgProps)
   }
 
   createTooltipArea() {
@@ -275,35 +270,8 @@ class SVGClass {
       .style("stroke", "black")
       .style("stroke-width", 1);
 
-      // createSVGDefs(this.svg,svgDefs)
-
-      createSVGDefs2(this.svg,svgDefs.user)
-      const svgProps = { x: 0, y: 10, width: 20, height: 20 }
-      // appendSvgElements(this.svg,'icon-user',svgProps)
-      appendSvgElementsArray(this.svg,['icon-user','icon-user'],svgProps)
-
-    //   const group = this.svg.append('g')
-    //   .attr('transform', 'translate(10, 10) scale(3)'); // Adjust the scale as needed
-  
-    // // Append the use element to the group
-    // group.append('use')
-    //   .attr('xlink:href', '#icon-user')
-    //   .style('fill', 'red')
-
-
-    //   const nestedSvg = this.svg.append('svg')
-    // .attr('x', 1)
-    // .attr('y', 16)
-    // .attr('width',50)
-    // .attr('height',50)
-
-    // nestedSvg.append('use')
-    // .attr('xlink:href', '#icon-user')
-    // .attr('width', 20)
-    // .attr('height', 20)
-    // .style('fill', 'red');
-
-
+      createSVGDefs3(this.svg,svgDefs)
+    
   }
 }
 

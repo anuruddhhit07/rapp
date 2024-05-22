@@ -22,7 +22,7 @@ declare module "d3" {
     translate(x: number, y: number): this;
     insertHTML(html: string): this;
     onEvent1(eventName: string, eventHandler: (this: SVGGElement, event: any, d: any) => void): this;
-    createSquaresHorizontally(numSquares: number, squareWidth: number, spacing: number, pressstate: boolean[], idarray: string[]): this;
+    createSquaresHorizontally(numSquares: number, squareWidth: number, spacing: number, pressstate: boolean[], idarray: string[],svgicon:string[]): this;
     attachClickEvent(callback: (id: string, className: string, pressstate: boolean) => void): this;
     addIconImageToRect(iconSvg: string): this;
   }
@@ -147,6 +147,7 @@ export function createGroupAdv(
 
   return group;
 }
+
 export function appendSvgElementsArray(mainSvg: d3.Selection<SVGSVGElement, any, any, any>, symbolIds: string[], svgProps: {
   x: number;
   y: number;
@@ -156,11 +157,12 @@ export function appendSvgElementsArray(mainSvg: d3.Selection<SVGSVGElement, any,
   const { x, y, width, height } = svgProps;
 
   // Create nested SVG at the specified location with the given width and height
-  const nestedSvg = mainSvg.append('svg')
-    .attr('x', x)
-    .attr('y', y)
-    .attr('width', width)
-    .attr('height', height);
+  const nestedSvg = mainSvg.append('g')
+  // // .append('svg')
+  //   .attr('x', x)
+  //   .attr('y', y)
+  //   .attr('width', width*symbolIds.length)
+  //   .attr('height', height);
 
   // Append use element to nestedSvg for each symbolId
   symbolIds.forEach((symbolId, index) => {
@@ -168,11 +170,11 @@ export function appendSvgElementsArray(mainSvg: d3.Selection<SVGSVGElement, any,
       .attr('xlink:href', `#${symbolId}`)
       .attr('width', width)
       .attr('height', height)
-      .attr('y', index * height) // Adjust the y position for each symbol
+      .attr('x', index * width) // Adjust the y position for each symbol
       .style('fill', 'red');
   });
 }
-export function appendSvgElements(mainSvg: d3.Selection<SVGSVGElement, any, any, any>, symbolId: string, svgProps: {
+export function appendSvgElementsArray1(mainSvg: d3.Selection<SVGSVGElement, any, any, any>, symbolIds: string[], svgProps: {
   x: number;
   y: number;
   width: number;
@@ -181,19 +183,23 @@ export function appendSvgElements(mainSvg: d3.Selection<SVGSVGElement, any, any,
   const { x, y, width, height } = svgProps;
 
   // Create nested SVG at the specified location with the given width and height
-  const nestedSvg = mainSvg.append('svg')
+  const nestedSvg = mainSvg.append('g').append('svg')
     .attr('x', x)
     .attr('y', y)
-    .attr('width', width)
+    .attr('width', width*symbolIds.length)
     .attr('height', height);
 
-  // Append use element to nestedSvg
-  nestedSvg.append('use')
-    .attr('xlink:href', `#${symbolId}`)
-    .attr('width', width)
-    .attr('height', height)
-    .style('fill', 'red');
+  // Append use element to nestedSvg for each symbolId
+  symbolIds.forEach((symbolId, index) => {
+    nestedSvg.append('use')
+      .attr('xlink:href', `#${symbolId}`)
+      .attr('width', width)
+      .attr('height', height)
+      .attr('x', index * width) // Adjust the y position for each symbol
+      .style('fill', 'red');
+  });
 }
+
 
 export function enhanceGroup(
   groupmain: d3.Selection<SVGGElement, any, HTMLElement, any>,
@@ -291,29 +297,24 @@ export function createSVGDefs2(svg: d3.Selection<SVGSVGElement, any, HTMLElement
   if (defsElement.empty()) {
     defsElement = svg.append("defs");
   }
+
   defsElement.html(symbolDef);
-
-
-
 }
-export function createSVGDefs(svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>, defs: { [key: string]: string }): void {
+
+export function createSVGDefs3(svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>, symbolDefs: { [key: string]: string }): void {
   // Select the existing defs element if available, or create a new one
   let defsElement: d3.Selection<SVGDefsElement, any, HTMLElement, any> = svg.select<SVGDefsElement>("defs");
   if (defsElement.empty()) {
     defsElement = svg.append("defs");
   }
+  // defsElement.html(symbolDef);
 
-  // Append each SVG definition directly to the defs element
-  Object.entries(defs).forEach(([id, svgString]) => {
-    defsElement
-      .append(() => {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(svgString, "image/svg+xml");
-        return doc.documentElement;
-      })
-      .attr("id", id);
+  Object.entries(symbolDefs).forEach(([id, svgString]) => {
+    defsElement.append("g").html(svgString);
   });
 }
+
+
 
 export function createMultipleSqure(
   svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,
@@ -332,6 +333,7 @@ export function createMultipleSqure(
     id: string;
     class: string;
     pressstate: boolean | undefined;
+    svgicon:string
   }[];
 
   // Add method to translate the group
@@ -361,7 +363,8 @@ export function createMultipleSqure(
     squareWidth: number,
     spacing: number,
     pressstate: boolean[] | undefined = undefined,
-    idarray: string[] | undefined = undefined
+    idarray: string[] | undefined = undefined,
+    svgicon:string[] 
   ) {
     squaresData = Array.from({ length: numSquares }, (_, i) => ({
       x: i * (squareWidth + spacing),
@@ -370,9 +373,10 @@ export function createMultipleSqure(
       id: idarray ? idarray[i] : "no-idset",
       class: `${className}-square`,
       pressstate: pressstate ? pressstate[i] : undefined,
+      svgicon: svgicon ? svgicon[i] : 'square',
     }));
 
-    // console.log("squaresData",squaresData);
+    console.log("squaresData",squaresData);
 
     this.selectAll("rect")
       .data(squaresData)
@@ -384,10 +388,34 @@ export function createMultipleSqure(
       .attr("height", (d) => d.size)
       .attr("id", (d) => d.id)
       .attr("class", (d) => d.class)
+      .attr("opacity",0)
       .style("fill", (d) => {
         if (typeof d.pressstate === "undefined") return "gray"; // Color for undefined state
         return d.pressstate ? "green" : "steelblue"; // Colors for true and false states
       });
+
+
+      group
+      .selectAll('use') // Use selectAll instead of select to bind data to all existing <use> elements
+      .data(squaresData) // Bind data to the selection
+      .enter() // Enter selection for data not yet existing as elements
+      .append('use') // Append a <use> element for each data point
+      .attr('xlink:href', (d) => {
+        if (typeof d.svgicon === "undefined") return `#${'symbol1'}`; // Color for undefined state
+        console.log(d.svgicon);
+        return `#${d.svgicon}`   // Colors for true and false states
+      })
+      // `#${'home'}`) // Set the xlink:href attribute
+      .attr("width", (d) => d.size) // Set the width based on data
+      .attr("height", (d) => d.size) // Set the height based on data
+      .attr('x',(d) => d.x) // Set the x position based on data
+      .attr('y', (d) => d.y) // Set the y position based on data
+      .attr("id", (d) => `svg${d.id}`)
+      .style('fill',(d) => {
+        if (typeof d.pressstate === "undefined") return "gray"; // Color for undefined state
+        return d.pressstate ? "green" : "red"; // Colors for true and false states
+      })
+      .attr('pointer-events', 'none') 
 
     return this; // Return the group selection for chaining
   };
@@ -409,6 +437,7 @@ export function createMultipleSqure(
 
           // Update the fill color based on the updated pressstate
           rect.style("fill", squaresData[dataIndex].pressstate ? "green" : "steelblue");
+          d3.selectAll(`#svg${id}`).style("fill", squaresData[dataIndex].pressstate ? "green" : "red");
         }
 
         // Call the callback function with square ID, class name, and pressstate
