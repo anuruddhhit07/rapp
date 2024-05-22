@@ -16,8 +16,31 @@ export const svgDefs = {
   chartline: `<svg id="chartline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm406.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L320 210.7l-57.4-57.4c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L240 221.3l57.4 57.4c12.5 12.5 32.8 12.5 45.3 0l128-128z"/></svg>`,
   square: `<svg id="square" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96z"/></svg>`,
   hline: `<svg id="hline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5. by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M32 288c-17.7 0-32 14.3-32 32s14.3 32 32 32l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L32 288zm0-128c-17.7 0-32 14.3-32 32s14.3 32 32 32l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L32 160z"/></svg>`,
-  A_svg: `<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-  <svg id="A_svg" width="800px" height="800px" viewBox="0 0 48 48" id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg"><defs><style>.cls-1{fill:none;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;}</style></defs><path class="cls-1" d="M40.5,5.5H7.5a2,2,0,0,0-2,2v33a2,2,0,0,0,2,2h33a2,2,0,0,0,2-2V7.5A2,2,0,0,0,40.5,5.5Z"/><line class="cls-1" x1="17.25" y1="37.5" x2="30.75" y2="37.5"/><line class="cls-1" x1="17.25" y1="10.5" x2="30.75" y2="10.5"/><line class="cls-1" x1="17.25" y1="24" x2="26.05" y2="24"/><line class="cls-1" x1="17.25" y1="10.5" x2="17.25" y2="37.5"/></svg>`,
+  E5: `<svg id="E5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+  <!-- Draws text "SI" at coordinates (224, 256) for better central alignment -->
+  <text x="224" y="256" font-size="392"  font-family="sans" text-anchor="middle" dominant-baseline="central">E5</text>
+</svg>`,
+Volume: `<svg id="Volume" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+<!-- Draws text "SI" at coordinates (224, 256) for better central alignment -->
+<text x="224" y="256" font-size="392"  font-family="sans" text-anchor="middle" dominant-baseline="central">V</text>
+</svg>`,
+CRSI: `<svg id="CRSI" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+<!-- Draws text "SI" at coordinates (224, 256) for better central alignment -->
+<text x="224" y="256" font-size="392"  font-family="sans" text-anchor="middle" dominant-baseline="central">CR</text>
+</svg>`,
+RSI: `<svg id="RSI" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+<!-- Draws text "SI" at coordinates (224, 256) for better central alignment -->
+<text x="224" y="256" font-size="392"  font-family="sans" text-anchor="middle" dominant-baseline="central">RS</text>
+</svg>`,
+ADX: `<svg id="ADX" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+<!-- Draws text "SI" at coordinates (224, 256) for better central alignment -->
+<text x="224" y="256" font-size="392"  font-family="sans" text-anchor="middle" dominant-baseline="central">AD</text>
+</svg>`,
+EPS: `<svg id="EPS" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+<!-- Draws text "SI" at coordinates (224, 256) for better central alignment -->
+<text x="224" y="256" font-size="392"  font-family="sans" text-anchor="middle" dominant-baseline="central">EP</text>
+</svg>`,
+
 };
 
 // `<svg version="1.0" xmlns="http://www.w3.org/2000/svg"

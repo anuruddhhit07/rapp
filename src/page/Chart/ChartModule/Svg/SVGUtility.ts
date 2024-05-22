@@ -388,11 +388,13 @@ export function createMultipleSqure(
       .attr("height", (d) => d.size)
       .attr("id", (d) => d.id)
       .attr("class", (d) => d.class)
-      .attr("opacity",0)
+      .attr("opacity",.2)
       .style("fill", (d) => {
         if (typeof d.pressstate === "undefined") return "gray"; // Color for undefined state
         return d.pressstate ? "green" : "steelblue"; // Colors for true and false states
-      });
+      })
+      // .style("stroke", "black") // Set border color
+      .style("stroke-width", "2px"); // Set border width
 
 
       group

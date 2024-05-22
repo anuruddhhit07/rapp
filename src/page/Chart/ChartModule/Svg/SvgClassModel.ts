@@ -196,11 +196,11 @@ class SVGClass {
       // .drawBorder(0,0,100,20,"green",3,"yellow",1)
       .createSquaresHorizontally(
         numberofbutton,
-        Shared_ChartDimension.margin.top,
+        Shared_ChartDimension.margin.top*1.5,
         2,
         initialPlotStatusArray,
         updatedIdArray,
-        ['barchart','hline','A_svg']
+        ['barchart','hline','E5','Volume','CRSI','RSI','ADX','EPS']
       )
       .attachClickEvent(callback);
       

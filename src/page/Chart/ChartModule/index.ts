@@ -60,7 +60,7 @@ class CandlestickChartTS {
     this.svg = this.SVGClass.svg;
     console.log(Shared_ChartPlotData)
     this.SVGClass.createYaxiseventArea(this.zoomY);
-    const numberofbutton = 8;
+    const numberofbutton = 11;
     this.BackGroup = this.SVGClass.BackGroup;
 
     this.FrontGroup = this.SVGClass.FrontGroup;
