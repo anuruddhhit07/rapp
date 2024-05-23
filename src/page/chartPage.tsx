@@ -5,6 +5,7 @@ import { DefaultChartParameter } from "./Chart/ChartModule/types";
 import TechGroup from "./Chart/TechModule";
 import { Shared_Allstockdata, updateChartData } from "./Chart/ChartModule/DataUtility/chartDataUitility";
 import { Timer } from "d3";
+import { getbackestdata } from "./Chart/TechModule/testdata/becktestreportdata";
 
 const techGroup = TechGroup.getInstance();
 // console.log(Shared_Allstockdata);
@@ -13,12 +14,14 @@ const testobj = new testdatamodule(1500);
 
 const divId = "chartContainer";
 const Candlestickparamater: DefaultChartParameter = {};
+const backtestdata=getbackestdata(0)
+console.log(backtestdata);
 
 const ChartPage = () => {
   const chartobj = useRef<CandlestickChartTS | null>(null);
   const intervalId: any = useRef();
   const [isIntervalRunning, setIsIntervalRunning] = useState(false);
-  const datacount = useRef(100);
+  const datacount = useRef(300);
 
   const handleToggleInterval = () => {
     // console.log("hereerrtre");
@@ -32,6 +35,7 @@ const ChartPage = () => {
     techGroup.attachOHLCV(ohlcdata);
     const zigzag = techGroup.calculateZizZag();
     updateChartData("techdata", undefined, "zigzagdatasub", zigzag);
+    updateChartData("techdata", undefined, "btresult", backtestdata);
 
     const chartContainer = document.getElementById(divId);
     if (!chartobj.current && chartContainer) {

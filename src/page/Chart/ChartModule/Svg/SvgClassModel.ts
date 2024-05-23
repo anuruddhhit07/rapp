@@ -212,7 +212,7 @@ class SVGClass {
         2,
         initialPlotStatusArray,
         updatedIdArray,
-        ["live",'barchart','hline','E5','Volume','CRSI','RSI','ADX','EPS']
+        ["live",'barchart','hline','E5','Volume','CRSI','RSI','ADX','EPS','BT']
       )
       .attachClickEvent(callback);
       

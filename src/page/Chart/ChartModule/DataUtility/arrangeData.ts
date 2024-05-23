@@ -1,10 +1,11 @@
-import { ChartDataIN,ChartDataType } from "../types";
+import { ChartDataIN,ChartDataType, backtestitem, backtestresult } from "../types";
 import TechGroup from "../../TechModule";
-import { zigzagdatasub } from "../../TechModule/ZigZAgTool/types/type";
+import {zigzagdatasub } from "../../TechModule/ZigZAgTool/types/type";
 
 const techGroup= TechGroup.getInstance();
 
 export function arrangeData(this: any, stockData: ChartDataIN, funda: number = 0): ChartDataType {
+    console.log(stockData);
     
     const ohlcDataArray = stockData.histdata || [];
     const techDataobject = stockData.techdata || {};
@@ -12,7 +13,7 @@ export function arrangeData(this: any, stockData: ChartDataIN, funda: number = 0
   
     const zigzagdata = techDataobject.zigzagdatasub || {} as zigzagdatasub;
     const indicatordata = techDataobject.indicatordata || {};
-    const backtestdata = techDataobject.btresult || {};
+    const backtestdata = techDataobject.btresult || {} as backtestresult
   
     const profitLossData = fundaDataobject.profitLossData || {};
     const quartersData = fundaDataobject.quartersData || {};
@@ -34,6 +35,7 @@ export function arrangeData(this: any, stockData: ChartDataIN, funda: number = 0
     // }))
 
 // console.log(brlinedata);
+        console.log(backtestdata);
 
     return {
         xindex:ohlcDataArray.map((item,index)=>index),
@@ -58,7 +60,7 @@ export function arrangeData(this: any, stockData: ChartDataIN, funda: number = 0
             x:[broutfor,rejectat,broutat],
             y:[highatref,highatrejec,highatrejec],
             label:breakoutperiod.toString()
-        }))
-
+        })),
+        backtestresultline : backtestdata.backtestLine ? backtestdata.backtestLine : [] 
     }
 }

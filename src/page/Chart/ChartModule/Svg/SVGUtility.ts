@@ -3,6 +3,8 @@
 import * as d3 from "d3";
 import { BaseType, groups, index, Selection } from "d3";
 import { CandlestickData, MulitlineLineChartData, ScatterDataType } from "./chartSetuptype";
+import { backtestitem } from "../types";
+import { Shared_ChartPlotData } from "../BaseSetup/SharedDataUtility";
 
 declare module "d3" {
   interface Selection<GElement extends BaseType, Datum, PElement extends BaseType, PDatum> {
@@ -15,14 +17,13 @@ declare module "d3" {
       borderWidth: number,
       fill: string,
       opacity: number,
-      iconContent?: boolean,
-
+      iconContent?: boolean
     ): this;
     importData(data: any[]): this;
     translate(x: number, y: number): this;
     insertHTML(html: string): this;
     onEvent1(eventName: string, eventHandler: (this: SVGGElement, event: any, d: any) => void): this;
-    createSquaresHorizontally(numSquares: number, squareWidth: number, spacing: number, pressstate: boolean[], idarray: string[],svgicon:string[]): this;
+    createSquaresHorizontally(numSquares: number, squareWidth: number, spacing: number, pressstate: boolean[], idarray: string[], svgicon: string[]): this;
     attachClickEvent(callback: (id: string, className: string, pressstate: boolean) => void): this;
     addIconImageToRect(iconSvg: string): this;
   }
@@ -48,7 +49,7 @@ export function createGroupAdv(
     borderWidth: number,
     fill: string,
     opacity: number,
-    iconContent?: boolean,
+    iconContent?: boolean
   ) {
     lastRect = this.append("rect")
       .attr("class", `${className}-border`) // Add class attribute
@@ -61,26 +62,24 @@ export function createGroupAdv(
       .style("stroke", borderColor)
       .style("stroke-width", borderWidth);
 
-      if (iconContent){
-        // console.log(iconContent);
-        group
-        .append('use') // Append a <use> element for each data point
-        .attr('xlink:href',`#${'zoomout'}`)
+    if (iconContent) {
+      // console.log(iconContent);
+      group
+        .append("use") // Append a <use> element for each data point
+        .attr("xlink:href", `#${"zoomout"}`)
         // `#${'home'}`) // Set the xlink:href attribute
         .attr("width", width) // Set the width based on data
-        .attr("height",height) // Set the height based on data
-        .attr('x',0) // Set the x position based on data
-        .attr('y', 0) // Set the y position based on data
+        .attr("height", height) // Set the height based on data
+        .attr("x", 0) // Set the x position based on data
+        .attr("y", 0) // Set the y position based on data
         // .attr("id", (d) => `svg${d.id}`)
         // .style('fill',(d) => {
         //   if (typeof d.pressstate === "undefined") return "gray"; // Color for undefined state
         //   return d.pressstate ? "green" : "red"; // Colors for true and false states
         // })
-        .attr('pointer-events', 'none') 
+        .attr("pointer-events", "none");
+    }
 
-      }
-
-   
     return this; // Return the group selection for chaining
   };
 
@@ -151,16 +150,20 @@ export function createGroupAdv(
   return group;
 }
 
-export function appendSvgElementsArray(mainSvg: d3.Selection<SVGSVGElement, any, any, any>, symbolIds: string[], svgProps: {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}): void {
+export function appendSvgElementsArray(
+  mainSvg: d3.Selection<SVGSVGElement, any, any, any>,
+  symbolIds: string[],
+  svgProps: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  }
+): void {
   const { x, y, width, height } = svgProps;
 
   // Create nested SVG at the specified location with the given width and height
-  const nestedSvg = mainSvg.append('g')
+  const nestedSvg = mainSvg.append("g");
   // // .append('svg')
   //   .attr('x', x)
   //   .attr('y', y)
@@ -169,40 +172,47 @@ export function appendSvgElementsArray(mainSvg: d3.Selection<SVGSVGElement, any,
 
   // Append use element to nestedSvg for each symbolId
   symbolIds.forEach((symbolId, index) => {
-    nestedSvg.append('use')
-      .attr('xlink:href', `#${symbolId}`)
-      .attr('width', width)
-      .attr('height', height)
-      .attr('x', index * width) // Adjust the y position for each symbol
-      .style('fill', 'red');
+    nestedSvg
+      .append("use")
+      .attr("xlink:href", `#${symbolId}`)
+      .attr("width", width)
+      .attr("height", height)
+      .attr("x", index * width) // Adjust the y position for each symbol
+      .style("fill", "red");
   });
 }
-export function appendSvgElementsArray1(mainSvg: d3.Selection<SVGSVGElement, any, any, any>, symbolIds: string[], svgProps: {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}): void {
+export function appendSvgElementsArray1(
+  mainSvg: d3.Selection<SVGSVGElement, any, any, any>,
+  symbolIds: string[],
+  svgProps: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  }
+): void {
   const { x, y, width, height } = svgProps;
 
   // Create nested SVG at the specified location with the given width and height
-  const nestedSvg = mainSvg.append('g').append('svg')
-    .attr('x', x)
-    .attr('y', y)
-    .attr('width', width*symbolIds.length)
-    .attr('height', height);
+  const nestedSvg = mainSvg
+    .append("g")
+    .append("svg")
+    .attr("x", x)
+    .attr("y", y)
+    .attr("width", width * symbolIds.length)
+    .attr("height", height);
 
   // Append use element to nestedSvg for each symbolId
   symbolIds.forEach((symbolId, index) => {
-    nestedSvg.append('use')
-      .attr('xlink:href', `#${symbolId}`)
-      .attr('width', width)
-      .attr('height', height)
-      .attr('x', index * width) // Adjust the y position for each symbol
-      .style('fill', 'red');
+    nestedSvg
+      .append("use")
+      .attr("xlink:href", `#${symbolId}`)
+      .attr("width", width)
+      .attr("height", height)
+      .attr("x", index * width) // Adjust the y position for each symbol
+      .style("fill", "red");
   });
 }
-
 
 export function enhanceGroup(
   groupmain: d3.Selection<SVGGElement, any, HTMLElement, any>,
@@ -294,7 +304,7 @@ export function createClipPath(
   return clipPath;
 }
 
-export function createSVGDefs2(svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>, symbolDef: string ): void {
+export function createSVGDefs2(svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>, symbolDef: string): void {
   // Select the existing defs element if available, or create a new one
   let defsElement: d3.Selection<SVGDefsElement, any, HTMLElement, any> = svg.select<SVGDefsElement>("defs");
   if (defsElement.empty()) {
@@ -317,8 +327,6 @@ export function createSVGDefs3(svg: d3.Selection<SVGSVGElement, any, HTMLElement
   });
 }
 
-
-
 export function createMultipleSqure(
   svg: d3.Selection<SVGSVGElement, any, HTMLElement, any>,
   className: string // Add a parameter for the class name
@@ -336,7 +344,7 @@ export function createMultipleSqure(
     id: string;
     class: string;
     pressstate: boolean | undefined;
-    svgicon:string
+    svgicon: string;
   }[];
 
   // Add method to translate the group
@@ -367,7 +375,7 @@ export function createMultipleSqure(
     spacing: number,
     pressstate: boolean[] | undefined = undefined,
     idarray: string[] | undefined = undefined,
-    svgicon:string[] 
+    svgicon: string[]
   ) {
     squaresData = Array.from({ length: numSquares }, (_, i) => ({
       x: i * (squareWidth + spacing),
@@ -376,7 +384,7 @@ export function createMultipleSqure(
       id: idarray ? idarray[i] : "no-idset",
       class: `${className}-square`,
       pressstate: pressstate ? pressstate[i] : undefined,
-      svgicon: svgicon ? svgicon[i] : 'square',
+      svgicon: svgicon ? svgicon[i] : "square",
     }));
 
     // console.log("squaresData",squaresData);
@@ -391,7 +399,7 @@ export function createMultipleSqure(
       .attr("height", (d) => d.size)
       .attr("id", (d) => d.id)
       .attr("class", (d) => d.class)
-      .attr("opacity",.2)
+      .attr("opacity", 0.2)
       .style("fill", (d) => {
         if (typeof d.pressstate === "undefined") return "gray"; // Color for undefined state
         return d.pressstate ? "green" : "steelblue"; // Colors for true and false states
@@ -399,28 +407,27 @@ export function createMultipleSqure(
       // .style("stroke", "black") // Set border color
       .style("stroke-width", "2px"); // Set border width
 
-
-      group
-      .selectAll('use') // Use selectAll instead of select to bind data to all existing <use> elements
+    group
+      .selectAll("use") // Use selectAll instead of select to bind data to all existing <use> elements
       .data(squaresData) // Bind data to the selection
       .enter() // Enter selection for data not yet existing as elements
-      .append('use') // Append a <use> element for each data point
-      .attr('xlink:href', (d) => {
-        if (typeof d.svgicon === "undefined") return `#${'symbol1'}`; // Color for undefined state
+      .append("use") // Append a <use> element for each data point
+      .attr("xlink:href", (d) => {
+        if (typeof d.svgicon === "undefined") return `#${"symbol1"}`; // Color for undefined state
         // console.log(d.svgicon);
-        return `#${d.svgicon}`   // Colors for true and false states
+        return `#${d.svgicon}`; // Colors for true and false states
       })
       // `#${'home'}`) // Set the xlink:href attribute
       .attr("width", (d) => d.size) // Set the width based on data
       .attr("height", (d) => d.size) // Set the height based on data
-      .attr('x',(d) => d.x) // Set the x position based on data
-      .attr('y', (d) => d.y) // Set the y position based on data
+      .attr("x", (d) => d.x) // Set the x position based on data
+      .attr("y", (d) => d.y) // Set the y position based on data
       .attr("id", (d) => `svg${d.id}`)
-      .style('fill',(d) => {
+      .style("fill", (d) => {
         if (typeof d.pressstate === "undefined") return "gray"; // Color for undefined state
         return d.pressstate ? "green" : "red"; // Colors for true and false states
       })
-      .attr('pointer-events', 'none') 
+      .attr("pointer-events", "none");
 
     return this; // Return the group selection for chaining
   };
@@ -562,14 +569,13 @@ export function DrawMultilineonSVG(
       .attr("stroke-width", 1) // Set width for the line
       .attr("d", lineGenerator as any); // Generate the line path using the line generator
 
-      svgGroup
-      .append('text')
-      .attr('x', xScale(avgX))
-      .attr('y', yScale(avgY) - 10)
-      .attr('fill', plotColor)
-      .attr('class', `all multilineplot avg-label-${lineData.label}`)
+    svgGroup
+      .append("text")
+      .attr("x", xScale(avgX))
+      .attr("y", yScale(avgY) - 10)
+      .attr("fill", plotColor)
+      .attr("class", `all multilineplot avg-label-${lineData.label}`)
       .text(`${lineData.label}`);
-
   });
 }
 
@@ -624,6 +630,7 @@ export function drawCandlestickOnSVG(
   high: number[],
   low: number[],
   close: number[],
+  backtestdata: backtestitem[],
   xScale: d3.ScaleLinear<number, number>,
   yScale: d3.ScaleLinear<number, number>,
   classNameTag: string,
@@ -634,6 +641,8 @@ export function drawCandlestickOnSVG(
   const cdxdata = xdata;
   const wick = svgGroup.selectAll(".wickplot").data(cdxdata);
   const candlesticks = svgGroup.selectAll(".candleplot").data(cdxdata);
+  // console.log(backtestdata);
+  // console.log(xdata);
 
   wick
     .enter()
@@ -671,6 +680,62 @@ export function drawCandlestickOnSVG(
     .attr("stroke-width", 1);
 
   candlesticks.exit().remove();
+
+  if (backtestdata && backtestdata.length > 0) {
+    // const btcircles = this.chartarea.selectAll(".btcircle").data(circleData);
+    // console.log("here");
+    const backtestobj = svgGroup.selectAll(".backtestplot").data(backtestdata);
+    backtestobj
+      .enter()
+      .append("path")
+      .attr("class", `all  backtestplot backtestplot-${classNameTag}`)
+      .attr("clip-path", `url(#clip-${yaxistag})`)
+      // .attr("cx",(d) => xScale(d.index))
+      // .attr("cy",(d) => yScale(Shared_ChartPlotData.low[d.index]))
+      // .attr("r",(d) => 4)
+      .attr("d", (d) => {
+        const x = xScale(d.index);
+        
+        let y;
+        const candleIndex = d.index;
+        // console.log(d,candleIndex);
+        // console.log(low[candleIndex]);
+        const offset = 0.01;
+        // console.log("x",d.index,x,yScale(low[candleIndex] - low[candleIndex] * offset));
+        const size = 8;
+        let reallow=Shared_ChartPlotData.low[candleIndex]
+        let realhigh=Shared_ChartPlotData.high[candleIndex]
+        // console.log(reallow,realhigh);
+        if (d.buyorsell === "trigger") {
+          return `M${x - size},${yScale(reallow - reallow * offset) - size} h${size * 2} v${size * 2} h-${size * 2} Z`;
+        } else if (d.buyorsell === "buy") {
+          y = yScale(reallow - reallow * offset);
+          return `M${x},${y - size} l${size},${size * 2} l${-size * 2},0 Z`;
+        } else if (d.buyorsell === "sell") {
+          y = yScale(realhigh +realhigh * offset);
+          return `M${x},${y + size} l${size},${-size * 2} l${-size * 2},0 Z`;
+        } else if (d.buyorsell === "PatternBaseIndex") {
+          return `M${x - size},${yScale(reallow - reallow * offset) - size} h${size * 2} v${size * 2} h-${size * 2} Z`;
+        }
+        return null;
+      })
+      .attr("fill", (d) => {
+        if (d.buyorsell === "trigger") {
+          return "blue"; // No fill for squares
+        } else if (d.buyorsell === "buy") {
+          return "cyan";
+        } else if (d.buyorsell === "sell") {
+          return d.pnl && d.pnl > 0 ? "green" : "red";
+        } else if (d.buyorsell === "PatternBaseIndex") {
+          return "yellow";
+        }
+        return "brown";
+      })
+      .attr("stroke", "black")
+      .attr("stroke-width", 1);
+
+    backtestobj.exit().remove();
+  }
 }
 
 export function drawMultipleLineChartOnSVG(svgGroup: d3.Selection<SVGGElement, any, any, any>, lineData: MulitlineLineChartData[], classNameTag: string) {
@@ -749,4 +814,57 @@ export function drawScatterPlotOnSVG(
       .attr("fill", "black")
       .style("font-size", "10px"); // Adjust the font size as needed
   }
+}
+
+export function drawBacktestPlotOnSVG(
+  svgGroup: d3.Selection<SVGGElement, any, any, any>,
+  backtestData: backtestitem[],
+  xScale: d3.ScaleLinear<number, number>,
+  yScale: d3.ScaleLinear<number, number>,
+  classNameTag: string,
+  yaxistag: string,
+) {
+  const size = 8;
+  const offset = 0.01;
+
+  const backtestobj = svgGroup.selectAll(".backtestplot").data(backtestData);
+
+  backtestobj
+    .enter()
+    .append("path")
+    .attr("class", `all backtestplot backtestplot-${classNameTag}`)
+    .attr("clip-path", `url(#clip-${yaxistag})`)
+    .attr("d", (d) => {
+      const x = xScale(d.index);
+      const candleIndex = d.index;
+      const reallow = Shared_ChartPlotData.low[candleIndex];
+      const realhigh = Shared_ChartPlotData.high[candleIndex];
+
+      if (d.buyorsell === "trigger" || d.buyorsell === "PatternBaseIndex") {
+        return `M${x - size},${yScale(reallow - reallow * offset) - size} h${size * 2} v${size * 2} h-${size * 2} Z`;
+      } else if (d.buyorsell === "buy") {
+        const y = yScale(reallow - reallow * offset);
+        return `M${x},${y - size} l${size},${size * 2} l${-size * 2},0 Z`;
+      } else if (d.buyorsell === "sell") {
+        const y = yScale(realhigh + realhigh * offset);
+        return `M${x},${y + size} l${size},${-size * 2} l${-size * 2},0 Z`;
+      }
+      return null;
+    })
+    .attr("fill", (d) => {
+      if (d.buyorsell === "trigger") {
+        return "blue"; // No fill for squares
+      } else if (d.buyorsell === "buy") {
+        return "cyan";
+      } else if (d.buyorsell === "sell") {
+        return d.pnl && d.pnl > 0 ? "green" : "red";
+      } else if (d.buyorsell === "PatternBaseIndex") {
+        return "yellow";
+      }
+      return "brown";
+    })
+    .attr("stroke", "black")
+    .attr("stroke-width", 1);
+
+  backtestobj.exit().remove();
 }

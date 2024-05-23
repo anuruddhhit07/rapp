@@ -1,5 +1,11 @@
 import { ChartDataIN, OHLCV } from "../types";
 
+// type backtestfinaloutput = {
+//     query_output: any[];
+//     common_output: {};
+//     backtestresult: backtestresult ;
+//   };
+
 export let Shared_Allstockdata:ChartDataIN={
     histdata: [],
     techdata: {
@@ -9,10 +15,11 @@ export let Shared_Allstockdata:ChartDataIN={
       },
       indicatordata: {LineInd: [{crsi_avg: [],crsi: []}],signalline: []},
       darvasBoxList: '',
-      btresult:  {backtestresult:{
+      btresult:  {
+        status:true,
         backtestLine: [],
-        backtestreport: []
-      }}
+        backtestreport: ''
+      }
     }
     // fundadata?: {
     //   profitLossData?: any;

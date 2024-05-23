@@ -45,6 +45,8 @@ export const plotInfoInput: PlotInfoInputType[] = [
     clipdata:false
   },
 
+ 
+
   {
     plotStatus: true,
     plotName: "brlinelot",
@@ -160,6 +162,19 @@ export const plotInfoInput: PlotInfoInputType[] = [
     plotType: "mulitbar",
     buttontag:"FundaPlot",
     // plotcolor
+  },
+  {
+    plotStatus: true,
+    plotName: "backtestplot",
+    xdataTag: "xindex",
+    ydataTag: "backtestresultline",
+    xscaleTag: "bot",
+    yscaleTag: "TR",
+    plotType: "backtest",
+    plotcolor: "blue",
+    buttontag:"backtestplot",
+    tooltip:false,
+    clipdata:false
   },
 
 
