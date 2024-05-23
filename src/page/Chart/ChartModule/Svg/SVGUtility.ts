@@ -630,7 +630,6 @@ export function drawCandlestickOnSVG(
   high: number[],
   low: number[],
   close: number[],
-  backtestdata: backtestitem[],
   xScale: d3.ScaleLinear<number, number>,
   yScale: d3.ScaleLinear<number, number>,
   classNameTag: string,
@@ -681,61 +680,7 @@ export function drawCandlestickOnSVG(
 
   candlesticks.exit().remove();
 
-  if (backtestdata && backtestdata.length > 0) {
-    // const btcircles = this.chartarea.selectAll(".btcircle").data(circleData);
-    // console.log("here");
-    const backtestobj = svgGroup.selectAll(".backtestplot").data(backtestdata);
-    backtestobj
-      .enter()
-      .append("path")
-      .attr("class", `all  backtestplot backtestplot-${classNameTag}`)
-      .attr("clip-path", `url(#clip-${yaxistag})`)
-      // .attr("cx",(d) => xScale(d.index))
-      // .attr("cy",(d) => yScale(Shared_ChartPlotData.low[d.index]))
-      // .attr("r",(d) => 4)
-      .attr("d", (d) => {
-        const x = xScale(d.index);
-        
-        let y;
-        const candleIndex = d.index;
-        // console.log(d,candleIndex);
-        // console.log(low[candleIndex]);
-        const offset = 0.01;
-        // console.log("x",d.index,x,yScale(low[candleIndex] - low[candleIndex] * offset));
-        const size = 8;
-        let reallow=Shared_ChartPlotData.low[candleIndex]
-        let realhigh=Shared_ChartPlotData.high[candleIndex]
-        // console.log(reallow,realhigh);
-        if (d.buyorsell === "trigger") {
-          return `M${x - size},${yScale(reallow - reallow * offset) - size} h${size * 2} v${size * 2} h-${size * 2} Z`;
-        } else if (d.buyorsell === "buy") {
-          y = yScale(reallow - reallow * offset);
-          return `M${x},${y - size} l${size},${size * 2} l${-size * 2},0 Z`;
-        } else if (d.buyorsell === "sell") {
-          y = yScale(realhigh +realhigh * offset);
-          return `M${x},${y + size} l${size},${-size * 2} l${-size * 2},0 Z`;
-        } else if (d.buyorsell === "PatternBaseIndex") {
-          return `M${x - size},${yScale(reallow - reallow * offset) - size} h${size * 2} v${size * 2} h-${size * 2} Z`;
-        }
-        return null;
-      })
-      .attr("fill", (d) => {
-        if (d.buyorsell === "trigger") {
-          return "blue"; // No fill for squares
-        } else if (d.buyorsell === "buy") {
-          return "cyan";
-        } else if (d.buyorsell === "sell") {
-          return d.pnl && d.pnl > 0 ? "green" : "red";
-        } else if (d.buyorsell === "PatternBaseIndex") {
-          return "yellow";
-        }
-        return "brown";
-      })
-      .attr("stroke", "black")
-      .attr("stroke-width", 1);
-
-    backtestobj.exit().remove();
-  }
+  
 }
 
 export function drawMultipleLineChartOnSVG(svgGroup: d3.Selection<SVGGElement, any, any, any>, lineData: MulitlineLineChartData[], classNameTag: string) {

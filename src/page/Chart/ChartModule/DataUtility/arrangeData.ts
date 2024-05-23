@@ -35,7 +35,7 @@ export function arrangeData(this: any, stockData: ChartDataIN, funda: number = 0
     // }))
 
 // console.log(brlinedata);
-        console.log(backtestdata);
+        // console.log(zigzagdata.brlist);
 
     return {
         xindex:ohlcDataArray.map((item,index)=>index),

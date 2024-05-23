@@ -108,7 +108,9 @@ class TechGroup {
             tobebreakdowndata: zigzag.tobebreakdowndata
                 ? { tobebreakcandelid: zigzag.tobebreakdowndata.tobebreakcandelid, pricetobebreakdown: zigzag.tobebreakdowndata.pricetobebreakdown }
                 : undefined,
-            brlist: zigzag.brlist.map(({ rejectat, broutfor, broutat, highatref, highatrejec, breakoutperiod }) => ({
+            brlist: zigzag.brlist
+            .filter(({ broutfor }) => !isNaN(broutfor))
+            .map(({ rejectat, broutfor, broutat, highatref, highatrejec, breakoutperiod }) => ({
                 rejectat,
                 broutfor,
                 broutat,

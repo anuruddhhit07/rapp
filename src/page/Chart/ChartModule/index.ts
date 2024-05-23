@@ -59,7 +59,7 @@ class CandlestickChartTS {
     this.livefunction=Candlestickparamater.liveFunction
     this.SVGClass = SVGClass.getInstance();
     this.svg = this.SVGClass.svg;
-    console.log(Shared_ChartPlotData)
+    // console.log(Shared_ChartPlotData)
     this.SVGClass.createYaxiseventArea(this.zoomY);
     const numberofbutton = 11;
     this.BackGroup = this.SVGClass.BackGroup;

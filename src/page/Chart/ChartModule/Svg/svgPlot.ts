@@ -366,8 +366,7 @@ function drawPlotMultiLineByName(
       label: string;
     }[]
 
-  
-    // console.log(Multilinedata);
+
 
 // console.log(plotName,XDATA.length,Shared_PlotInfo[plotName].clipdata,visiblerange);
   let plotColor = Shared_PlotInfo[plotName].plotcolor;
@@ -614,8 +613,7 @@ function drawPlotOHLCByName(
     // console.log(currentTransformX,currentTransformY);
     // console.log(Shared_ChartPlotData.backtestresultline);
     // const backtestdata=  Shared_ChartPlotData.backtestresultline
-    const backtestdata: backtestitem[]=  []
-  
+
     drawCandlestickOnSVG(
       PlotGroupArea,
       XDATA as number[],
@@ -623,7 +621,6 @@ function drawPlotOHLCByName(
       high as number[],
       low as number[],
       close as number[],
-      backtestdata as backtestitem[],
       newxScale,
       newyScale,
       plotName,

@@ -179,7 +179,7 @@ class SVGClass {
       buttonsvgarray[index] = groupedData[key][0].buttonSvgIcon;
     });
 
-    console.log(buttonsvgarray)
+    // console.log(buttonsvgarray)
     // const replacingArray = Array(numberofbutton).fill(false, 0, numberofbutton-1);
     // const updatedState = [...initialPlotStatusArray, ...replacingArray.slice(initialPlotStatusArray.length)];
 
@@ -204,8 +204,8 @@ class SVGClass {
     initialPlotStatusArray.splice(insertAtIndex, itemsToRemove, false)
     buttonsvgarray.splice(insertAtIndex, itemsToRemove, 'live')
 
-    console.log(updatedIdArray);
-    console.log(buttonsvgarray);
+    // console.log(updatedIdArray);
+    // console.log(buttonsvgarray);
 
     this.Buttonpanel = createMultipleSqure(this.svg, "top-button-panel")
       .translate(
