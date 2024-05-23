@@ -1,5 +1,5 @@
 export const svgDefs = {
-  symbol1: '<symbol id="symbol1" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="red" /></symbol>',
+  defaultsvg: '<symbol id="defaultsvg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="red" /></symbol>',
   gradient1:
     '<linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:rgb(255,255,0);stop-opacity:1" /><stop offset="100%" style="stop-color:rgb(255,0,0);stop-opacity:1" /></linearGradient>',
   myCircle: `<circle id="myCircle" cx="50" cy="50" r="50" />`,

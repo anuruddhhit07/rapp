@@ -143,6 +143,7 @@ class SVGClass {
       plotStatus: boolean;
       plotName: string;
       buttonid: string;
+      buttonSvgIcon:string;
     }
     
     interface GroupedData {
@@ -166,13 +167,19 @@ class SVGClass {
     const initialPlotStatusArray: boolean[] = new Array(arrayLength).fill(
       false
     );
+    const buttonsvgarray: string[] = new Array(arrayLength).fill(
+      'defaultsvg'
+    );
     const buttonidarray: string[] = [];
+    // const buttonsvgarray: string[] = [];
     // Iterate over each key in the interface and set the initial value in the array
     Object.keys(groupedData).forEach((key, index) => {
       initialPlotStatusArray[index] = groupedData[key][0].plotStatus; // Assuming each group has at least one plot data object
       buttonidarray[index] = key;
+      buttonsvgarray[index] = groupedData[key][0].buttonSvgIcon;
     });
 
+    console.log(buttonsvgarray)
     // const replacingArray = Array(numberofbutton).fill(false, 0, numberofbutton-1);
     // const updatedState = [...initialPlotStatusArray, ...replacingArray.slice(initialPlotStatusArray.length)];
 
@@ -195,9 +202,10 @@ class SVGClass {
     let itemsToRemove = 0
     updatedIdArray.splice(insertAtIndex, itemsToRemove, 'liverubfn')
     initialPlotStatusArray.splice(insertAtIndex, itemsToRemove, false)
+    buttonsvgarray.splice(insertAtIndex, itemsToRemove, 'live')
 
-    // console.log(updatedIdArray);
-    // console.log(initialPlotStatusArray);
+    console.log(updatedIdArray);
+    console.log(buttonsvgarray);
 
     this.Buttonpanel = createMultipleSqure(this.svg, "top-button-panel")
       .translate(
@@ -212,7 +220,8 @@ class SVGClass {
         2,
         initialPlotStatusArray,
         updatedIdArray,
-        ["live",'barchart','hline','E5','Volume','CRSI','RSI','ADX','EPS','BT']
+        buttonsvgarray
+        // ["live",'barchart','hline','E5','Volume','CRSI','RSI','ADX','EPS','BT']
       )
       .attachClickEvent(callback);
       

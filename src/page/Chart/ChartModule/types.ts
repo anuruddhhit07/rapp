@@ -276,6 +276,7 @@ export interface PlotInfoInputType {
   plotType: string;
   plotcolor?: string;
   buttontag?: string;
+  buttonSvgIcon?:string;
   tooltip?: boolean;
   clipdata?: boolean;
 }
@@ -290,6 +291,7 @@ export interface PlotInfoItem {
   plotType: string;
   plotcolor: string;
   buttontag: string;
+  buttonSvgIcon:string;
   tooltip: boolean;
   getTooltipHTML?: (this: PlotInfoItem, yaxistag: string, index: number, tooltiparea: d3.Selection<SVGGElement, any, HTMLElement, any>) => void;
   clipdata: boolean;
@@ -303,7 +305,7 @@ export interface XscaleYscaleRelation {
 }
 
 export interface PlotStatusByButtonTag {
-  [key: string]: { plotStatus: boolean; plotName: string; buttonid: string };
+  [key: string]: { plotStatus: boolean; plotName: string; buttonid: string; buttonSvgIcon:string; };
 }
 
 export interface Margin {

@@ -245,6 +245,7 @@ export function updateShared_PlotInfo(key: string, partialData: Partial<PlotInfo
       plotType: "line",
       plotcolor: "red",
       buttontag: "no-button",
+      buttonSvgIcon:"defaultsvg",
       tooltip:false,
       clipdata:true,
       ...partialData, // Merge with additional partialData
@@ -345,7 +346,7 @@ export const updateYscaleconfig = (yScaleConfigInputArray = yScaleConfigInput) =
 
 export const updateplotInfo = (plotInfoInputArray = plotInfoInput) => {
   plotInfoInputArray.map((plotinfoitem) => {
-    const { plotStatus, plotName, xdataTag, ydataTag, xscaleTag, yscaleTag, plotType, plotcolor, buttontag ,tooltip,clipdata} = plotinfoitem;
+    const { plotStatus, plotName, xdataTag, ydataTag, xscaleTag, yscaleTag, buttonSvgIcon,plotType, plotcolor, buttontag ,tooltip,clipdata} = plotinfoitem;
     const tempplotinforItem: PlotInfoItem = {
       plotStatus: plotStatus,
       plotName: plotName,
@@ -356,6 +357,7 @@ export const updateplotInfo = (plotInfoInputArray = plotInfoInput) => {
       plotType: plotType,
       plotcolor: plotcolor ? plotcolor : "green",
       buttontag: buttontag ? buttontag : "no-button",
+      buttonSvgIcon:buttonSvgIcon?buttonSvgIcon:'defaultsvg',
       tooltip:tooltip?tooltip:false,
       clipdata:clipdata!=undefined?clipdata:true
     };
@@ -404,7 +406,7 @@ export function getPlotStatusByButtonTag(): void {
 
   Object.entries(Shared_PlotInfo).forEach(([key, plot]) => {
     if (plot.buttontag !== "no-button") {
-      Shared_ButtonProp[key] = { plotStatus: plot.plotStatus, plotName: plot.plotName, buttonid: `buttonid_${plot.buttontag}` };
+      Shared_ButtonProp[key] = { plotStatus: plot.plotStatus, plotName: plot.plotName, buttonid: `buttonid_${plot.buttontag}`,buttonSvgIcon:plot.buttonSvgIcon };
     }
   });
 

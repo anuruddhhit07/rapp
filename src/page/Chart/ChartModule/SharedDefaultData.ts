@@ -29,6 +29,7 @@ export const plotInfoInput: PlotInfoInputType[] = [
     plotType: "ohlc",
     plotcolor: "red",
     buttontag:"OHLCPlot",
+    buttonSvgIcon:'barchart',
     tooltip:true
   },
   {
@@ -41,6 +42,7 @@ export const plotInfoInput: PlotInfoInputType[] = [
     plotType: "line",
     plotcolor: "blue",
     buttontag:"OHLCPlot",
+    buttonSvgIcon:'barchart',
     tooltip:true,
     clipdata:false
   },
@@ -57,6 +59,7 @@ export const plotInfoInput: PlotInfoInputType[] = [
     plotType: "multiline",
     plotcolor: "black",
     buttontag:"BrlInePlot",
+    buttonSvgIcon:'hline',
     tooltip:true,
     clipdata:false
   },
@@ -72,6 +75,7 @@ export const plotInfoInput: PlotInfoInputType[] = [
     plotType: "line",
     plotcolor: "red",
     buttontag:"SMAPlot",
+    buttonSvgIcon:'E5',
     tooltip:true
   },
   {
@@ -83,6 +87,7 @@ export const plotInfoInput: PlotInfoInputType[] = [
     yscaleTag: "BR",
     plotType: "bar",
     buttontag:"VolumePlot",
+    buttonSvgIcon:'Volume',
     plotcolor:"blue",
     tooltip:true
   },
@@ -94,7 +99,8 @@ export const plotInfoInput: PlotInfoInputType[] = [
     xscaleTag: "bot",
     yscaleTag: "LR",
     plotType: "scatter",
-    buttontag:"HighPlot"
+    buttontag:"HighPlot",
+    buttonSvgIcon:'CRSI',
   },
   // {
   //   plotStatus: false,
@@ -116,7 +122,9 @@ export const plotInfoInput: PlotInfoInputType[] = [
     yscaleTag: "rsi_scale",
     plotType: "line",
     plotcolor:"black",
-    buttontag:"RSIPlot"
+    buttontag:"RSIPlot",
+    buttonSvgIcon:'RSI',
+
   },
   {
     plotStatus: false,
@@ -127,7 +135,8 @@ export const plotInfoInput: PlotInfoInputType[] = [
     yscaleTag: "rsi_scale",
     plotType: "line",
     plotcolor:'blue',
-    buttontag:"ADXplot"
+    buttontag:"ADXplot",
+    buttonSvgIcon:'ADX',
   },
   {
     plotStatus: false,
@@ -138,7 +147,8 @@ export const plotInfoInput: PlotInfoInputType[] = [
     yscaleTag: "rsi_scale",
     plotType: "line",
     plotcolor:'green',
-    buttontag:"ADXplot"
+    buttontag:"ADXplot",
+    buttonSvgIcon:'ADX',
   },
   {
     plotStatus: false,
@@ -149,7 +159,8 @@ export const plotInfoInput: PlotInfoInputType[] = [
     yscaleTag: "rsi_scale",
     plotType: "line",
     plotcolor:'red',
-    buttontag:"ADXplot"
+    buttontag:"ADXplot",
+    buttonSvgIcon:'ADX',
   },
 
   {
@@ -161,10 +172,11 @@ export const plotInfoInput: PlotInfoInputType[] = [
     yscaleTag: "Funda_yscale",
     plotType: "mulitbar",
     buttontag:"FundaPlot",
+    buttonSvgIcon:'EPS',
     // plotcolor
   },
   {
-    plotStatus: true,
+    plotStatus: false,
     plotName: "backtestplot",
     xdataTag: "xindex",
     ydataTag: "backtestresultline",
@@ -173,6 +185,7 @@ export const plotInfoInput: PlotInfoInputType[] = [
     plotType: "backtest",
     plotcolor: "blue",
     buttontag:"backtestplot",
+    buttonSvgIcon:'BT',
     tooltip:false,
     clipdata:false
   },
