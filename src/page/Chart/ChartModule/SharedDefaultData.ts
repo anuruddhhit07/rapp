@@ -32,7 +32,7 @@ export const plotInfoInput: PlotInfoInputType[] = [
     tooltip:true
   },
   {
-    plotStatus: true,
+    plotStatus: false,
     plotName: "zigzaglot",
     xdataTag: "zigzagX",
     ydataTag: "zigzagY",

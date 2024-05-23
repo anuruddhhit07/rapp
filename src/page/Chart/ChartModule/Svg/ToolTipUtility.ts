@@ -112,7 +112,7 @@ interface TooltipData {
   
     const data: TooltipData[] = [
     //   { I: { value: index } },
-      { [this.plotName]: { value:  this.ydata[index] .toFixed(2), color: 'black' } },
+      { [this.plotName]: { value:  this.ydata()[index] .toFixed(2), color: 'black' } },
     //   { H: { value: Shared_ChartPlotData.high[index].toFixed(2), color: 'green' } },
     //   { L: { value: Shared_ChartPlotData.low[index].toFixed(2), color: 'red' } },
     //   { C: { value: Shared_ChartPlotData.close[index].toFixed(2), color: 'blue' } }

@@ -161,7 +161,10 @@ export function getYscale(this: YScaleConfigItemType): {
   // }
 
   if (this.yscaleDataTag == "ohlc") {
+    // console.log(this.xscaleVisibleRange[1]);
+    // console.log(Shared_ChartPlotData["low"].length);
     visiblerange = this.xscaleVisibleRange[1] == 0 ? [0, Shared_ChartPlotData["low"].length] : this.xscaleVisibleRange;
+    // console.log(visiblerange);
 
     domain = [
       d3.min(Shared_ChartPlotData["low"].slice(visiblerange[0], visiblerange[1])) as number,
@@ -235,8 +238,8 @@ export function updateShared_PlotInfo(key: string, partialData: Partial<PlotInfo
     Shared_PlotInfo[key] = {
       plotStatus: true,
       plotName: "PlotName",
-      xdata: [],
-      ydata: [],
+      xdata: ()=>[],
+      ydata: ()=>[],
       xscaleTag: "Bot1",
       yscaleTag: "TL",
       plotType: "line",
@@ -346,8 +349,8 @@ export const updateplotInfo = (plotInfoInputArray = plotInfoInput) => {
     const tempplotinforItem: PlotInfoItem = {
       plotStatus: plotStatus,
       plotName: plotName,
-      xdata: Shared_ChartPlotData[xdataTag],
-      ydata: ydataTag == "ohlc" ? [] : Shared_ChartPlotData[ydataTag],
+      xdata: ()=> Shared_ChartPlotData[xdataTag],
+      ydata: ydataTag == "ohlc" ? ()=>[] : ()=>Shared_ChartPlotData[ydataTag],
       xscaleTag: xscaleTag,
       yscaleTag: yscaleTag,
       plotType: plotType,

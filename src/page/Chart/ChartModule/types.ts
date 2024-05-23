@@ -269,8 +269,8 @@ export interface PlotInfoInputType {
 export interface PlotInfoItem {
   plotStatus: boolean;
   plotName: string;
-  xdata: number[];
-  ydata: number[];
+  xdata: ()=>number[];
+  ydata: ()=>number[];
   xscaleTag: keyof xScaleConfigType;
   yscaleTag: keyof xScaleConfigType;
   plotType: string;

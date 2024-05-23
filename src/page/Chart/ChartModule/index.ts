@@ -224,6 +224,15 @@ class CandlestickChartTS {
       );
     });
   }
+  updatechart(stockdata: ChartDataIN){
+    // console.log(stockdata.histdata.length);
+    updateChartPlotData(arrangeData(stockdata));
+    // console.log(Shared_ChartPlotData);
+    this.rendorAxis();
+    this.rendorPlot();
+
+  }
+
 }
 
 export default CandlestickChartTS;

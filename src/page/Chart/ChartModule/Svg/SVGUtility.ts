@@ -404,7 +404,7 @@ export function createMultipleSqure(
       .append('use') // Append a <use> element for each data point
       .attr('xlink:href', (d) => {
         if (typeof d.svgicon === "undefined") return `#${'symbol1'}`; // Color for undefined state
-        console.log(d.svgicon);
+        // console.log(d.svgicon);
         return `#${d.svgicon}`   // Colors for true and false states
       })
       // `#${'home'}`) // Set the xlink:href attribute
@@ -536,6 +536,7 @@ export function DrawMultilineonSVG(
   plotColor: string
 ) {
   // Iterate over each line data in multilineData
+  // console.log("multilineData",multilineData);
   multilineData.forEach((lineData, index) => {
     // Create a line generator for the current line
 

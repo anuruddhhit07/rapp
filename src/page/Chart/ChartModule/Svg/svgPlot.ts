@@ -120,12 +120,12 @@ function drawPlotScatteryName(
     let YDATA:number[]=[]
 
     if (visiblerange[1]==0){
-        XDATA = Shared_PlotInfo[plotName].xdata
-        YDATA = Shared_PlotInfo[plotName].ydata
+        XDATA = Shared_PlotInfo[plotName].xdata()
+        YDATA = Shared_PlotInfo[plotName].ydata()
     }
     else {
-        XDATA = Shared_PlotInfo[plotName].xdata.slice(visiblerange[0], visiblerange[1])
-        YDATA = Shared_PlotInfo[plotName].ydata.slice(visiblerange[0], visiblerange[1])
+        XDATA = Shared_PlotInfo[plotName].xdata().slice(visiblerange[0], visiblerange[1])
+        YDATA = Shared_PlotInfo[plotName].ydata().slice(visiblerange[0], visiblerange[1])
     }
 
     // const xScaleType = Shared_XScaleConfig[Shared_PlotInfo[plotName].xscaleTag].xsaleType
@@ -194,21 +194,23 @@ function drawPlotLineByName(
     let YDATA:number[]=[]
     let XDATA_fillter1:number[]=[]
     let YDATA_fillter1:number[]=[]
+    // console.log(Shared_PlotInfo); 
+    // console.log(plotName);
 
     if (visiblerange[1]==0 ){
-        XDATA = Shared_PlotInfo[plotName].xdata
-        YDATA = Shared_PlotInfo[plotName].ydata
+        XDATA = Shared_PlotInfo[plotName].xdata()
+        YDATA = Shared_PlotInfo[plotName].ydata()
     }
     else {
       // console.log(Shared_PlotInfo[plotName].clipdata);
       if (Shared_PlotInfo[plotName].clipdata){
         // console.log(plotName,visiblerange)
-        const filterdata=filterData(Shared_PlotInfo[plotName].xdata,Shared_PlotInfo[plotName].ydata,visiblerange[0],visiblerange[1])
+        const filterdata=filterData(Shared_PlotInfo[plotName].xdata(),Shared_PlotInfo[plotName].ydata(),visiblerange[0],visiblerange[1])
         XDATA=filterdata.xdata
         YDATA=filterdata.ydata
       } else {
-        XDATA = Shared_PlotInfo[plotName].xdata
-        YDATA = Shared_PlotInfo[plotName].ydata
+        XDATA = Shared_PlotInfo[plotName].xdata()
+        YDATA = Shared_PlotInfo[plotName].ydata()
       }
         
     }
@@ -278,13 +280,14 @@ function drawPlotMultiLineByName(
     }[]=[]
 
 
-    Multilinedata=Shared_PlotInfo[plotName].ydata as unknown as {
+    Multilinedata=Shared_PlotInfo[plotName].ydata() as unknown as {
       x: number[];
       y: number[];
       label: string;
     }[]
 
   
+    // console.log(Multilinedata);
 
 // console.log(plotName,XDATA.length,Shared_PlotInfo[plotName].clipdata,visiblerange);
   let plotColor = Shared_PlotInfo[plotName].plotcolor;
@@ -347,12 +350,13 @@ function drawPlotBarByName(
     let YDATA:number[]=[]
 
     if (visiblerange[1]==0){
-        XDATA = Shared_PlotInfo[plotName].xdata
-        YDATA = Shared_PlotInfo[plotName].ydata
+        XDATA = Shared_PlotInfo[plotName].xdata()
+        YDATA = Shared_PlotInfo[plotName].ydata()
     }
     else {
-        XDATA = Shared_PlotInfo[plotName].xdata.slice(visiblerange[0], visiblerange[1])
-        YDATA = Shared_PlotInfo[plotName].ydata.slice(visiblerange[0], visiblerange[1])
+      // console.log(Shared_PlotInfo[plotName]);
+        XDATA = Shared_PlotInfo[plotName].xdata().slice(visiblerange[0], visiblerange[1])
+        YDATA = Shared_PlotInfo[plotName].ydata().slice(visiblerange[0], visiblerange[1])
     }
 
     const xScaleType = Shared_XScaleConfig[Shared_PlotInfo[plotName].xscaleTag].xsaleType
@@ -412,13 +416,13 @@ function drawPlotMulitBarByName(
     let YDATA:{ [key: string]: number[] }={}
 
     if (visiblerange[1]==0){
-        XDATA = Shared_PlotInfo[plotName].xdata
-        YDATA = Shared_PlotInfo[plotName].ydata as unknown as { [key: string]: number[] }
+        XDATA = Shared_PlotInfo[plotName].xdata()
+        YDATA = Shared_PlotInfo[plotName].ydata() as unknown as { [key: string]: number[] }
     }
     else {
-        XDATA = Shared_PlotInfo[plotName].xdata.slice(visiblerange[0], visiblerange[1])
+        XDATA = Shared_PlotInfo[plotName].xdata().slice(visiblerange[0], visiblerange[1])
         // YDATA = Shared_PlotInfo[plotName].ydata.slice(visiblerange[0], visiblerange[1]) as unknown as { [key: string]: number[] }
-        let tempyData=Shared_PlotInfo[plotName].ydata as unknown as { [key: string]: number[] }
+        let tempyData=Shared_PlotInfo[plotName].ydata() as unknown as { [key: string]: number[] }
         Object.keys(tempyData).forEach(key => {
           YDATA[key] = tempyData[key].slice(visiblerange[0], visiblerange[1]);
         });
@@ -475,29 +479,32 @@ function drawPlotOHLCByName(
     plotName: string,
     PlotGroupArea: d3.Selection<SVGGElement, any, HTMLElement, any>,
     xzoomeventsvg: d3.Selection<SVGGElement, any, HTMLElement, any>
+    
   ) {
     const visiblerange=Shared_YScaleConfig[Shared_PlotInfo[plotName].yscaleTag].xscaleVisibleRange
+    // console.log(visiblerange);
     //console.log(visiblerange)
+    // console.log(Shared_PlotInfo); 
     let XDATA:number[]=[]
     let open:number[]=[]
     let high:number[]=[]
     let low:number[]=[]
     let close:number[]=[]
     if (visiblerange[1]==0){
-        XDATA = Shared_PlotInfo[plotName].xdata
+        XDATA = Shared_PlotInfo[plotName].xdata()
         open = Shared_ChartPlotData.open;
         high = Shared_ChartPlotData.high;
         low = Shared_ChartPlotData.low;
         close = Shared_ChartPlotData.close;
     } else {
-        XDATA = Shared_PlotInfo[plotName].xdata.slice(visiblerange[0], visiblerange[1]);
+        XDATA = Shared_PlotInfo[plotName].xdata().slice(visiblerange[0], visiblerange[1]);
         open = Shared_ChartPlotData.open.slice(visiblerange[0], visiblerange[1]);
         high = Shared_ChartPlotData.high.slice(visiblerange[0], visiblerange[1]);
         low = Shared_ChartPlotData.low.slice(visiblerange[0], visiblerange[1]);
         close = Shared_ChartPlotData.close.slice(visiblerange[0], visiblerange[1]);
     }
     
-  
+  // console.log(visiblerange,XDATA,Shared_PlotInfo[plotName].xdata());
     // const YDATA = Shared_DataToplot[plotName].ydata();
     let plotColor = Shared_PlotInfo[plotName].plotcolor;
     // // const currentTransformX = Shared_Xscaleconfig[Shared_DataToplot[plotName].xscaletag].currentTransformX;
