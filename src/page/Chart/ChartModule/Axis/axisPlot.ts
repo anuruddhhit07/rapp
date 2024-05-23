@@ -320,7 +320,7 @@ export function drawYaxis(
   axisAreaonSVG.selectAll(".y-axis").each(function () {
     const yScaleTag = d3.select(this).attr("class").split("y-axis-")[1];
     if (!yscaleTagSet.includes(yScaleTag)) {
-      console.log(yScaleTag, yScaleTag);
+      // console.log(yScaleTag, yScaleTag);
       axisAreaonSVG.select(`.y-axis-${yScaleTag}`).remove();
     }
   });

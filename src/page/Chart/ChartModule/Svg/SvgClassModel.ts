@@ -64,15 +64,17 @@ class SVGClass {
       0
     );
 
-    this.ResetButton = createGroupAdv(this.svg, "reset-area").drawBorder(
-      svgWidth - margin.right,
-      svgHeight - margin.bottom,
+    this.ResetButton = createGroupAdv(this.svg, "reset-area")
+    .translate(svgWidth - margin.right,svgHeight - margin.bottom)
+    .drawBorder(
+      0,
+      0,
       margin.right,
       margin.bottom,
       "red",
-      2,
-      "green",
-      0.5,homesvg,false
+      0,
+      "white",
+      0.1,true
     )
     // .addIconImageToRect(trendSvg)
    
@@ -187,6 +189,16 @@ class SVGClass {
       ...replacingifArray.slice(buttonidarray.length),
     ];
 
+    // console.log(updatedIdArray);
+    // console.log(initialPlotStatusArray);
+    let insertAtIndex = 0
+    let itemsToRemove = 0
+    updatedIdArray.splice(insertAtIndex, itemsToRemove, 'liverubfn')
+    initialPlotStatusArray.splice(insertAtIndex, itemsToRemove, false)
+
+    // console.log(updatedIdArray);
+    // console.log(initialPlotStatusArray);
+
     this.Buttonpanel = createMultipleSqure(this.svg, "top-button-panel")
       .translate(
         Shared_ChartDimension.margin.left +
@@ -200,7 +212,7 @@ class SVGClass {
         2,
         initialPlotStatusArray,
         updatedIdArray,
-        ['barchart','hline','E5','Volume','CRSI','RSI','ADX','EPS']
+        ["live",'barchart','hline','E5','Volume','CRSI','RSI','ADX','EPS']
       )
       .attachClickEvent(callback);
       

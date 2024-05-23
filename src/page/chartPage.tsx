@@ -38,7 +38,7 @@ const ChartPage = () => {
       const width = chartContainer.offsetWidth; // Get the width of the chart container
       //const height = chartContainer.offsetHeight; // Get the height of the chart container
       const height = 500;
-      chartobj.current = new CandlestickChartTS(Shared_Allstockdata, divId, { divWidth: width, divHeight: height });
+      chartobj.current = new CandlestickChartTS(Shared_Allstockdata, divId, { divWidth: width, divHeight: height,liveFunction:handleToggleInterval });
     }
   }, []); // Empty dependency array ensures the effect runs only once, similar to componentDidMount in class components
 
@@ -84,7 +84,7 @@ const ChartPage = () => {
 
   return (
     <>
-      <button onClick={handleToggleInterval}>Change ID</button>
+      {/* <button onClick={handleToggleInterval}>Change ID</button> */}
       <div id={divId} style={{ margin: "20px" }}>
         {/* Placeholder for chart */}
       </div>

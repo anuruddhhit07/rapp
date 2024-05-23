@@ -46,6 +46,7 @@ class CandlestickChartTS {
   ToolTipArea!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   BackChartGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   Buttonpanel!: void;
+  livefunction: (() => void) | undefined;
 
   constructor(stockdata: ChartDataIN, targetID: string,Candlestickparamater:DefaultChartParameter) {
     SetupChart.getInstance(Candlestickparamater?.divWidth??1600, Candlestickparamater?.divHeight??800, { targetID: targetID });
@@ -55,7 +56,7 @@ class CandlestickChartTS {
     UpdateYscaleconfig();
     UpdatePlotInfo();
     //console.log(Shared_YScaleConfig)
-
+    this.livefunction=Candlestickparamater.liveFunction
     this.SVGClass = SVGClass.getInstance();
     this.svg = this.SVGClass.svg;
     console.log(Shared_ChartPlotData)
@@ -110,9 +111,16 @@ class CandlestickChartTS {
 
   // keyof typeof mapButtontoChart
   buttonClick(id: any, className: any, pressstate: any) {
-    //console.log(id);
+    // console.log(id);
+
+    if (id=='liverubfn'){
+      if (this.livefunction){
+        this.livefunction()
+      }
+    }
 
     const plotarray = collectKeysByButtonId(id) as [keyof typeof Shared_ButtonProp];
+    
     plotarray.map((toggleplot) => {
       proxy_plotinfo[toggleplot].plotStatus = pressstate;
     });

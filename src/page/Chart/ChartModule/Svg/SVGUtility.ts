@@ -15,8 +15,8 @@ declare module "d3" {
       borderWidth: number,
       fill: string,
       opacity: number,
-      iconContent?: string,
-      isPath?: boolean
+      iconContent?: boolean,
+
     ): this;
     importData(data: any[]): this;
     translate(x: number, y: number): this;
@@ -48,8 +48,7 @@ export function createGroupAdv(
     borderWidth: number,
     fill: string,
     opacity: number,
-    iconContent?: string,
-    isPath?: boolean
+    iconContent?: boolean,
   ) {
     lastRect = this.append("rect")
       .attr("class", `${className}-border`) // Add class attribute
@@ -62,22 +61,26 @@ export function createGroupAdv(
       .style("stroke", borderColor)
       .style("stroke-width", borderWidth);
 
-    if (iconContent) {
-      const foreignObject = this.append("foreignObject").attr("width", width).attr("height", height).attr("x", x).attr("y", y);
+      if (iconContent){
+        // console.log(iconContent);
+        group
+        .append('use') // Append a <use> element for each data point
+        .attr('xlink:href',`#${'zoomout'}`)
+        // `#${'home'}`) // Set the xlink:href attribute
+        .attr("width", width) // Set the width based on data
+        .attr("height",height) // Set the height based on data
+        .attr('x',0) // Set the x position based on data
+        .attr('y', 0) // Set the y position based on data
+        // .attr("id", (d) => `svg${d.id}`)
+        // .style('fill',(d) => {
+        //   if (typeof d.pressstate === "undefined") return "gray"; // Color for undefined state
+        //   return d.pressstate ? "green" : "red"; // Colors for true and false states
+        // })
+        .attr('pointer-events', 'none') 
 
-      foreignObject
-        .append("xhtml:div")
-        .html(
-          isPath
-            ? `<svg class="svgclass" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink"><use xlink:href="${iconContent}" /></svg>`
-            : iconContent
-        )
-        .style("width", "50%")
-        .style("height", "50%")
-        .style("display", "flex")
-        .style("justify-content", "center")
-        .style("align-items", "center");
-    }
+      }
+
+   
     return this; // Return the group selection for chaining
   };
 
@@ -376,7 +379,7 @@ export function createMultipleSqure(
       svgicon: svgicon ? svgicon[i] : 'square',
     }));
 
-    console.log("squaresData",squaresData);
+    // console.log("squaresData",squaresData);
 
     this.selectAll("rect")
       .data(squaresData)

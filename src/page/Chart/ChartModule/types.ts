@@ -1,6 +1,7 @@
 export interface DefaultChartParameter {
     divWidth?: number;
     divHeight?: number;
+    liveFunction?: () => void;
   }
 
   import { NumberValue, ScaleLinear } from "d3";
