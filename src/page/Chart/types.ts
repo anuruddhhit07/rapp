@@ -22,11 +22,7 @@ const AA: OptionsFlags<Features> = {
   newUserProfile: true,
 };
 
-// export interface ChartDataType {
-//   xindex: number[];
-//   close: number[];
-//   open: number[];
-// }
+
 
 export interface OHLCV {
   timestamp: number;
