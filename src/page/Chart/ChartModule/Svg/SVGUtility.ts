@@ -3,7 +3,7 @@
 import * as d3 from "d3";
 import { BaseType, groups, index, Selection } from "d3";
 import { CandlestickData, MulitlineLineChartData, ScatterDataType } from "./chartSetuptype";
-import { backtestitem } from "../types";
+import { backtestitem } from "../../types";
 import { Shared_ChartPlotData } from "../BaseSetup/SharedDataUtility";
 
 declare module "d3" {

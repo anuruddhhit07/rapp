@@ -1,4 +1,4 @@
-import { ZigzaglineData,HistoryResponceData, BreakoutData,BreakoutData_ToBe_base,BreakdownData_ToBe_base } from "../types/type"
+import { ZigzaglineData,HistoryResponceData, BreakoutData,BreakoutData_ToBe_base,BreakdownData_ToBe_base } from "../../../types"
 
 interface DataPoint {
   timestamp: number;

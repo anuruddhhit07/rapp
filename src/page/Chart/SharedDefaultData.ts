@@ -4,7 +4,7 @@ import {
   XScaleConfigInputType,
   YScaleConfigInputType,
 } from "./types";
-import { Shared_ChartDimension } from "./BaseSetup/SharedDataUtility";
+import { Shared_ChartDimension } from "./ChartModule/BaseSetup/SharedDataUtility";
 import { ChartDataType } from "./types";
 
 export const defaultchartData: ChartDataType = {

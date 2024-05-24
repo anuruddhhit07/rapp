@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { PlotInfoItem, XScaleConfigItemType, YScaleConfigItemType, xScaleConfigType, yScaleConfigType } from "../types";
+import { PlotInfoItem, XScaleConfigItemType, YScaleConfigItemType, xScaleConfigType, yScaleConfigType } from "../../types";
 import {
   Shared_ChartBaseData,
   Shared_ChartDimension,
@@ -13,7 +13,7 @@ import {
   updateShared_YScaleConfig,
   updateYScaleConfigByKey,
 } from "../BaseSetup/SharedDataUtility";
-import { ChartDataType } from "../types";
+import { ChartDataType } from "../../types";
 import { formatVolume, multiFormat } from "./dateFormat";
 import { getTooltipHTMLLine, getTooltipHTMLOHLC, getTooltipHTMLVolume } from "../Svg/ToolTipUtility";
 

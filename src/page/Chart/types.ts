@@ -36,7 +36,16 @@ export interface OHLCV {
   close: number;
   volume: number;
 }
-interface zigzagdatasub {
+export type HistoryResponceData = {
+  time: number;
+  timestamp: number;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+};
+export interface zigzagdatasub {
   sublist: { orgindex: number; value: number }[];
   tobebreakdata?: { tobebreakcandelid: number; pricetobebreak: number };
   tobebreakdowndata?: { tobebreakcandelid: number; pricetobebreakdown: number };
@@ -49,6 +58,70 @@ interface zigzagdatasub {
     breakoutperiod: number;
   }[];
 }
+
+interface BreakStrengthResult {
+  [percentageRange: number]: { totalWeight: number; numAttempts: number };
+}
+export interface ZigzaglineData {
+  time: number;
+  orgindex: number;
+  value: number;
+  zigind: string;
+  zigType: string;
+  trend?: string;
+  // marker?: number;
+}
+export type BreakoutData = {
+  broutfor: number;
+  broutat: number;
+  rejectat: number;
+  brekoutcandleago: number;
+  breakoutperiod: number;
+  breakoutpercentage: number;
+  highatref: number;
+  highatrejec: number;
+  highatbr: number;
+  closeatbr: number;
+};
+export interface BreakoutData_ToBe_base {
+  pricetobebreak: number;
+  lastclose: number;
+  laginprct: number;
+  candeldistance: number;
+  tobebreakcandelid: number;
+  timestamp: number;
+}
+
+export interface BreakoutData_ToBeTable extends BreakoutData_ToBe_base {
+  ticker: string;
+  cdarray: string[];
+  trianglecheck: number;
+}
+
+export interface BreakdownData_ToBe_base {
+  pricetobebreakdown: number;
+  lastclose: number;
+  laginprct: number;
+  candeldistance: number;
+  tobebreakcandelid: number;
+  timestamp: number;
+}
+
+export interface BreakoutData_ToBeBreakDownTable extends BreakdownData_ToBe_base {
+  ticker: string;
+  cdarray: string[];
+  trianglecheck: number;
+}
+
+export type ZigzagData = {
+  sublist: ZigzaglineData[]; // Replace 'any' with the appropriate type for 'sublist'
+  brlist: BreakoutData[]; // Replace 'any' with the appropriate type for 'brlist'
+  lastbreakout: { latestbrindex: number; breakoutperiod: number; latestbreakobj: BreakoutData; laststockindex: number }; // Replace 'any' with the appropriate type for 'lastbreakout'
+  tobebreakdata: BreakoutData_ToBe_base;
+  tobebreakdowndata: BreakdownData_ToBe_base;
+  breakStrenth: BreakStrengthResult;
+  Tr_patternMark: number;
+};
 
 interface indicatordata {
   LineInd: {

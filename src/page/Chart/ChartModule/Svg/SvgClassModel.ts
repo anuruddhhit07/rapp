@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 
 import { appendSvgElementsArray, createGroupAdv, createMultipleSqure, createSVGDefs3, enhanceGroup } from "./SVGUtility";
-import { PlotStatusByButtonTag } from "../types";
+import { PlotStatusByButtonTag } from "../../types";
 import {
   Shared_ChartBaseData,
   Shared_ChartDimension,

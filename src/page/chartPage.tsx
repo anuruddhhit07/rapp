@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { testdatamodule } from "testdata";
-import CandlestickChartTS from "./Chart/ChartModule";
-import { DefaultChartParameter } from "./Chart/ChartModule/types";
-import TechGroup from "./Chart/TechModule";
+import {CandlestickChartTS,TechGroup} from "./Chart/index";
+import { DefaultChartParameter } from "./Chart/types";
+// import TechGroup from "./Chart/TechModule";
 import { Shared_Allstockdata, updateChartData } from "./Chart/ChartModule/DataUtility/chartDataUitility";
 import { Timer } from "d3";
 import { getbackestdata } from "./Chart/TechModule/testdata/becktestreportdata";

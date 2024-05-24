@@ -1,8 +1,8 @@
 import { IndicatorsNormalizedSync } from "./@ixjb94/indicators/dist";
-import { OHLCV } from "../ChartModule/types";
+import { OHLCV } from "../types";
 // import zigtagind from "./ZigZAgTool";
 import ZigProcessor from "./ZigZAgTool/core/zigzag"
-import { ZigzagData, zigzagdatasub } from "./ZigZAgTool/types/type";
+import { ZigzagData, zigzagdatasub } from "../types";
 
 
 let ta = new IndicatorsNormalizedSync();

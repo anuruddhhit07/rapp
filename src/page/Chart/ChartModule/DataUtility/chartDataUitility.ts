@@ -1,4 +1,4 @@
-import { ChartDataIN, OHLCV } from "../types";
+import { ChartDataIN, OHLCV } from "../../types";
 
 // type backtestfinaloutput = {
 //     query_output: any[];

@@ -1,6 +1,6 @@
-import { ChartDataIN,ChartDataType, backtestitem, backtestresult } from "../types";
+import { ChartDataIN,ChartDataType, backtestitem, backtestresult } from "../../types";
 import TechGroup from "../../TechModule";
-import {zigzagdatasub } from "../../TechModule/ZigZAgTool/types/type";
+import {zigzagdatasub} from "../../types"
 
 const techGroup= TechGroup.getInstance();
 

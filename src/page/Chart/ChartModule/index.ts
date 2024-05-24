@@ -1,7 +1,7 @@
 import SetupChart from "../ChartModule/BaseSetup/SetupChart";
 import { arrangeData } from "./DataUtility/arrangeData";
 
-import { ChartDataIN } from "./types";
+import { ChartDataIN } from "../types";
 import * as d3 from "d3";
 
 import { createClipPath } from "../ChartModule/Svg/SVGUtility";
@@ -29,7 +29,7 @@ import { UpdatePlotInfo, UpdateXscaleconfig, UpdateYscaleconfig, drawXaxis, draw
 import { plotonsvg } from "../ChartModule/Svg/svgPlot";
 import { updateTooltips } from "../ChartModule/Svg/ToolTipUtility";
 import { drawCrosshair } from "./Svg/CrosshairUtility";
-import { DefaultChartParameter } from "./types";
+import { DefaultChartParameter } from "../types";
 
 
 class CandlestickChartTS {

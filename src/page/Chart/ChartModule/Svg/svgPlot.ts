@@ -7,7 +7,7 @@ import {
   Shared_yaxisProp,
   groupDataByPlotType,
 } from "../BaseSetup/SharedDataUtility";
-import { ChartDataType, backtestitem } from "../types";
+import { ChartDataType, backtestitem } from "../../types";
 import { DrawMultilineonSVG, drawBacktestPlotOnSVG, drawBarChartOnSVG, drawCandlestickOnSVG, drawLineOnSVG, drawMultiBarChartOnSVG, drawScatterPlotOnSVG } from "./SVGUtility";
 import { ScatterDataType } from "./chartSetuptype";
 
