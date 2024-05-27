@@ -17,7 +17,8 @@
     "react-scripts": "5.0.1",
     "testdata": "git+https://github.com/anuruddhhit07/testdata.git",
     "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "webpacklib": "github:anuruddhhit07/webpackLib"
   },
   "scripts": {
     "start": "react-scripts start",
