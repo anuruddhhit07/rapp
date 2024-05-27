@@ -9,21 +9,24 @@ import { testdatamodule } from "testdata";
 
 // import {CandlestickChartTS,TechGroup,getbackestdata,updateChartData,Shared_Allstockdata} from "../dist";
 // import {CandlestickChartTS,TechGroup,Shared_Allstockdata,updateChartData} from "../dist";
-import {CandlestickChartTS,TechGroup,Shared_Allstockdata,updateChartData} from "Achartlib";
-// import  {getbackestdata2}  from "Achartlib/dist/Chart/ChartModule/DataUtility/chartDataUitility";
-import {getbackestdata} from "Achartlib/dist/Chart/TechModule"
+import {CandlestickChartTS,TechGroup,Shared_Allstockdata,updateChartData,getbackestdata3} from "Achartlib";
+// // import  {getbackestdata2}  from "Achartlib/dist/Chart/ChartModule/DataUtility/chartDataUitility";
+// import {getbackestdata2} from "Achartlib/dist/Chart/ChartModule/DataUtility/chartDataUitility"
+// import {getbackestdata} from "Achartlib/dist/Chart/TechModule"
+
+// import {CandlestickChartTS,TechGroup,Shared_Allstockdata,updateChartData,getbackestdata} from "Achartlib/dist/index.js";
 
 const techGroup = TechGroup.getInstance();
 
 
-// console.log(Shared_Allstockdata);
+console.log(getbackestdata3());
 
 const testobj = new testdatamodule(1500);
 
 
 const divId = "chartContainer";
 // const Candlestickparamater: DefaultChartParameter = {};
-const backtestdata=getbackestdata(0)
+const backtestdata=getbackestdata3()
 // console.log(getbackestdata(0));
 // console.log(testdata);
 
