@@ -56,3 +56,4 @@ export declare function generateRelationObject(): void;
 export declare function groupDataByPlotType(): {
     [key: string]: string[];
 };
+//# sourceMappingURL=SharedDataUtility.d.ts.map

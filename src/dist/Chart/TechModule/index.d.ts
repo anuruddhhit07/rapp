@@ -18,3 +18,4 @@ declare class TechGroup {
     calculateZizZag(): zigzagdatasub;
 }
 export default TechGroup;
+//# sourceMappingURL=index.d.ts.map

@@ -19,3 +19,4 @@ export declare const svgDefs: {
     zoomout: string;
     BT: string;
 };
+//# sourceMappingURL=svgSybolLibraray.d.ts.map

@@ -5,3 +5,4 @@ export declare const plotInfoInput: PlotInfoInputType[];
 export declare const xScaleConfigInput: XScaleConfigInputType[];
 export declare const yScaleConfigInput: YScaleConfigInputType[];
 export declare const defaultChartDimensionProp: ChartDimensionType;
+//# sourceMappingURL=SharedDefaultData.d.ts.map

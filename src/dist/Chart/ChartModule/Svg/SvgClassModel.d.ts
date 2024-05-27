@@ -21,3 +21,4 @@ declare class SVGClass {
     setupSVG(): void;
 }
 export default SVGClass;
+//# sourceMappingURL=SvgClassModel.d.ts.map

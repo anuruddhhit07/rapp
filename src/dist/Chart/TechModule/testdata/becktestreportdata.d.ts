@@ -14,3 +14,4 @@ type backtestresult = {
 };
 export declare function getbackestdata(index?: number): backtestresult;
 export {};
+//# sourceMappingURL=becktestreportdata.d.ts.map

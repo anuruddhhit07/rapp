@@ -386,3 +386,4 @@ export interface ChartDimensionType {
 }
 export type PartialChartBaseSetupType = Partial<ChartDimensionType>;
 export {};
+//# sourceMappingURL=types.d.ts.map

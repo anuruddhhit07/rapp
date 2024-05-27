@@ -53,3 +53,4 @@ declare class ZigProcessor {
     };
 }
 export default ZigProcessor;
+//# sourceMappingURL=zigzag.d.ts.map

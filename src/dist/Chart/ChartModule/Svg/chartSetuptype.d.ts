@@ -128,3 +128,4 @@ export type PartialChartBaseSetupType = Partial<ChartBaseSetupType>;
 export type CustomChartOptions = ChartOptionsIn & {
     [key: string]: never;
 };
+//# sourceMappingURL=chartSetuptype.d.ts.map

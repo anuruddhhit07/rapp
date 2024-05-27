@@ -7,7 +7,8 @@ import { testdatamodule } from "testdata";
 // import { Shared_Allstockdata, updateChartData } from "./Chart/ChartModule/DataUtility/chartDataUitility";
 // import { getbackestdata } from "./Chart/TechModule/testdata/becktestreportdata";
 
-import {CandlestickChartTS,TechGroup,getbackestdata,updateChartData,Shared_Allstockdata} from "../dist/";
+// import {CandlestickChartTS,TechGroup,getbackestdata,updateChartData,Shared_Allstockdata} from "../dist";
+import {CandlestickChartTS,TechGroup,Shared_Allstockdata,updateChartData} from "../dist";
 
 const techGroup = TechGroup.getInstance();
 
@@ -19,8 +20,8 @@ const testobj = new testdatamodule(1500);
 
 const divId = "chartContainer";
 // const Candlestickparamater: DefaultChartParameter = {};
-const backtestdata=getbackestdata(0)
-console.log(backtestdata);
+// const backtestdata=getbackestdata(0)
+// console.log(backtestdata);
 
 const ChartPage = () => {
   const chartobj = useRef<CandlestickChartTS | null>(null);
@@ -38,9 +39,9 @@ const ChartPage = () => {
 
     updateChartData("histdata", ohlcdata);
     techGroup.attachOHLCV(ohlcdata);
-    const zigzag = techGroup.calculateZizZag();
-    updateChartData("techdata", undefined, "zigzagdatasub", zigzag);
-    updateChartData("techdata", undefined, "btresult", backtestdata);
+    // const zigzag = techGroup.calculateZizZag();
+    // updateChartData("techdata", undefined, "zigzagdatasub", zigzag);
+    // updateChartData("techdata", undefined, "btresult", backtestdata);
 
     const chartContainer = document.getElementById(divId);
     if (!chartobj.current && chartContainer) {
@@ -58,9 +59,9 @@ const ChartPage = () => {
     const ohlcdata = testobj.getDataRange(0,datacount.current);
     // console.log(ohlcdata.length);
     updateChartData("histdata", ohlcdata);
-    techGroup.attachOHLCV(ohlcdata);
-    const zigzag = techGroup.calculateZizZag();
-    updateChartData("techdata", undefined, "zigzagdatasub", zigzag);
+    // techGroup.attachOHLCV(ohlcdata);
+    // const zigzag = techGroup.calculateZizZag();
+    // updateChartData("techdata", undefined, "zigzagdatasub", zigzag);
     chartobj.current?.updatechart(Shared_Allstockdata)
 
   };
@@ -89,6 +90,7 @@ const ChartPage = () => {
     return () => {
       stopInterval();
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isIntervalRunning]);
 
   return (

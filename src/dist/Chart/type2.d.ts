@@ -310,3 +310,4 @@ export interface ChartDimensionType {
     readonly height: number;
 }
 export type PartialChartBaseSetupType = Partial<ChartDimensionType>;
+//# sourceMappingURL=type2.d.ts.map

@@ -53,3 +53,4 @@ export declare function drawCandlestickOnSVG(svgGroup: d3.Selection<SVGGElement,
 export declare function drawMultipleLineChartOnSVG(svgGroup: d3.Selection<SVGGElement, any, any, any>, lineData: MulitlineLineChartData[], classNameTag: string): void;
 export declare function drawScatterPlotOnSVG(svgGroup: d3.Selection<SVGGElement, any, any, any>, scatterData: ScatterDataType[], xScale: d3.ScaleLinear<number, number>, yScale: d3.ScaleLinear<number, number>, classNameTag: string, yaxistag: string, labelstatus: boolean): void;
 export declare function drawBacktestPlotOnSVG(svgGroup: d3.Selection<SVGGElement, any, any, any>, backtestData: backtestitem[], xScale: d3.ScaleLinear<number, number>, yScale: d3.ScaleLinear<number, number>, classNameTag: string, yaxistag: string): void;
+//# sourceMappingURL=SVGUtility.d.ts.map

@@ -23,12 +23,13 @@ declare class CandlestickChartTS {
     buttonClick(id: any, className: any, pressstate: any): void;
     rendorAxis(): void;
     isMouseInsideFrontGroup(x: number, y: number): boolean | undefined;
-    mouseoutvent(event: MouseEvent): void;
+    mouseoutvent(): void;
     mousemovevent(event: MouseEvent): void;
     handleTooltipAndCrosshair(x: d3.NumberValue, y: number): void;
     rendorPlot(): void;
-    resetplot(event: any): void;
+    resetplot(): void;
     getclippath(): void;
     updatechart(stockdata: ChartDataIN): void;
 }
 export default CandlestickChartTS;
+//# sourceMappingURL=index.d.ts.map

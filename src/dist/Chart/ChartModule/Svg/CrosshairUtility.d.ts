@@ -5,3 +5,4 @@ export declare function drawCrosshair({ BackGroup, index, y, valuestring, curren
     valuestring: string;
     currentXscale: any;
 }): void;
+//# sourceMappingURL=CrosshairUtility.d.ts.map
