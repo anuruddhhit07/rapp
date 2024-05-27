@@ -1,0 +1,1 @@
+export declare function plotonsvg(plotAreaonSVG: d3.Selection<SVGGElement, any, HTMLElement, any>, xzoomeventsvg: d3.Selection<SVGGElement, any, HTMLElement, any>, yzoomeventsvg: d3.Selection<SVGGElement, any, HTMLElement, any>): void;

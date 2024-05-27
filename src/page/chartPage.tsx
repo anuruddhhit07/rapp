@@ -1,19 +1,24 @@
 import React, { useEffect, useRef, useState } from "react";
 import { testdatamodule } from "testdata";
-import {CandlestickChartTS,TechGroup} from "./Chart/index";
-import { DefaultChartParameter } from "./Chart/types";
-// import TechGroup from "./Chart/TechModule";
-import { Shared_Allstockdata, updateChartData } from "./Chart/ChartModule/DataUtility/chartDataUitility";
-import { Timer } from "d3";
-import { getbackestdata } from "./Chart/TechModule/testdata/becktestreportdata";
+
+
+// import {CandlestickChartTS,TechGroup} from "./Chart/index";
+// import { DefaultChartParameter } from "./Chart/types";
+// import { Shared_Allstockdata, updateChartData } from "./Chart/ChartModule/DataUtility/chartDataUitility";
+// import { getbackestdata } from "./Chart/TechModule/testdata/becktestreportdata";
+
+import {CandlestickChartTS,TechGroup,getbackestdata,updateChartData,Shared_Allstockdata} from "../dist/";
 
 const techGroup = TechGroup.getInstance();
+
+
 // console.log(Shared_Allstockdata);
 
 const testobj = new testdatamodule(1500);
 
+
 const divId = "chartContainer";
-const Candlestickparamater: DefaultChartParameter = {};
+// const Candlestickparamater: DefaultChartParameter = {};
 const backtestdata=getbackestdata(0)
 console.log(backtestdata);
 

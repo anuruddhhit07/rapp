@@ -1,0 +1,119 @@
+import { Shared_ChartBaseData, Shared_ChartPlotData, Shared_PlotInfo, Shared_YScaleConfig } from "../BaseSetup/SharedDataUtility";
+function formatTimestamp(timestamp) {
+    const date = new Date(timestamp * 1000); // Convert Unix timestamp to milliseconds
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${day}/${month}/${year}:${hours}:${minutes}`;
+}
+export function getTooltipHTMLOHLC(yaxistag, index, tooltiparea) {
+    // Remove existing tooltips
+    if (Number.isNaN(index))
+        return;
+    tooltiparea.selectAll(`.tooliptext-${yaxistag}-${this.plotName}`).remove();
+    const xPos = [0, 50, 150, 80, 80, 80]; // Adjust x positions as needed
+    const data = [
+        { I: { value: index } },
+        { D: { value: formatTimestamp(Shared_ChartPlotData.timestamp[index]), color: 'blue' } },
+        { O: { value: Shared_ChartPlotData.open[index].toFixed(2), color: 'blue' } },
+        { H: { value: Shared_ChartPlotData.high[index].toFixed(2), color: 'green' } },
+        { L: { value: Shared_ChartPlotData.low[index].toFixed(2), color: 'red' } },
+        { C: { value: Shared_ChartPlotData.close[index].toFixed(2), color: 'blue' } }
+    ];
+    let indexcount = 0;
+    for (const item of data) {
+        for (const key in item) {
+            if (item.hasOwnProperty(key)) {
+                const value = item[key].value;
+                tooltiparea
+                    .append('text')
+                    .attr('class', `tooliptext-${yaxistag}-${this.plotName}`)
+                    .attr('x', xPos.slice(0, indexcount + 1).reduce((acc, curr) => acc + curr, 0))
+                    .attr('y', 10)
+                    .append('tspan')
+                    .text(`${key}: ${value}`)
+                    .attr('fill', item[key].color || 'black');
+                // Increment x position for the next data point
+                indexcount++;
+                //   console.log(indexcount);
+            }
+        }
+    }
+}
+export function getTooltipHTMLVolume(yaxistag, index, tooltiparea) {
+    // Remove existing tooltips
+    tooltiparea.selectAll(`.tooliptext-${yaxistag}-${this.plotName}`).remove();
+    const xPos = [0, 40, 70, 70, 70]; // Adjust x positions as needed
+    const data = [
+        //   { I: { value: index } },
+        { V: { value: Shared_ChartPlotData.volume[index], color: 'blue' } },
+        //   { H: { value: Shared_ChartPlotData.high[index].toFixed(2), color: 'green' } },
+        //   { L: { value: Shared_ChartPlotData.low[index].toFixed(2), color: 'red' } },
+        //   { C: { value: Shared_ChartPlotData.close[index].toFixed(2), color: 'blue' } }
+    ];
+    let indexcount = 0;
+    for (const item of data) {
+        for (const key in item) {
+            if (item.hasOwnProperty(key)) {
+                const value = item[key].value;
+                tooltiparea
+                    .append('text')
+                    .attr('class', `tooliptext-${yaxistag}-${this.plotName}`)
+                    .attr('x', xPos.slice(0, indexcount + 1).reduce((acc, curr) => acc + curr, 0))
+                    .attr('y', 10)
+                    .append('tspan')
+                    .text(`${key}: ${value}`)
+                    .attr('fill', item[key].color || 'black');
+                // Increment x position for the next data point
+                indexcount++;
+                //   console.log(indexcount);
+            }
+        }
+    }
+}
+export function getTooltipHTMLLine(yaxistag, index, tooltiparea) {
+    // Remove existing tooltips
+    tooltiparea.selectAll(`.tooliptext-${yaxistag}-${this.plotName}`).remove();
+    const xPos = [0, 40, 70, 70, 70]; // Adjust x positions as needed
+    // const xdata=
+    const data = [
+        //   { I: { value: index } },
+        { [this.plotName]: { value: this.ydata()[index].toFixed(2), color: 'black' } },
+        //   { H: { value: Shared_ChartPlotData.high[index].toFixed(2), color: 'green' } },
+        //   { L: { value: Shared_ChartPlotData.low[index].toFixed(2), color: 'red' } },
+        //   { C: { value: Shared_ChartPlotData.close[index].toFixed(2), color: 'blue' } }
+    ];
+    let indexcount = 0;
+    for (const item of data) {
+        for (const key in item) {
+            if (item.hasOwnProperty(key)) {
+                const value = item[key].value;
+                tooltiparea
+                    .append('text')
+                    .attr('class', `tooliptext-${yaxistag}-${this.plotName}`)
+                    .attr('x', xPos.slice(0, indexcount + 1).reduce((acc, curr) => acc + curr, 0))
+                    .attr('y', 10)
+                    .append('tspan')
+                    .text(`${key}: ${value}`)
+                    .attr('fill', item[key].color || 'black');
+                // Increment x position for the next data point
+                indexcount++;
+                //   console.log(indexcount);
+            }
+        }
+    }
+}
+export function updateTooltips(svg, index) {
+    const uniquePLot = Array.from(Shared_ChartBaseData.plotName);
+    uniquePLot.forEach((plotname) => {
+        const plotInfo = Shared_PlotInfo[plotname];
+        if (plotInfo && plotInfo.tooltip && plotInfo.getTooltipHTML) {
+            const yscaleTag = plotInfo.yscaleTag;
+            const yaxistag = Shared_YScaleConfig[yscaleTag].yaxisTag;
+            const tooltipSelection = svg.select(`.tooltip-${yaxistag}-${plotname}`); // Correct the selector
+            plotInfo.getTooltipHTML(yaxistag, index, tooltipSelection);
+        }
+    });
+}
