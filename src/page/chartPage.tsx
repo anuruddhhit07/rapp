@@ -7,21 +7,14 @@ import { DefaultChartParameter } from "./Chart/types";
 import { Shared_Allstockdata, updateChartData } from "./Chart/ChartModule/DataUtility/chartDataUitility";
 import { getbackestdata } from "./Chart/TechModule/testdata/becktestreportdata";
 
-// import {CandlestickChartTS,TechGroup,getbackestdata,updateChartData,Shared_Allstockdata} from "../dist";
-// import {CandlestickChartTS,TechGroup,Shared_Allstockdata,updateChartData} from "../dist";
-// import {CandlestickChartTS,TechGroup,Shared_Allstockdata,updateChartData,getbackestdata} from "webpacklib";
-// // import  {getbackestdata2}  from "Achartlib/dist/Chart/ChartModule/DataUtility/chartDataUitility";
-// import {getbackestdata2} from "Achartlib/dist/Chart/ChartModule/DataUtility/chartDataUitility"
-// import {getbackestdata} from "Achartlib/dist/Chart/TechModule"
 
-// import {CandlestickChartTS,TechGroup,Shared_Allstockdata,updateChartData,getbackestdata} from "Achartlib/dist/index.js";
 
 const techGroup = TechGroup.getInstance();
 
 
 console.log(getbackestdata());
 
-const testobj = new testdatamodule(1500);
+const testobj = new testdatamodule(10);
 
 
 const divId = "chartContainer";
@@ -35,7 +28,7 @@ const ChartPage = () => {
   const chartobj = useRef<CandlestickChartTS | null>(null);
   const intervalId: any = useRef();
   const [isIntervalRunning, setIsIntervalRunning] = useState(false);
-  const datacount = useRef(300);
+  const datacount = useRef(10);
 
   const handleToggleInterval = () => {
     // console.log("hereerrtre");

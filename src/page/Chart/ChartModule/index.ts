@@ -1,10 +1,10 @@
 import SetupChart from "../ChartModule/BaseSetup/SetupChart";
 import { arrangeData } from "./DataUtility/arrangeData";
 
-import { ChartDataIN } from "../types";
+import { ChartDataIN, TrendLineDataType } from "../types";
 import * as d3 from "d3";
 
-import { createClipPath } from "../ChartModule/Svg/SVGUtility";
+import { createClipPath, drawCirclesOnSVG, drawTrendLineOnSVG } from "../ChartModule/Svg/SVGUtility";
 
 import SVGClass from "../ChartModule/Svg/SvgClassModel";
 
@@ -21,15 +21,18 @@ import {
   Shared_ChartPlotData,
   Shared_PlotInfo,
   Shared_XYrelation,
+  Shared_TrendlineData,
   getAxisKeyForRangeValue,
 } from "../ChartModule/BaseSetup/SharedDataUtility";
 import proxy_plotinfo from "../ChartModule/BaseSetup";
 import { InitializeBaseProp } from "../ChartModule/BaseSetup/BaseProp";
 import { UpdatePlotInfo, UpdateXscaleconfig, UpdateYscaleconfig, drawXaxis, drawYaxis, intialRendorAxis } from "../ChartModule/Axis/axisPlot";
-import { plotonsvg } from "../ChartModule/Svg/svgPlot";
+import { plotonsvg, plottrendlineonsvg } from "../ChartModule/Svg/svgPlot";
 import { updateTooltips } from "../ChartModule/Svg/ToolTipUtility";
-import { drawCrosshair } from "./Svg/CrosshairUtility";
+import { drawCrosshair, drawtrenline } from "./Svg/CrosshairUtility";
 import { DefaultChartParameter } from "../types";
+import { D3DragEvent, DraggedElementBaseType } from "d3";
+
 
 
 class CandlestickChartTS {
@@ -47,6 +50,8 @@ class CandlestickChartTS {
   BackChartGroup!: d3.Selection<SVGGElement, any, HTMLElement, any>;
   Buttonpanel!: void;
   livefunction: (() => void) | undefined;
+  togglehzline:boolean
+  dragBehavior: d3.DragBehavior<Element, unknown, unknown>;
 
   constructor(stockdata: ChartDataIN, targetID: string,Candlestickparamater:DefaultChartParameter) {
     SetupChart.getInstance(Candlestickparamater?.divWidth??1600, Candlestickparamater?.divHeight??800, { targetID: targetID });
@@ -56,6 +61,8 @@ class CandlestickChartTS {
     UpdateYscaleconfig();
     UpdatePlotInfo();
     //console.log(Shared_YScaleConfig)
+    this.togglehzline=false
+
     this.livefunction=Candlestickparamater.liveFunction
     this.SVGClass = SVGClass.getInstance();
     this.svg = this.SVGClass.svg;
@@ -85,6 +92,19 @@ class CandlestickChartTS {
       this.mouseoutvent(event);
     });
 
+    this.FrontGroup.onEvent1("click", (event: MouseEvent) => {
+      // Handle click event here
+      // For example:
+      console.log("Click event:", event);
+      this.clickEvent(event);
+    });
+
+    this.dragBehavior = d3
+      .drag()
+      .on("start", this.handleDragStart.bind(this))
+      .on("drag", this.handleDrag.bind(this))
+      .on("end", this.handleDragEnd.bind(this));
+
     intialRendorAxis(this.BackGroup, this.FrontGroup);
     this.rendorPlot();
     this.ResetButton.onEvent1("click", (event) => {
@@ -109,9 +129,127 @@ class CandlestickChartTS {
     this.rendorPlot();
   }
 
+  handleDragStart = (event: D3DragEvent<SVGCircleElement, unknown, SVGCircleElement>) => {
+    const targetElement = event.sourceEvent.target;
+    (this.dragBehavior as any).activeElement = targetElement;
+    d3.select(targetElement).style("fill", "yellow");
+};
+
+  handleDrag = (event: { sourceEvent: { target: any; }; }) => {
+    // console.log("drag start", event, this);
+    // const targetElement = event.sourceEvent.target;
+    const targetElement = d3.select((this.dragBehavior as any).activeElement);
+    // console.log("targetElement", targetElement,targetElement1);
+
+    var point_id = targetElement.attr("Line_Point");
+    const selectedLine_ID = targetElement.attr("Line_ID");
+
+    console.log(selectedLine_ID,point_id);
+
+    const asscociateindex = this.getIndexForName(
+      selectedLine_ID,
+      Shared_TrendlineData
+    );
+
+    const lineyaxistag=Shared_TrendlineData[asscociateindex].yaxiastag
+    
+    console.log(asscociateindex,lineyaxistag);
+    const [x, y] = d3.pointer(event);
+
+    const currentTransform = this.FrontGroup.property('__zoom');
+    const zoomXscaleAxis = 'bot';
+    const currentXscale = currentTransform.rescaleX(Shared_XScaleConfig[zoomXscaleAxis].xscale().XSCALE);
+
+    // Calculate x value and index
+    const xValue = currentXscale.invert(x);
+
+    // let index = Math.round(xValue) < 0 ? 0 : Math.round(xValue) > Shared_ChartPlotData[Shared_XScaleConfig[zoomXscaleAxis].xscaleDataTag].length - 1
+    //     ? Shared_ChartPlotData[Shared_XScaleConfig[zoomXscaleAxis].xscaleDataTag].length - 1 : Math.round(xValue);
+
+    // Get the corresponding y-axis tag and value string
+    const tagyaxis = getAxisKeyForRangeValue(y);
+    if (tagyaxis !== '1main' && tagyaxis) {
+      // Your code here
+      return
+  }
+    let valuestring = "";
+    let yvalue:number=NaN
+    let yscale:d3.ScaleLinear<number, number, never>
+    if (tagyaxis) {
+        const yscaletag = Shared_yaxisProp[tagyaxis].yscaleTag;
+        valuestring = Shared_YScaleConfig[yscaletag[0]].yscale().YSCALE?.invert(y).toFixed(2) as string;
+        yvalue=Shared_YScaleConfig[yscaletag[0]].yscale().YSCALE?.invert(y) as number
+        yscale=Shared_YScaleConfig[yscaletag[0]].yscale().YSCALE as d3.ScaleLinear<number, number, never>
+    }
+
+
+
+
+    const newx = currentXscale.invert(x);
+    const newy = yvalue;
+    console.log(newx, newy);
+
+    if (point_id == '1') {
+      if (!Number.isNaN(newx) && !Number.isNaN(newy)) {
+        Shared_TrendlineData[asscociateindex].x1 = newx;
+        Shared_TrendlineData[asscociateindex].y1 = newy;
+      } else {
+        // Handle the case where newx or newy is null
+        // For example:
+        console.error("newx or newy is null");
+      }
+    }
+
+    if (point_id == "2") {
+      if (!Number.isNaN(newx) && !Number.isNaN(newy)) {
+        Shared_TrendlineData[asscociateindex].x2 = newx;
+        Shared_TrendlineData[asscociateindex].y2 = newy;
+      } else {
+        // Handle the case where newx or newy is null
+        // For example:
+        console.error("newx or newy is null");
+      }
+    }
+
+    plottrendlineonsvg(this.FrontGroup,this.FrontGroup,this.dragBehavior)
+    
+    // this.FrontGroup.selectAll(`.trendlineplot`).remove();
+    // Shared_TrendlineData.forEach((config) => {
+      
+    //   // if (config.plot) {
+    //     // if (yscale){
+    //       const {name, x1, y1,x2, y2,yaxiastag}=config
+    //       drawTrendLineOnSVG(this.FrontGroup,[x1,x2],[y1,y2],currentXscale,yscale,name,yaxiastag,'red',this.dragBehavior);
+    //     // }
+       
+    //   // }
+    // });
+   
+
+
+  };
+
+  handleDragEnd = (event: { sourceEvent: { target: any; }; }) => {
+    // console.log("drag start", event, this);
+    const targetElement = event.sourceEvent.target;
+    // console.log("targetElement", targetElement);
+    (this.dragBehavior as any).activeElement = targetElement;
+    d3.select(targetElement).style("fill", "blue");
+  };
+
+  
+
   // keyof typeof mapButtontoChart
   buttonClick(id: any, className: any, pressstate: any) {
     // console.log(id);
+
+    const plotarray = collectKeysByButtonId(id) as [keyof typeof Shared_ButtonProp];
+    
+    plotarray.map((toggleplot) => {
+      proxy_plotinfo[toggleplot].plotStatus = pressstate;
+    });
+
+    console.log(pressstate);
 
     if (id=='liverubfn'){
       if (this.livefunction){
@@ -119,15 +257,41 @@ class CandlestickChartTS {
       }
     }
 
-    const plotarray = collectKeysByButtonId(id) as [keyof typeof Shared_ButtonProp];
+    if (id=='drawhzbtn'){
+      // if (this.livefunction){
+      //   this.livefunction()
+      // }
+      console.log("drawhzbtn");
+
+      this.togglehzline=!this.togglehzline
+      console.log(this.togglehzline);
+    }
+
+
+    if (id=='viewhzline'){
+      // if (this.livefunction){
+      //   this.livefunction()
+      // }
+      console.log("drawhzbtn");
+
+      this.svg.selectAll(".trendlineplot").style("display", "none");
+
+      console.log(this.svg.selectAll(".trendlineplot"));
+
+      // this.togglehzline=!this.togglehzline
+      // console.log(this.togglehzline);
+    }
+
     
-    plotarray.map((toggleplot) => {
-      proxy_plotinfo[toggleplot].plotStatus = pressstate;
-    });
+
+
+
+    
     this.SVGClass.createYaxiseventArea(this.zoomY);
     this.SVGClass.createTooltipArea();
     this.rendorAxis();
     this.rendorPlot();
+
 
     // console.log(Shared_yaxisProp);
   }
@@ -159,6 +323,81 @@ class CandlestickChartTS {
     // console.log("in");
     this.handleTooltipAndCrosshair(x, y)
   }
+  clickEvent(event: MouseEvent) {
+    const { width, height, margin, svgWidth } = Shared_ChartDimension;
+    const [x, y] = d3.pointer(event);
+    const currentTransform = this.FrontGroup.property('__zoom');
+    const zoomXscaleAxis = 'bot';
+    const currentXscale = currentTransform.rescaleX(Shared_XScaleConfig[zoomXscaleAxis].xscale().XSCALE);
+
+    // Calculate x value and index
+    const xValue = currentXscale.invert(x);
+    let index = Math.round(xValue) < 0 ? 0 : Math.round(xValue) > Shared_ChartPlotData[Shared_XScaleConfig[zoomXscaleAxis].xscaleDataTag].length - 1
+        ? Shared_ChartPlotData[Shared_XScaleConfig[zoomXscaleAxis].xscaleDataTag].length - 1 : Math.round(xValue);
+    // Get the corresponding y-axis tag and value string
+    const tagyaxis = getAxisKeyForRangeValue(y);
+    if (tagyaxis !== '1main' && tagyaxis || !this.togglehzline) {
+      // Your code here
+      return
+  }
+    let valuestring = "";
+    let yvalue:number=NaN
+    let yscale:d3.ScaleLinear<number, number, never>
+    if (tagyaxis) {
+        const yscaletag = Shared_yaxisProp[tagyaxis].yscaleTag;
+        valuestring = Shared_YScaleConfig[yscaletag[0]].yscale().YSCALE?.invert(y).toFixed(2) as string;
+        yvalue=Shared_YScaleConfig[yscaletag[0]].yscale().YSCALE?.invert(y) as number
+        yscale=Shared_YScaleConfig[yscaletag[0]].yscale().YSCALE as d3.ScaleLinear<number, number, never>
+    }
+
+    let x1=currentXscale.domain()[0]
+    let x2=currentXscale.domain()[1]
+    let y1=yvalue
+    let y2=yvalue
+    let newKey = this.getNextName(Shared_TrendlineData);
+    Shared_TrendlineData.push({name:newKey,x1:x1,y1:y1,x2:x2,y2:y2,yaxiastag:tagyaxis?tagyaxis:"noyaxistag"})
+    plottrendlineonsvg(this.FrontGroup,this.FrontGroup,this.dragBehavior)
+  }
+
+
+
+  getNextName(existingNames:TrendLineDataType):string {
+    let maxIndex = -1;
+  
+    // Loop through existing names to find the highest index
+    existingNames.forEach((item: { name: string; }) => {
+      const index = parseInt(item.name.split("_")[1]);
+      if (index > maxIndex) {
+        maxIndex = index;
+      }
+    });
+  
+    // Increment the highest index by 1
+    const nextIndex = maxIndex + 1;
+  
+    // Construct the new name
+    const nextName = "tr_" + nextIndex;
+  
+    return nextName;
+  }
+
+  getIndexForName(name:string, dataArray:TrendLineDataType) {
+    for (let i = 0; i < dataArray.length; i++) {
+      if (dataArray[i].name === name) {
+        return i;
+      }
+    }
+    return -1; // Return -1 if the name is not found
+  }
+  
+  // getIndexesByValues(array, values) {
+  //   let indexes = [];
+  //   values.forEach((value) => {
+  //     let index = array.indexOf(value);
+  //     indexes.push(index);
+  //   });
+  //   return indexes;
+  // }
 
  handleTooltipAndCrosshair(x: d3.NumberValue, y: number) {
     // Display tooltip and crosshair elements
@@ -198,6 +437,7 @@ class CandlestickChartTS {
   rendorPlot() {
     this.getclippath();
     plotonsvg(this.BackGroup, this.FrontGroup, this.AxisYGroup);
+    plottrendlineonsvg(this.FrontGroup,this.FrontGroup,this.dragBehavior)
   }
 
   resetplot(event: any) {
@@ -238,6 +478,7 @@ class CandlestickChartTS {
     // console.log(Shared_ChartPlotData);
     this.rendorAxis();
     this.rendorPlot();
+    
 
   }
 

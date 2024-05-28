@@ -29,7 +29,7 @@ export const plotInfoInput: PlotInfoInputType[] = [
     plotType: "ohlc",
     plotcolor: "red",
     buttontag:"OHLCPlot",
-    buttonSvgIcon:'barchart',
+    buttonSvgIcon:'cdsvg',
     tooltip:true
   },
   {
@@ -42,7 +42,7 @@ export const plotInfoInput: PlotInfoInputType[] = [
     plotType: "line",
     plotcolor: "blue",
     buttontag:"OHLCPlot",
-    buttonSvgIcon:'barchart',
+    buttonSvgIcon:'cdsvg',
     tooltip:true,
     clipdata:false
   },
@@ -87,7 +87,7 @@ export const plotInfoInput: PlotInfoInputType[] = [
     yscaleTag: "BR",
     plotType: "bar",
     buttontag:"VolumePlot",
-    buttonSvgIcon:'Volume',
+    buttonSvgIcon:'volumesvg',
     plotcolor:"blue",
     tooltip:true
   },

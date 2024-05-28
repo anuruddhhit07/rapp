@@ -476,6 +476,148 @@ export function createRect(
   return svg.append("rect").attr("x", x).attr("y", y).attr("width", width).attr("height", height);
 }
 
+export function drawCirclesOnSVG(
+  svgGroup: d3.Selection<SVGGElement, any, any, any>,
+  clickPoints: { x: number; y: number }[],
+  circleRadius: number,
+  circleColor: string,
+  dragBehavior:any
+) {
+  // Append circles for each click point
+  const circles = svgGroup
+    .selectAll("circle")
+    .data(clickPoints)
+    .enter()
+    .append("circle")
+    .attr("class", `all allplot trendlineplot trendlineplot-${'classNameTag'}`)
+    .attr("cx", (d) => d.x) // Set x-coordinate of circle
+    .attr("cy", (d) => d.y) // Set y-coordinate of circle
+    .attr("r", circleRadius) // Set radius of circle
+    .attr("fill", circleColor) // Set color of circle
+    .call(dragBehavior);
+    // .call(
+    //   d3
+    //     .drag<SVGCircleElement, { x: number; y: number }>() // Attach drag behavior to circles
+    //     .on("drag", function (event, d) {
+    //       // Update the coordinates of the dragged circle
+    //       d3.select<SVGCircleElement, { x: number; y: number }>(this)
+    //         .attr("cx", (d.x = event.x))
+    //         .attr("cy", (d.y = event.y));
+    //     })
+    //     .on("dragend", function (event, d) {
+    //       console.log("heerg");
+    //       // Update the coordinates of the dragged circle
+    //       // d3.select<SVGCircleElement, { x: number; y: number }>(this)
+    //       //   .attr("cx", (d.x = event.x))
+    //       //   .attr("cy", (d.y = event.y));
+    //     })
+    // );
+
+  // Update clickPoints array when circles are dragged
+  // circles.on("dragend", function (event, d) {
+  //   // Find the index of the dragged circle
+  //   console.log("object");
+  //   const index = clickPoints.indexOf(d);
+  //   if (index !== -1) {
+  //     // Update the coordinates of the point in the clickPoints array
+  //     clickPoints[index] = { x: d.x, y: d.y };
+  //     console.log("Updated clickPoints:", clickPoints);
+  //   }
+  //   console.log("Updated clickPoints:", clickPoints);
+  // });
+}
+
+export function drawTrendLineOnSVG(
+  svgGroup: d3.Selection<SVGGElement, any, any, any>,
+  xData: number[],
+  yData: number[],
+  xScale: d3.ScaleLinear<number, number>,
+  yScale: d3.ScaleLinear<number, number>,
+  classNameTag: string,
+  yaxistag: string,
+  plotColor: string,
+  dragBehavior: d3.DragBehavior<Element, unknown, unknown>
+) {
+  // Create a line generator
+  const lineGenerator = d3
+    .line()
+    .x((d, i) => xScale(xData[i]))
+    .y((d, i) => yScale(yData[i]));
+
+  // Append a path element to the SVG group
+  svgGroup
+    .append("path")
+    .datum(yData) // Set data for the line
+    .attr("class", `all trendlineplot trendlineplot-${classNameTag}`)
+    .attr("clip-path", `url(#clip-${yaxistag})`)
+    .attr("fill", "none")
+    .attr("stroke", plotColor) // Set color for the line
+    .attr("stroke-width", 2) // Set width for the line
+    .attr("d", lineGenerator as any); // Generate the line path using the line generator
+
+    svgGroup
+    .append("circle")
+    .attr("class", `all trendlineplot circle1-trendlineplot-${classNameTag}`)
+    .attr("clip-path", `url(#clip-${yaxistag})`)
+    .attr("cx", xScale(xData[0])) // Use the x-coordinate of the endpoint
+    .attr("cy", yScale(yData[0])) // Use the y-coordinate of the endpoint
+    .attr("r", 7) // Adjust the radius as needed
+    .style("fill", "red")
+    .attr("Line_Point", 1)
+    .attr("Line_ID", (d, i) => `${classNameTag}`)
+    .call(dragBehavior as any)
+    // .on("dblclick", this.dbClicktoDelete)
+    //.on("click", this.clicktoselect.bind(this))
+    // .call(this.dragBehavior)
+    // .on("dblclick", this.dbClicktoDelete.bind(this));
+
+    svgGroup
+    .append("circle")
+    .attr("class", `all trendlineplot circle1-trendlineplot-${classNameTag}`)
+    .attr("clip-path", `url(#clip-${yaxistag})`)
+    .attr("cx", xScale(xData[1])) // Use the x-coordinate of the endpoint
+    .attr("cy", yScale(yData[1])) // Use the y-coordinate of the endpoint
+    .attr("r", 7) // Adjust the radius as needed
+    .style("fill", "red")
+    .attr("Line_Point", 2)
+    .attr("Line_ID", (d, i) => `${classNameTag}`)
+    .call(dragBehavior as any)
+    // .on("dblclick", this.dbClicktoDelete)
+    //.on("click", this.clicktoselect.bind(this))
+    // .call(this.dragBehavior)
+    // .on("dblclick", this.dbClicktoDelete.bind(this));
+
+}
+
+export function drawtrendLineOnSVG1(
+  svgGroup: d3.Selection<SVGGElement, any, any, any>,
+  svgXData: number[],
+  svgYData: number[],
+  classNameTag: string,
+  yaxistag: string,
+  plotColor: string
+) {
+  // Create a line generator
+  const lineGenerator = d3
+    .line()
+    .x((d, i) => svgXData[i])
+    .y((d, i) => svgYData[i]);
+
+  // .attr("class", `all allplot trendlineplot trendlineplot-${'classNameTag'}`)
+  // .attr("clip-path", `url(#clip-${'yaxistag'})`)
+
+  // Append a path element to the SVG group
+  svgGroup
+    .append("path")
+    .datum(svgYData) // Set data for the line (assuming Y coordinates only)
+    .attr("class", `all allplot trendlineplot trendlineplot-${classNameTag}`)
+    .attr("clip-path", `url(#clip-${yaxistag})`)
+    .attr("fill", "none")
+    .attr("stroke", plotColor) // Set color for the line
+    .attr("stroke-width", 2) // Set width for the line
+    .attr("d", lineGenerator as any); // Generate the line path using the line generator
+}
+
 export function drawLineOnSVG(
   svgGroup: d3.Selection<SVGGElement, any, any, any>,
   xData: number[],
@@ -679,8 +821,6 @@ export function drawCandlestickOnSVG(
     .attr("stroke-width", 1);
 
   candlesticks.exit().remove();
-
-  
 }
 
 export function drawMultipleLineChartOnSVG(svgGroup: d3.Selection<SVGGElement, any, any, any>, lineData: MulitlineLineChartData[], classNameTag: string) {
@@ -767,7 +907,7 @@ export function drawBacktestPlotOnSVG(
   xScale: d3.ScaleLinear<number, number>,
   yScale: d3.ScaleLinear<number, number>,
   classNameTag: string,
-  yaxistag: string,
+  yaxistag: string
 ) {
   const size = 8;
   const offset = 0.01;

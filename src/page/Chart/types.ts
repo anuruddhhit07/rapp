@@ -416,6 +416,9 @@ export interface ScatterDataType {
   color: string;
   size: number;
 }
+export interface TrendLineItemType {name: string, x1: number, y1: number,x2: number, y2: number,yaxiastag:string }
+export type TrendLineDataType=TrendLineItemType[]
+
 
 export interface ChartDimensionType {
   svgWidth: number;

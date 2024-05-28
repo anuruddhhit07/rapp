@@ -5,6 +5,7 @@ import {
   PlotInfoItem,
   PlotInfoType,
   PlotStatusByButtonTag,
+  TrendLineDataType,
   XScaleConfigItemType,
   XscaleYscaleRelation,
   YScaleConfigItemType,
@@ -19,6 +20,7 @@ import { NumberValue, ScaleBand, ScaleLinear, ScaleTime } from "d3";
 
 export let Shared_ChartPlotData: ChartDataType = defaultchartData;
 export let Shared_ChartDimension: ChartDimensionType = defaultChartDimensionProp;
+export let Shared_TrendlineData:TrendLineDataType=[]
 export let Shared_XScaleConfig: xScaleConfigType = {};
 export let Shared_YScaleConfig: yScaleConfigType = {};
 

@@ -196,16 +196,24 @@ class SVGClass {
       ...replacingifArray.slice(buttonidarray.length),
     ];
 
-    // console.log(updatedIdArray);
-    // console.log(initialPlotStatusArray);
+  
     let insertAtIndex = 0
     let itemsToRemove = 0
     updatedIdArray.splice(insertAtIndex, itemsToRemove, 'liverubfn')
     initialPlotStatusArray.splice(insertAtIndex, itemsToRemove, false)
     buttonsvgarray.splice(insertAtIndex, itemsToRemove, 'live')
 
-    // console.log(updatedIdArray);
-    // console.log(buttonsvgarray);
+  
+    updatedIdArray.splice(insertAtIndex, itemsToRemove, 'viewhzline')
+    initialPlotStatusArray.splice(insertAtIndex, itemsToRemove, false)
+    buttonsvgarray.splice(insertAtIndex, itemsToRemove, 'viewsvg')
+
+    updatedIdArray.splice(insertAtIndex, itemsToRemove, 'drawhzbtn')
+    initialPlotStatusArray.splice(insertAtIndex, itemsToRemove, false)
+    buttonsvgarray.splice(insertAtIndex, itemsToRemove, 'deshline')
+
+    
+
 
     this.Buttonpanel = createMultipleSqure(this.svg, "top-button-panel")
       .translate(

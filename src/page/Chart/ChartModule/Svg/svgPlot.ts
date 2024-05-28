@@ -2,13 +2,14 @@ import {
   Shared_ChartBaseData,
   Shared_ChartPlotData,
   Shared_PlotInfo,
+  Shared_TrendlineData,
   Shared_XScaleConfig,
   Shared_YScaleConfig,
   Shared_yaxisProp,
   groupDataByPlotType,
 } from "../BaseSetup/SharedDataUtility";
 import { ChartDataType, backtestitem } from "../../types";
-import { DrawMultilineonSVG, drawBacktestPlotOnSVG, drawBarChartOnSVG, drawCandlestickOnSVG, drawLineOnSVG, drawMultiBarChartOnSVG, drawScatterPlotOnSVG } from "./SVGUtility";
+import { DrawMultilineonSVG, drawBacktestPlotOnSVG, drawBarChartOnSVG, drawCandlestickOnSVG, drawLineOnSVG, drawMultiBarChartOnSVG, drawScatterPlotOnSVG, drawTrendLineOnSVG } from "./SVGUtility";
 import { ScatterDataType } from "./chartSetuptype";
 
 function filterData(xdata: number[], ydata: number[], lowerLimit: number, upperLimit: number): { xdata: number[], ydata: number[] } {
@@ -118,6 +119,9 @@ export function plotonsvg(
       }
     }
   }
+
+ 
+
 }
 
 function drawPlotBackTestByName(
@@ -625,5 +629,33 @@ function drawPlotOHLCByName(
       newyScale,
       plotName,
       yaxistag);
+  }
+
+  export function plottrendlineonsvg(
+    plotAreaonSVG: d3.Selection<SVGGElement, any, HTMLElement, any>,
+    xzoomeventsvg: d3.Selection<SVGGElement, any, HTMLElement, any>,
+    dragBehavior:any
+    // yzoomeventsvg: d3.Selection<SVGGElement, any, HTMLElement, any>
+  ) {
+
+    plotAreaonSVG.selectAll(`.trendlineplot`).remove();
+    const currentTransformX = xzoomeventsvg.property("__zoom");
+    // const currentTransform = this.FrontGroup.property('__zoom');
+    const zoomXscaleAxis = 'bot';
+    
+    const currentXscale = currentTransformX.rescaleX(Shared_XScaleConfig[zoomXscaleAxis].xscale().XSCALE);
+    
+
+    Shared_TrendlineData.forEach((config) => {
+          const {name, x1, y1,x2, y2,yaxiastag}=config
+          const yscaletag = Shared_yaxisProp[yaxiastag].yscaleTag;
+          const yscale=Shared_YScaleConfig[yscaletag[0]].yscale().YSCALE  as d3.ScaleLinear<number, number, never>
+
+          drawTrendLineOnSVG(plotAreaonSVG,[x1,x2],[y1,y2],currentXscale,yscale,name,yaxiastag,'red',dragBehavior);
+    //     // }
+       
+    //   // }
+    });
+
   }
   
