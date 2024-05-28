@@ -2,14 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import { testdatamodule } from "testdata";
 
 
-import {CandlestickChartTS,TechGroup} from "./Chart/index";
-import { DefaultChartParameter } from "./Chart/types";
-import { Shared_Allstockdata, updateChartData } from "./Chart/ChartModule/DataUtility/chartDataUitility";
-import { getbackestdata } from "./Chart/TechModule/testdata/becktestreportdata";
+// import {CandlestickChartTS,TechGroup} from "./Chart/index";
+// import { DefaultChartParameter } from "./Chart/types";
+// import { Shared_Allstockdata, updateChartData } from "./Chart/ChartModule/DataUtility/chartDataUitility";
+// import { getbackestdata } from "./Chart/TechModule/testdata/becktestreportdata";
 
 // import {CandlestickChartTS,TechGroup,getbackestdata,updateChartData,Shared_Allstockdata} from "../dist";
 // import {CandlestickChartTS,TechGroup,Shared_Allstockdata,updateChartData} from "../dist";
-// import {CandlestickChartTS,TechGroup,Shared_Allstockdata,updateChartData,getbackestdata} from "webpacklib";
+import {CandlestickChartTS,TechGroup,Shared_Allstockdata,updateChartData,getbackestdata} from "webpacklib";
 // // import  {getbackestdata2}  from "Achartlib/dist/Chart/ChartModule/DataUtility/chartDataUitility";
 // import {getbackestdata2} from "Achartlib/dist/Chart/ChartModule/DataUtility/chartDataUitility"
 // import {getbackestdata} from "Achartlib/dist/Chart/TechModule"
@@ -31,7 +31,7 @@ const backtestdata=getbackestdata()
 // console.log(testdata);
 
 
-const ChartPage = () => {
+const ChartPage2 = () => {
   const chartobj = useRef<CandlestickChartTS | null>(null);
   const intervalId: any = useRef();
   const [isIntervalRunning, setIsIntervalRunning] = useState(false);
@@ -111,4 +111,4 @@ const ChartPage = () => {
   );
 };
 
-export default ChartPage;
+export default ChartPage2;
