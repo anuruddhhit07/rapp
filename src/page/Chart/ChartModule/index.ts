@@ -51,6 +51,7 @@ class CandlestickChartTS {
   Buttonpanel!: void;
   livefunction: (() => void) | undefined;
   togglehzline:boolean
+  drawtrendline:boolean
   dragBehavior: d3.DragBehavior<Element, unknown, unknown>;
 
   constructor(stockdata: ChartDataIN, targetID: string,Candlestickparamater:DefaultChartParameter) {
@@ -62,6 +63,7 @@ class CandlestickChartTS {
     UpdatePlotInfo();
     //console.log(Shared_YScaleConfig)
     this.togglehzline=false
+    this.drawtrendline=false
 
     this.livefunction=Candlestickparamater.liveFunction
     this.SVGClass = SVGClass.getInstance();
@@ -211,7 +213,7 @@ class CandlestickChartTS {
       }
     }
 
-    plottrendlineonsvg(this.FrontGroup,this.FrontGroup,this.dragBehavior)
+    plottrendlineonsvg(this.FrontGroup,this.FrontGroup,this.dragBehavior,this.togglehzline)
     
     // this.FrontGroup.selectAll(`.trendlineplot`).remove();
     // Shared_TrendlineData.forEach((config) => {
@@ -263,21 +265,17 @@ class CandlestickChartTS {
       // }
       console.log("drawhzbtn");
 
-      this.togglehzline=!this.togglehzline
-      console.log(this.togglehzline);
+      this.drawtrendline=pressstate
+      console.log(this.drawtrendline);
+      if (pressstate==true){
+        this.togglehzline=pressstate
+      }
     }
 
 
     if (id=='viewhzline'){
-      // if (this.livefunction){
-      //   this.livefunction()
-      // }
-      console.log("drawhzbtn");
-      this.svg.selectAll(".trendlineplot").attr("color", "blue");
-      console.log(this.svg.selectAll(".trendlineplot"));
-
-      // this.togglehzline=!this.togglehzline
-      // console.log(this.togglehzline);
+        //  const trendlines = d3.selectAll(".trendlineplot");
+        this.togglehzline=pressstate
     }
 
     
@@ -314,6 +312,7 @@ class CandlestickChartTS {
     // const [x, y] = d3.pointer(event)
     this.svg.selectAll(`.tooltip`).style("display", "none");
     this.BackGroup.selectAll(".crosshair").style("display", "none");
+   
   }
   mousemovevent(event: MouseEvent) {
     const { width, height, margin, svgWidth } = Shared_ChartDimension;
@@ -334,7 +333,8 @@ class CandlestickChartTS {
         ? Shared_ChartPlotData[Shared_XScaleConfig[zoomXscaleAxis].xscaleDataTag].length - 1 : Math.round(xValue);
     // Get the corresponding y-axis tag and value string
     const tagyaxis = getAxisKeyForRangeValue(y);
-    if (tagyaxis !== '1main' && tagyaxis || !this.togglehzline) {
+    console.log("this.drawtrendline",this.drawtrendline)
+    if (tagyaxis !== '1main' && tagyaxis || !this.drawtrendline) {
       // Your code here
       return
   }
@@ -354,7 +354,7 @@ class CandlestickChartTS {
     let y2=yvalue
     let newKey = this.getNextName(Shared_TrendlineData);
     Shared_TrendlineData.push({name:newKey,x1:x1,y1:y1,x2:x2,y2:y2,yaxiastag:tagyaxis?tagyaxis:"noyaxistag"})
-    plottrendlineonsvg(this.FrontGroup,this.FrontGroup,this.dragBehavior)
+    plottrendlineonsvg(this.FrontGroup,this.FrontGroup,this.dragBehavior,this.togglehzline)
   }
 
 
@@ -401,7 +401,7 @@ class CandlestickChartTS {
     // Display tooltip and crosshair elements
     this.svg.selectAll('.tooltip').style('display', 'block');
     this.BackGroup.selectAll('.crosshair').style('display', 'block');
-
+    // this.svg.selectAll(`.trendlineplot`).style("display", "block");
     // Get current zoom transform
     const currentTransform = this.FrontGroup.property('__zoom');
     const zoomXscaleAxis = 'bot';
@@ -435,7 +435,7 @@ class CandlestickChartTS {
   rendorPlot() {
     this.getclippath();
     plotonsvg(this.BackGroup, this.FrontGroup, this.AxisYGroup);
-    plottrendlineonsvg(this.FrontGroup,this.FrontGroup,this.dragBehavior)
+    plottrendlineonsvg(this.FrontGroup,this.FrontGroup,this.dragBehavior,this.togglehzline)
   }
 
   resetplot(event: any) {

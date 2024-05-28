@@ -536,7 +536,8 @@ export function drawTrendLineOnSVG(
   classNameTag: string,
   yaxistag: string,
   plotColor: string,
-  dragBehavior: d3.DragBehavior<Element, unknown, unknown>
+  dragBehavior: d3.DragBehavior<Element, unknown, unknown>,
+  togglehzline:boolean
 ) {
   // Create a line generator
   const lineGenerator = d3
@@ -553,7 +554,8 @@ export function drawTrendLineOnSVG(
     .attr("fill", "none")
     .attr("stroke", plotColor) // Set color for the line
     .attr("stroke-width", 2) // Set width for the line
-    .attr("d", lineGenerator as any); // Generate the line path using the line generator
+    .attr("d", lineGenerator as any) // Generate the line path using the line generator
+    .style("display", togglehzline ? "block" : "none");
 
     svgGroup
     .append("circle")
@@ -565,6 +567,7 @@ export function drawTrendLineOnSVG(
     .style("fill", "red")
     .attr("Line_Point", 1)
     .attr("Line_ID", (d, i) => `${classNameTag}`)
+    .style("display", togglehzline ? "block" : "none")
     .call(dragBehavior as any)
     // .on("dblclick", this.dbClicktoDelete)
     //.on("click", this.clicktoselect.bind(this))
@@ -581,6 +584,7 @@ export function drawTrendLineOnSVG(
     .style("fill", "red")
     .attr("Line_Point", 2)
     .attr("Line_ID", (d, i) => `${classNameTag}`)
+    .style("display", togglehzline ? "block" : "none")
     .call(dragBehavior as any)
     // .on("dblclick", this.dbClicktoDelete)
     //.on("click", this.clicktoselect.bind(this))
