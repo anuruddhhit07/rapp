@@ -273,9 +273,7 @@ class CandlestickChartTS {
       //   this.livefunction()
       // }
       console.log("drawhzbtn");
-
-      this.svg.selectAll(".trendlineplot").style("display", "none");
-
+      this.svg.selectAll(".trendlineplot").attr("color", "blue");
       console.log(this.svg.selectAll(".trendlineplot"));
 
       // this.togglehzline=!this.togglehzline
