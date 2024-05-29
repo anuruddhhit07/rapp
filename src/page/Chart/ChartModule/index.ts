@@ -82,6 +82,7 @@ class CandlestickChartTS {
     this.ToolTipArea = this.SVGClass.ToolTipArea;
 
     this.FrontGroup.call(this.zoomX as any);
+    this.FrontGroup.on("dblclick.zoom", null);
     this.FrontGroup.onEvent1("mousemove", (event: MouseEvent) => {
       // console.log(event)
       this.mousemovevent(event);
@@ -97,7 +98,7 @@ class CandlestickChartTS {
     this.FrontGroup.onEvent1("click", (event: MouseEvent) => {
       // Handle click event here
       // For example:
-      console.log("Click event:", event);
+      // console.log("Click event:", event);
       this.clickEvent(event);
     });
 
@@ -131,6 +132,28 @@ class CandlestickChartTS {
     this.rendorPlot();
   }
 
+  dbClicktoDelete= (event: any) => {
+    // console.log("targetElement", event);
+    // const targetElement = d3.select((this.dragBehavior as any).activeElement);
+    // console.log("targetElement", targetElement,targetElement1);
+    const targetElement = d3.select(event.target);
+    var point_id = targetElement.attr("Line_Point");
+    const selectedLine_ID = targetElement.attr("Line_ID");
+
+    // console.log(selectedLine_ID,point_id);
+
+    const asscociateindex = this.getIndexForName(
+      selectedLine_ID,
+      Shared_TrendlineData
+    );
+    Shared_TrendlineData.splice(asscociateindex, 1);
+    this.plottrendlineonsvgmid()
+  }
+
+  plottrendlineonsvgmid(){
+    plottrendlineonsvg(this.FrontGroup,this.FrontGroup,this.dragBehavior,this.togglehzline,this.dbClicktoDelete)
+  }
+
   handleDragStart = (event: D3DragEvent<SVGCircleElement, unknown, SVGCircleElement>) => {
     const targetElement = event.sourceEvent.target;
     (this.dragBehavior as any).activeElement = targetElement;
@@ -146,7 +169,7 @@ class CandlestickChartTS {
     var point_id = targetElement.attr("Line_Point");
     const selectedLine_ID = targetElement.attr("Line_ID");
 
-    console.log(selectedLine_ID,point_id);
+    // console.log(selectedLine_ID,point_id);
 
     const asscociateindex = this.getIndexForName(
       selectedLine_ID,
@@ -155,8 +178,9 @@ class CandlestickChartTS {
 
     const lineyaxistag=Shared_TrendlineData[asscociateindex].yaxiastag
     
-    console.log(asscociateindex,lineyaxistag);
-    const [x, y] = d3.pointer(event);
+    // console.log(asscociateindex,lineyaxistag);
+    const targetelemmt=d3.select(".main-border-border").node();
+    const [x, y] = d3.pointer(event,targetelemmt);
 
     const currentTransform = this.FrontGroup.property('__zoom');
     const zoomXscaleAxis = 'bot';
@@ -179,9 +203,12 @@ class CandlestickChartTS {
     let yscale:d3.ScaleLinear<number, number, never>
     if (tagyaxis) {
         const yscaletag = Shared_yaxisProp[tagyaxis].yscaleTag;
-        valuestring = Shared_YScaleConfig[yscaletag[0]].yscale().YSCALE?.invert(y).toFixed(2) as string;
-        yvalue=Shared_YScaleConfig[yscaletag[0]].yscale().YSCALE?.invert(y) as number
-        yscale=Shared_YScaleConfig[yscaletag[0]].yscale().YSCALE as d3.ScaleLinear<number, number, never>
+        // valuestring = Shared_YScaleConfig[yscaletag[0]].yscale().YSCALE?.invert(y).toFixed(2) as string;
+        // yvalue=Shared_YScaleConfig[yscaletag[0]].yscale().YSCALE?.invert(y) as number
+        // yscale=Shared_YScaleConfig[yscaletag[0]].yscale().YSCALE as d3.ScaleLinear<number, number, never>
+        const yscale=Shared_YScaleConfig[yscaletag[0]].yscale().TranSFormedYscale  as d3.ScaleLinear<number, number, never>
+        yvalue=yscale.invert(y) as number
+
     }
 
 
@@ -189,7 +216,7 @@ class CandlestickChartTS {
 
     const newx = currentXscale.invert(x);
     const newy = yvalue;
-    console.log(newx, newy);
+    // console.log(newx, newy);
 
     if (point_id == '1') {
       if (!Number.isNaN(newx) && !Number.isNaN(newy)) {
@@ -213,7 +240,7 @@ class CandlestickChartTS {
       }
     }
 
-    plottrendlineonsvg(this.FrontGroup,this.FrontGroup,this.dragBehavior,this.togglehzline)
+    plottrendlineonsvg(this.FrontGroup,this.FrontGroup,this.dragBehavior,this.togglehzline,this.dbClicktoDelete)
     
     // this.FrontGroup.selectAll(`.trendlineplot`).remove();
     // Shared_TrendlineData.forEach((config) => {
@@ -263,10 +290,10 @@ class CandlestickChartTS {
       // if (this.livefunction){
       //   this.livefunction()
       // }
-      console.log("drawhzbtn");
+      // console.log("drawhzbtn");
 
       this.drawtrendline=pressstate
-      console.log(this.drawtrendline);
+      // console.log(this.drawtrendline);
       if (pressstate==true){
         this.togglehzline=pressstate
       }
@@ -278,11 +305,6 @@ class CandlestickChartTS {
         this.togglehzline=pressstate
     }
 
-    
-
-
-
-    
     this.SVGClass.createYaxiseventArea(this.zoomY);
     this.SVGClass.createTooltipArea();
     this.rendorAxis();
@@ -302,7 +324,7 @@ class CandlestickChartTS {
   isMouseInsideFrontGroup(x: number, y: number): boolean | undefined {
     // Get FrontGroup element dimensions
     const frontGroupRect = this.FrontGroup.node()?.getBoundingClientRect();
-    console.log(frontGroupRect);
+    // console.log(frontGroupRect);
 
     // Check if mouse coordinates are inside FrontGroup
     return frontGroupRect && x >= frontGroupRect.left && x <= frontGroupRect.right && y >= frontGroupRect.top && y <= frontGroupRect.bottom;
@@ -316,13 +338,17 @@ class CandlestickChartTS {
   }
   mousemovevent(event: MouseEvent) {
     const { width, height, margin, svgWidth } = Shared_ChartDimension;
-    const [x, y] = d3.pointer(event);
+   
+    const targetelemmt=d3.select(".main-border-border").node();
+    const [x, y] = d3.pointer(event,targetelemmt);
+   
     // console.log("in");
     this.handleTooltipAndCrosshair(x, y)
   }
   clickEvent(event: MouseEvent) {
     const { width, height, margin, svgWidth } = Shared_ChartDimension;
-    const [x, y] = d3.pointer(event);
+    const targetelemmt=d3.select(".main-border-border").node();
+    const [x, y] = d3.pointer(event,targetelemmt);
     const currentTransform = this.FrontGroup.property('__zoom');
     const zoomXscaleAxis = 'bot';
     const currentXscale = currentTransform.rescaleX(Shared_XScaleConfig[zoomXscaleAxis].xscale().XSCALE);
@@ -333,20 +359,24 @@ class CandlestickChartTS {
         ? Shared_ChartPlotData[Shared_XScaleConfig[zoomXscaleAxis].xscaleDataTag].length - 1 : Math.round(xValue);
     // Get the corresponding y-axis tag and value string
     const tagyaxis = getAxisKeyForRangeValue(y);
-    console.log("this.drawtrendline",this.drawtrendline)
+    // console.log("this.drawtrendline",this.drawtrendline)
     if (tagyaxis !== '1main' && tagyaxis || !this.drawtrendline) {
       // Your code here
       return
   }
     let valuestring = "";
     let yvalue:number=NaN
-    let yscale:d3.ScaleLinear<number, number, never>
+    // let yscale:d3.ScaleLinear<number, number, never>
     if (tagyaxis) {
         const yscaletag = Shared_yaxisProp[tagyaxis].yscaleTag;
         valuestring = Shared_YScaleConfig[yscaletag[0]].yscale().YSCALE?.invert(y).toFixed(2) as string;
-        yvalue=Shared_YScaleConfig[yscaletag[0]].yscale().YSCALE?.invert(y) as number
-        yscale=Shared_YScaleConfig[yscaletag[0]].yscale().YSCALE as d3.ScaleLinear<number, number, never>
+        // yvalue=Shared_YScaleConfig[yscaletag[0]].yscale().YSCALE?.invert(y) as number
+        // yscale=Shared_YScaleConfig[yscaletag[0]].yscale().YSCALE as d3.ScaleLinear<number, number, never>
+        const yscale=Shared_YScaleConfig[yscaletag[0]].yscale().TranSFormedYscale  as d3.ScaleLinear<number, number, never>
+        yvalue=yscale.invert(y) as number
     }
+
+   
 
     let x1=currentXscale.domain()[0]
     let x2=currentXscale.domain()[1]
@@ -354,7 +384,7 @@ class CandlestickChartTS {
     let y2=yvalue
     let newKey = this.getNextName(Shared_TrendlineData);
     Shared_TrendlineData.push({name:newKey,x1:x1,y1:y1,x2:x2,y2:y2,yaxiastag:tagyaxis?tagyaxis:"noyaxistag"})
-    plottrendlineonsvg(this.FrontGroup,this.FrontGroup,this.dragBehavior,this.togglehzline)
+    plottrendlineonsvg(this.FrontGroup,this.FrontGroup,this.dragBehavior,this.togglehzline,this.dbClicktoDelete)
   }
 
 
@@ -435,7 +465,7 @@ class CandlestickChartTS {
   rendorPlot() {
     this.getclippath();
     plotonsvg(this.BackGroup, this.FrontGroup, this.AxisYGroup);
-    plottrendlineonsvg(this.FrontGroup,this.FrontGroup,this.dragBehavior,this.togglehzline)
+    plottrendlineonsvg(this.FrontGroup,this.FrontGroup,this.dragBehavior,this.togglehzline,this.dbClicktoDelete)
   }
 
   resetplot(event: any) {

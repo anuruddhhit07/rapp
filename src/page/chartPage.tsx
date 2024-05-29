@@ -14,7 +14,7 @@ const techGroup = TechGroup.getInstance();
 
 console.log(getbackestdata());
 
-const testobj = new testdatamodule(10);
+const testobj = new testdatamodule(110);
 
 
 const divId = "chartContainer";

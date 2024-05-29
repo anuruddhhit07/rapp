@@ -636,6 +636,7 @@ function drawPlotOHLCByName(
     xzoomeventsvg: d3.Selection<SVGGElement, any, HTMLElement, any>,
     dragBehavior:any,
     togglehzline:boolean,
+    dbclicktodelete:any
     // yzoomeventsvg: d3.Selection<SVGGElement, any, HTMLElement, any>
   ) {
 
@@ -653,7 +654,7 @@ function drawPlotOHLCByName(
           const yscale=Shared_YScaleConfig[yscaletag[0]].yscale().TranSFormedYscale  as d3.ScaleLinear<number, number, never>
           
 
-          drawTrendLineOnSVG(plotAreaonSVG,[x1,x2],[y1,y2],currentXscale,yscale,name,yaxiastag,'red',dragBehavior,togglehzline);
+          drawTrendLineOnSVG(plotAreaonSVG,[x1,x2],[y1,y2],currentXscale,yscale,name,yaxiastag,'red',dragBehavior,togglehzline,dbclicktodelete);
     //     // }
        
     //   // }

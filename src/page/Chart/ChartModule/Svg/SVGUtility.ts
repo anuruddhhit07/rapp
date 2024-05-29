@@ -527,7 +527,7 @@ export function drawCirclesOnSVG(
   // });
 }
 
-export function drawTrendLineOnSVG(
+export function drawTrendLineOnSVG( 
   svgGroup: d3.Selection<SVGGElement, any, any, any>,
   xData: number[],
   yData: number[],
@@ -537,7 +537,8 @@ export function drawTrendLineOnSVG(
   yaxistag: string,
   plotColor: string,
   dragBehavior: d3.DragBehavior<Element, unknown, unknown>,
-  togglehzline:boolean
+  togglehzline:boolean,
+  dbclicktodelete:any
 ) {
   // Create a line generator
   const lineGenerator = d3
@@ -569,6 +570,7 @@ export function drawTrendLineOnSVG(
     .attr("Line_ID", (d, i) => `${classNameTag}`)
     .style("display", togglehzline ? "block" : "none")
     .call(dragBehavior as any)
+    .on("dblclick",dbclicktodelete);
     // .on("dblclick", this.dbClicktoDelete)
     //.on("click", this.clicktoselect.bind(this))
     // .call(this.dragBehavior)
